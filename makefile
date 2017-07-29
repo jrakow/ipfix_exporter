@@ -31,4 +31,4 @@ wave: testbench.ghw
 
 .PHONY: html
 html:
-	doxygen
+	doxygen 2>&1 | sed '/.*Elaborating.*/d' | sed '/^$$/d'
