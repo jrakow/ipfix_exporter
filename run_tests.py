@@ -18,7 +18,7 @@ if __name__ == "__main__":
 	expected_tests = 0
 	unexpected_tests = 0
 
-	for module in json["modules"]:
+	for module in json:
 		eprint("starting " + module["name"] + " test")
 
 		for case in module["cases"]:
