@@ -71,6 +71,8 @@ begin
 		wait until rising_edge(s_clk);
 		s_rst <= '0';
 
+		wait until rising_edge(s_clk) and s_emulator_finished = '1';
+		report "emulator finished";
 		wait until rising_edge(s_clk) and s_generator_finished = '1';
 		report "generator finished";
 		wait until rising_edge(s_clk) and s_checker_finished = '1';
