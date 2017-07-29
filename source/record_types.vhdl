@@ -10,6 +10,8 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 package record_types is
+	constant c_reset_active : std_ulogic := '1';
+
 	--! AXI stream interface for packets master port
 	type t_if_axis_packet_m is record
 		tvalid : std_ulogic;
