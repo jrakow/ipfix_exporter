@@ -90,6 +90,40 @@ package pkg_protocol_types is
 		source          => (others => '0'),
 		destination     => (others => '0')
 	);
+
+	subtype t_ipfix_version_number        is std_ulogic_vector(15 downto 0);
+	subtype t_ipfix_export_time           is std_ulogic_vector(31 downto 0);
+	subtype t_ipfix_sequence_number       is unsigned(31 downto 0);
+	subtype t_ipfix_observation_domain_id is std_ulogic_vector(31 downto 0);
+	subtype t_ipfix_set_id                is std_ulogic_vector(15 downto 0);
+	subtype t_ipfix_length                is unsigned(15 downto 0);
+	type t_ipfix_header is record
+		version_number        : t_ipfix_version_number;
+		length                : t_ipfix_length;
+		export_time           : t_ipfix_export_time;
+		sequence_number       : t_ipfix_sequence_number;
+		observation_domain_id : t_ipfix_observation_domain_id;
+	end record;
+	constant c_ipfix_header_width : natural := 128;
+	function to_std_ulogic_vector(ih : t_ipfix_header) return std_ulogic_vector;
+	constant c_ipfix_header_default : t_ipfix_header := (
+		version_number        => x"000A",
+		length                => (others => '0'),
+		export_time           => (others => '0'),
+		sequence_number       => (others => '0'),
+		observation_domain_id => (others => '0')
+	);
+
+	type t_ipfix_set_header is record
+		set_id : t_ipfix_set_id;
+		length : t_ipfix_length;
+	end record;
+	constant c_ipfix_set_header_width : natural := 32;
+	function to_std_ulogic_vector(ih : t_ipfix_set_header) return std_ulogic_vector;
+	constant c_ipfix_set_header_default : t_ipfix_set_header := (
+		set_id => (others => '0'),
+		length => (others => '0')
+	);
 end package;
 
 package body pkg_protocol_types is
@@ -171,6 +205,24 @@ package body pkg_protocol_types is
 		ret( 79 downto  64) := ih.header_checksum;
 		ret( 63 downto  32) := ih.source         ;
 		ret( 31 downto   0) := ih.destination    ;
+		return ret;
+	end;
+
+	function to_std_ulogic_vector(ih : t_ipfix_header) return std_ulogic_vector is
+		variable ret : std_ulogic_vector(c_ipfix_header_width - 1 downto 0) := (others => '0');
+	begin
+		ret(127 downto 112) := ih.version_number       ;
+		ret(111 downto  96) := std_ulogic_vector(ih.length         );
+		ret( 95 downto  64) := std_ulogic_vector(ih.export_time    );
+		ret( 63 downto  32) := std_ulogic_vector(ih.sequence_number);
+		ret( 31 downto   0) := ih.observation_domain_id;
+		return ret;
+	end;
+	function to_std_ulogic_vector(ih : t_ipfix_set_header) return std_ulogic_vector is
+		variable ret : std_ulogic_vector(c_ipfix_set_header_width - 1 downto 0) := (others => '0');
+	begin
+		ret(31 downto 16) := ih.set_id;
+		ret(15 downto  0) := std_ulogic_vector(ih.length);
 		return ret;
 	end;
 end package body;
