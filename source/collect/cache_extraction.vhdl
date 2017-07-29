@@ -45,5 +45,4 @@ end entity;
 
 architecture arch of cache_extraction is
 begin
-	static_assert(g_record_width = c_ipfix_ipv6_data_record_width or g_record_width = c_ipfix_ipv4_data_record_width, "g_record_width is not a record width", failure);
 end architecture;

@@ -87,8 +87,8 @@ begin
 
 	i_top_collect_ipv6 : entity ipfix_exporter.top_collect
 		generic map(
-			g_addr_width   => g_ipv6_cache_addr_width,
-			g_record_width => c_ipfix_ipv6_data_record_width
+			g_addr_width => g_ipv6_cache_addr_width,
+			g_ip_version => 6
 		)
 		port map(
 			clk           => clk,
@@ -110,8 +110,8 @@ begin
 
 	i_top_collect_ipv4 : entity ipfix_exporter.top_collect
 		generic map(
-			g_addr_width   => g_ipv4_cache_addr_width,
-			g_record_width => c_ipfix_ipv4_data_record_width
+			g_addr_width => g_ipv4_cache_addr_width,
+			g_ip_version => 4
 		)
 		port map(
 			clk           => clk,
