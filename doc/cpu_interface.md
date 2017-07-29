@@ -24,9 +24,8 @@ The following registers are provided for reading and writing by the CPU:
 | `0x48` | 0x00, 0x0, IPv6 flow label                                           |
 | `0x4C` | 0x00, 0x00, IPv4 identification                                      |
 | `0x50` | 0x00, 0x00, IP hop limit, IP traffic class                           |
-| `0x50` | VLAN tag 0 (the first)                                               |
-| `0x54` | VLAN tag 1 (the second)                                              |
-| `0x58` | *invalid*                                                            |
+| `0x54` | VLAN tag 0 (the first)                                               |
+| `0x58` | VLAN tag 1 (the second)                                              |
 | `0x5C` | *invalid*                                                            |
 | `0x60` | source MAC address(bytes 3-0)                                        |
 | `0x64` | source MAC address(bytes 5-4)                                        |
