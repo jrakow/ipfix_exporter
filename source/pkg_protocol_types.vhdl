@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 package pkg_protocol_types is
+	type t_ip_version is (six, four);
 	subtype t_ipv6_addr           is std_ulogic_vector(127 downto 0);
 	subtype t_ipv4_addr           is std_ulogic_vector( 31 downto 0);
 	subtype t_ip_traffic_class    is std_ulogic_vector(  7 downto 0);
