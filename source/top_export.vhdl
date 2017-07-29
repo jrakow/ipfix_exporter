@@ -9,6 +9,24 @@ use ipfix_exporter.pkg_types.all;
 This module is the top level for the export path.
 
 It instantiates and connects the @ref ipfix_header, @ref udp_header, @ref ip_header, @ref ethertype_insertion, @ref vlan_insertion and @ref ethernet_header modules.
+
+@dot
+digraph overview
+	{
+	node [shape=box];
+	input  [ label="input"  shape=circle ];
+	output [ label="output" shape=circle ];
+
+	ipfix_header        [ label="ipfix_header"        URL="@ref ipfix_header"        ];
+	udp_header          [ label="udp_header"          URL="@ref udp_header"          ];
+	ip_header           [ label="ip_header"           URL="@ref ip_header"           ];
+	ethertype_insertion [ label="ethertype_insertion" URL="@ref ethertype_insertion" ];
+	vlan_insertion      [ label="vlan_insertion"      URL="@ref vlan_insertion"      ];
+	ethernet_header     [ label="ethernet_header"     URL="@ref ethernet_header"     ];
+
+	input -> ipfix_header -> udp_header -> ip_header -> ethertype_insertion -> vlan_insertion -> ethernet_header -> output;
+	}
+@enddot
  */
 entity top_export is
 	port(

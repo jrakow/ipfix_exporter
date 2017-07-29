@@ -9,6 +9,23 @@ use ipfix_exporter.pkg_types.all;
 This module is the top level for the IPv4 data path.
 
 It instantiates and connects the @ref information_extraction, @ref cache_insertion, @ref ram as cache, @ref cache_extraction and @ref ipfix_message_control modules.
+
+@dot
+digraph overview
+	{
+	node [shape=box];
+	input  [ label="input"  shape=circle ];
+	output [ label="output" shape=circle ];
+
+	information_extraction [ label="information_extraction" URL="@ref information_extraction" ];
+	cache_insertion        [ label="cache_insertion"        URL="@ref cache_insertion"        ];
+	cache                  [ label="cache"                  URL="@ref ram"                    ];
+	cache_extraction       [ label="cache_extraction"       URL="@ref cache_extraction"       ];
+	ipfix_message_control  [ label="ipfix_message_control"  URL="@ref ipfix_message_control"  ];
+
+	input -> information_extraction -> cache_insertion -> cache -> cache_extraction -> ipfix_message_control -> output;
+	}
+@enddot
  */
 entity top_collect is
 	generic(
