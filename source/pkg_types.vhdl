@@ -222,6 +222,15 @@ package pkg_types is
 	 * @return filled with n `'1'`s from the left
 	 */
 	function to_tkeep(n : positive; tkeep_width : natural) return std_ulogic_vector;
+
+	/**
+	 * check a condition like `assert`
+	 *
+	 * This is equivalent to normal `assert`.
+	 * However this procedure may be called with a static condition.
+	 * Failing is delayed until run.
+	 */
+	procedure static_assert(b : in boolean; s : in string; f : in severity_level);
 end package;
 
 package body pkg_types is
@@ -308,4 +317,11 @@ package body pkg_types is
 		end loop;
 		return ret;
 	end;
+
+	procedure static_assert(b : in boolean; s : in string; f : in severity_level) is
+	begin
+		assert b
+			report s
+			severity f;
+	end procedure;
 end package body;
