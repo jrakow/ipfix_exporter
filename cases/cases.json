@@ -1,6 +1,6 @@
 [
 	{
-		"name" : "testbench",
+		"name" : "testbench_test_dummy",
 		"cases" :
 		[
 			{ "number" : "00" , "invert" : false, "title" : "skip comments and empty lines" },
