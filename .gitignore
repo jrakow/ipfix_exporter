@@ -1,1 +1,6 @@
 /html
+*.o
+*.cf
+/testbench
+/testbench.ghw
+/waveform.gtkw
