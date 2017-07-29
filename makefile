@@ -49,7 +49,6 @@ clean:
 testbench.gcda run: testbench cases/*
 	./run_tests.py
 
-.PHONY: html
 html:
 	doxygen 2>&1 | sed '/.*Elaborating.*/d' | sed '/^$$/d'
 
