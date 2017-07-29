@@ -17,8 +17,12 @@ all: build/axis_testbench
 
 .PHONY: clean
 clean:
-	rm -rf build/ coverage/ waveforms report.html
+	rm -rf build/ coverage/ html/ waveforms report.html
 	make -C axis_testbench clean
+
+.PHONY: doc
+doc:
+	doxygen 2>&1 | sed '/.*Elaborating.*/d' | sed '/^$$/d'
 
 ## directories
 build:
