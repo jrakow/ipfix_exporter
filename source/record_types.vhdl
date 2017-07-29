@@ -141,6 +141,15 @@ package record_types is
 		traffic_class => (others => '0'),
 		padding       => (others => '0')
 	);
+
+	/**
+	 * convert a number of bytes to a std_ulogic_vector
+	 *
+	 * @param number of valid bytes in tdata
+	 * @param tkeep_width width of return tkeep std_ulogic_vector
+	 * @return filled with n `'1'`s from the left
+	 */
+	function to_tkeep(n : positive; tkeep_width : natural) return std_ulogic_vector;
 end package;
 
 package body record_types is
@@ -212,6 +221,19 @@ package body record_types is
 		ret.traffic_class :=          slv( 23 downto  16);
 		ret.tcp_flags     :=          slv( 15 downto   8);
 		ret.padding       :=          slv(  7 downto   0);
+		return ret;
+	end;
+
+	function to_tkeep(n : positive; tkeep_width : natural) return std_ulogic_vector is
+		variable ret : std_ulogic_vector(tkeep_width - 1 downto 0) := (others => '0');
+	begin
+		assert n <= tkeep_width;
+		for i in 0 to tkeep_width - 1 loop
+			ret(tkeep_width - i - 1) := '1';
+			if i >= n then
+				return ret;
+			end if;
+		end loop;
 		return ret;
 	end;
 end package body;
