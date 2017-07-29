@@ -45,7 +45,7 @@ if __name__ == "__main__":
 			eprint(" succeeded" if exit == 0 else " failed", end="")
 			# != is xor
 			expected = (exit == 0) != inverted
-			eprint(" as expected" if expected else ", should have failed")
+			eprint(" as expected" if expected else " unexpectedly")
 
 			number_of_tests += 1
 			if expected:
