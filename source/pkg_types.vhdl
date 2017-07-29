@@ -21,9 +21,10 @@ package pkg_types is
 
 	subtype t_timeout is unsigned(15 downto 0);
 
-	subtype t_timestamp    is unsigned(31 downto 0);
-	subtype t_packet_count is unsigned(31 downto 0);
-	subtype t_octet_count  is unsigned(31 downto 0);
+	subtype t_timestamp         is unsigned(31 downto 0);
+	subtype t_packet_count      is unsigned(31 downto 0);
+	subtype t_octet_count       is unsigned(31 downto 0);
+	subtype t_small_octet_count is unsigned(15 downto 0);
 
 	constant c_number_of_vlans_width : natural := 2;
 	subtype t_number_of_vlans is unsigned(c_number_of_vlans_width - 1 downto 0);
@@ -226,12 +227,12 @@ package pkg_types is
 		src_port      : t_transport_port;
 		dest_port     : t_transport_port;
 		timestamp     : t_timestamp;
-		octet_count   : t_octet_count;
+		octet_count   : t_small_octet_count;
 		next_header   : t_next_header;
 		traffic_class : t_ip_traffic_class;
 		tcp_flags     : t_tcp_flags;
 	end record;
-	constant c_ipv6_frame_info_width : natural := 2 * 128 + 2 * 16 + 32 + 32 + 3 * 8;
+	constant c_ipv6_frame_info_width : natural := 2 * 128 + 2 * 16 + 32 + 16 + 3 * 8;
 	function to_std_ulogic_vector(fi : t_ipv6_frame_info) return std_ulogic_vector;
 	function to_ipv6_frame_info(slv : std_ulogic_vector) return t_ipv6_frame_info;
 	constant c_ipv6_frame_info_default : t_ipv6_frame_info := (
@@ -258,12 +259,12 @@ package pkg_types is
 		src_port      : t_transport_port;
 		dest_port     : t_transport_port;
 		timestamp     : t_timestamp;
-		octet_count   : t_octet_count;
+		octet_count   : t_small_octet_count;
 		next_header   : t_next_header;
 		traffic_class : t_ip_traffic_class;
 		tcp_flags     : t_tcp_flags;
 	end record;
-	constant c_ipv4_frame_info_width : natural := 2 * 32 + 2 * 16 + 32 + 32 + 3 * 8;
+	constant c_ipv4_frame_info_width : natural := 2 * 32 + 2 * 16 + 32 + 16 + 3 * 8;
 	function to_std_ulogic_vector(fi : t_ipv4_frame_info) return std_ulogic_vector;
 	function to_ipv4_frame_info(slv : std_ulogic_vector) return t_ipv4_frame_info;
 	constant c_ipv4_frame_info_default : t_ipv4_frame_info := (
@@ -372,12 +373,12 @@ package body pkg_types is
 	function to_std_ulogic_vector(fi : t_ipv6_frame_info) return std_ulogic_vector is
 		variable ret : std_ulogic_vector(c_ipv6_frame_info_width - 1 downto 0) := (others => '0');
 	begin
-		ret(375 downto 248) := fi.src_ip_addr  ;
-		ret(247 downto 120) := fi.dest_ip_addr ;
-		ret(119 downto 104) := fi.src_port     ;
-		ret(103 downto  88) := fi.dest_port    ;
-		ret( 87 downto  56) := std_ulogic_vector(fi.timestamp  );
-		ret( 55 downto  24) := std_ulogic_vector(fi.octet_count);
+		ret(359 downto 232) := fi.src_ip_addr  ;
+		ret(231 downto 104) := fi.dest_ip_addr ;
+		ret(103 downto  88) := fi.src_port     ;
+		ret( 87 downto  72) := fi.dest_port    ;
+		ret( 71 downto  40) := std_ulogic_vector(fi.timestamp  );
+		ret( 39 downto  24) := std_ulogic_vector(fi.octet_count);
 		ret( 23 downto  16) := fi.next_header  ;
 		ret( 15 downto   8) := fi.traffic_class;
 		ret(  7 downto   0) := fi.tcp_flags    ;
@@ -387,12 +388,12 @@ package body pkg_types is
 	function to_ipv6_frame_info(slv : std_ulogic_vector) return t_ipv6_frame_info is
 		variable ret : t_ipv6_frame_info := c_ipv6_frame_info_default;
 	begin
-		ret.src_ip_addr   := slv(375 downto 248);
-		ret.dest_ip_addr  := slv(247 downto 120);
-		ret.src_port      := slv(119 downto 104);
-		ret.dest_port     := slv(103 downto  88);
-		ret.timestamp     := unsigned(slv( 87 downto  56));
-		ret.octet_count   := unsigned(slv( 55 downto  24));
+		ret.src_ip_addr   := slv(359 downto 232);
+		ret.dest_ip_addr  := slv(231 downto 104);
+		ret.src_port      := slv(103 downto  88);
+		ret.dest_port     := slv( 87 downto  72);
+		ret.timestamp     := unsigned(slv( 71 downto  40));
+		ret.octet_count   := unsigned(slv( 39 downto  24));
 		ret.next_header   := slv( 23 downto  16);
 		ret.traffic_class := slv( 15 downto   8);
 		ret.tcp_flags     := slv(  7 downto   0);
@@ -402,12 +403,12 @@ package body pkg_types is
 	function to_std_ulogic_vector(fi : t_ipv4_frame_info) return std_ulogic_vector is
 		variable ret : std_ulogic_vector(c_ipv4_frame_info_width - 1 downto 0) := (others => '0');
 	begin
-		ret(183 downto 152) := fi.src_ip_addr  ;
-		ret(151 downto 120) := fi.dest_ip_addr ;
-		ret(119 downto 104) := fi.src_port     ;
-		ret(103 downto  88) := fi.dest_port    ;
-		ret( 87 downto  56) := std_ulogic_vector(fi.timestamp  );
-		ret( 55 downto  24) := std_ulogic_vector(fi.octet_count);
+		ret(167 downto 136) := fi.src_ip_addr  ;
+		ret(135 downto 104) := fi.dest_ip_addr ;
+		ret(103 downto  88) := fi.src_port     ;
+		ret( 87 downto  72) := fi.dest_port    ;
+		ret( 71 downto  40) := std_ulogic_vector(fi.timestamp  );
+		ret( 39 downto  24) := std_ulogic_vector(fi.octet_count);
 		ret( 23 downto  16) := fi.next_header  ;
 		ret( 15 downto   8) := fi.traffic_class;
 		ret(  7 downto   0) := fi.tcp_flags    ;
@@ -417,12 +418,12 @@ package body pkg_types is
 	function to_ipv4_frame_info(slv : std_ulogic_vector) return t_ipv4_frame_info is
 		variable ret : t_ipv4_frame_info := c_ipv4_frame_info_default;
 	begin
-		ret.src_ip_addr   := slv(183 downto 152);
-		ret.dest_ip_addr  := slv(151 downto 120);
-		ret.src_port      := slv(119 downto 104);
-		ret.dest_port     := slv(103 downto  88);
-		ret.timestamp     := unsigned(slv( 87 downto  56));
-		ret.octet_count   := unsigned(slv( 55 downto  24));
+		ret.src_ip_addr   := slv(167 downto 136);
+		ret.dest_ip_addr  := slv(135 downto 104);
+		ret.src_port      := slv(103 downto  88);
+		ret.dest_port     := slv( 87 downto  72);
+		ret.timestamp     := unsigned(slv( 71 downto  40));
+		ret.octet_count   := unsigned(slv( 39 downto  24));
 		ret.next_header   := slv( 23 downto  16);
 		ret.traffic_class := slv( 15 downto   8);
 		ret.tcp_flags     := slv(  7 downto   0);
