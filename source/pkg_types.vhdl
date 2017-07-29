@@ -9,6 +9,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+--! data types and conversion functions
 package pkg_types is
 	constant c_reset_active       : std_ulogic := '1';
 
