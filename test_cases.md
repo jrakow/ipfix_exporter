@@ -16,4 +16,5 @@ Using more or less characters will result in a failed test as the `tkeep` and `t
 ## Test cases
 | module    | in file suffix | out file suffix | description                                    |
 | --------- | -------------- | --------------- | ---------------------------------------------- |
-| testbench | `_in.dat`      | `_out.dat`      | testbench should skip comments and empty lines |
+| testbench | `_00_in.dat`   | `_00_out.dat`   | skip comments and empty lines                  |
+| testbench | `_01_in.dat`   | `_01_out.dat`   | split frames on tlast                          |

@@ -1,0 +1,10 @@
+# in split
+# out single line
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+
+# in single line
+# out split
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
