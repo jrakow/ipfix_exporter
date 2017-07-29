@@ -323,29 +323,31 @@ begin
 			);
 		end generate;
 
-	i_cpu_interface : entity ipfix_exporter.cpu_interface
-		port map(
-			clk                    => clk,
-			rst                    => rst,
+	i_cpu_interface : if g_module /= "testbench_test_dummy" generate
+		i_cond_gen : entity ipfix_exporter.cpu_interface
+			port map(
+				clk                    => clk,
+				rst                    => rst,
 
-			read_enable            => read_enable,
-			write_enable           => write_enable,
-			data_in                => data_in,
-			data_out               => data_out,
-			address                => address,
-			read_valid             => read_valid,
+				read_enable            => read_enable,
+				write_enable           => write_enable,
+				data_in                => data_in,
+				data_out               => data_out,
+				address                => address,
+				read_valid             => read_valid,
 
-			drop_source_mac_enable => s_drop_source_mac_enable,
-			timestamp              => s_timestamp,
-			cache_active_timeout   => s_cache_active_timeout,
-			cache_inactive_timeout => s_cache_inactive_timeout,
-			ipfix_message_timeout  => s_ipfix_message_timeout,
-			ipfix_config_ipv6      => s_ipfix_config_ipv6,
-			ipfix_config_ipv4      => s_ipfix_config_ipv4,
-			udp_config             => s_udp_config,
-			ip_config              => s_ip_config,
-			vlan_config            => s_vlan_config,
-			ethernet_config        => s_ethernet_config,
-			events                 => s_events
-		);
+				drop_source_mac_enable => s_drop_source_mac_enable,
+				timestamp              => s_timestamp,
+				cache_active_timeout   => s_cache_active_timeout,
+				cache_inactive_timeout => s_cache_inactive_timeout,
+				ipfix_message_timeout  => s_ipfix_message_timeout,
+				ipfix_config_ipv6      => s_ipfix_config_ipv6,
+				ipfix_config_ipv4      => s_ipfix_config_ipv4,
+				udp_config             => s_udp_config,
+				ip_config              => s_ip_config,
+				vlan_config            => s_vlan_config,
+				ethernet_config        => s_ethernet_config,
+				events                 => s_events
+			);
+		end generate;
 end architecture;
