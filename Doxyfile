@@ -10,6 +10,7 @@ HIDE_SCOPE_NAMES = YES
 QUIET = YES
 
 INPUT = \
+	doc/cpu_interface.md \
 	doc/data_types.md \
 	doc/modules.md \
 	readme.md \
