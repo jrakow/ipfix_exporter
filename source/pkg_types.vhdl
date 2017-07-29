@@ -140,7 +140,7 @@ package pkg_types is
 		tkeep  : std_ulogic_vector(15  downto 0);
 		tlast  : std_ulogic;
 	end record;
-	constant c_if_axis_packet_m_default : t_if_axis_frame_m := (
+	constant c_if_axis_frame_m_default : t_if_axis_frame_m := (
 		tvalid => '0',
 		tdata  => (others => '0'),
 		tkeep  => (others => '0'),
