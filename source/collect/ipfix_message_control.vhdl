@@ -14,19 +14,23 @@ If the message is ready, the IPFIX set header is computed and it and the whole s
 
 @todo configuration in: `ipfix_message_timeout`
  */
-entity ipfix_message_control_ipv6 is
+entity ipfix_message_control is
+	generic(
+		g_record_width : natural
+	);
 	port(
 		clk : in std_ulogic;
 		rst : in std_ulogic;
 
-		if_axis_in_m : in  t_if_axis_ipv6_m;
-		if_axis_in_s : out t_if_axis_s;
+		if_axis_in_m_tdata  : in  std_ulogic_vector(g_record_width - 1 downto 0);
+		if_axis_in_m_tvalid : in  std_ulogic;
+		if_axis_in_s        : out t_if_axis_s;
 
 		if_axis_out_m : out t_if_axis_frame_m;
 		if_axis_out_s : in  t_if_axis_s
 	);
 end entity;
 
-architecture arch of ipfix_message_control_ipv6 is
+architecture arch of ipfix_message_control is
 begin
 end architecture;
