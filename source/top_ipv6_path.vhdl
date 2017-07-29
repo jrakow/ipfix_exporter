@@ -8,7 +8,7 @@ use ipfix_exporter.pkg_types.all;
 /*!
 This module is the top level for the IPv6 data path.
 
-It instantiates and connects the @ref information_extraction_ipv6, @ref cache_insertion_ipv6, @ref cache, @ref cache_extraction_ipv6, ipfix_message_control_ipv6 and @ref top_export modules.
+It instantiates and connects the @ref information_extraction_ipv6, @ref cache_insertion_ipv6, @ref ram as cache, @ref cache_extraction_ipv6, ipfix_message_control_ipv6 and @ref top_export modules.
  */
 entity top_ipv6_path is
 	port(
@@ -54,7 +54,7 @@ begin
 			if_axis_in_s => s_if_axis_s_0
 		);
 
-	i_cache : entity ipfix_exporter.cache
+	i_cache : entity ipfix_exporter.ram
 		port map(
 			clk => clk,
 			rst => rst

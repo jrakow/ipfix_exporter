@@ -8,7 +8,7 @@ use ipfix_exporter.pkg_types.all;
 /*!
 This module is the top level for the IPv4 data path.
 
-It instantiates and connects the @ref information_extraction_ipv4, @ref cache_insertion_ipv4, @ref cache, @ref cache_extraction_ipv4, ipfix_message_control_ipv4 and @ref top_export modules.
+It instantiates and connects the @ref information_extraction_ipv4, @ref cache_insertion_ipv4, @ref ram as cache, @ref cache_extraction_ipv4, ipfix_message_control_ipv4 and @ref top_export modules.
  */
 entity top_ipv4_path is
 	port(
@@ -54,7 +54,7 @@ begin
 			if_axis_in_s => s_if_axis_s_0
 		);
 
-	i_cache : entity ipfix_exporter.cache
+	i_cache : entity ipfix_exporter.ram
 		port map(
 			clk => clk,
 			rst => rst
