@@ -24,9 +24,9 @@ One AXIS interface connects the generator to the design under test input, anothe
  */
 entity testbench is
 	generic (
-		g_in_filename  : string := "cases/testbench_00_in.dat";
-		g_out_filename : string := "cases/testbench_00_out.dat";
-		g_emu_filename : string := "cases/testbench_00_emu.dat";
+		g_in_filename  : string := "this should be overwritten";
+		g_out_filename : string := "this should be overwritten";
+		g_emu_filename : string := "this should be overwritten";
 		g_module       : string := "testbench_test_dummy";
 
 		g_in_tdata_width  : natural := 64;
