@@ -4,17 +4,15 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-/*!
-basic file IO and conversion functions for the @ref axis_generator and @ref axis_checker modules
- */
+--! basic file IO and conversion functions for the @ref axis_generator and @ref axis_checker modules
 package pkg_axis_testbench_io is
 	--! convert a hex character to a 4 bit std_ulogic_vector
 	--!
-	--! @param a hexadecimal character `[0-9a-f\-]`. May be `-` (don't care).
+	--! @param c hexadecimal character `[0-9a-f\-]`. May be `-` (don't care).
 	--! @return `X` is returned for invalid inputs
 	function to_std_ulogic_vector(c : character) return std_ulogic_vector;
 
-	--! @brief convert a string of hexadecimal characters to a std_ulogic_vector
+	--! convert a string of hexadecimal characters to a std_ulogic_vector
 	function to_std_ulogic_vector(s : string) return std_ulogic_vector;
 
 	--! given a file descriptor get the first non-empty and non-comment line
@@ -52,7 +50,9 @@ package body pkg_axis_testbench_io is
 			when 'd'    => return x"d";
 			when 'e'    => return x"e";
 			when 'f'    => return x"f";
+--! @cond doxygen cannot handle this
 			when '-'    => return x"-";
+--! @endcond
 			when others => return x"X";
 		end case;
 	end;
