@@ -11,9 +11,7 @@ digraph overview
 	input  [ label="input"  shape=circle ];
 	output [ label="output" shape=circle ];
 
-	selective_dropping          [ label="selective_dropping"          URL="@ref selective_dropping"          ];
-	ethernet_dropping           [ label="ethernet_dropping"           URL="@ref ethernet_dropping"           ];
-	ip_version_split            [ label="ip_version_split"            URL="@ref ip_version_split"            ];
+	top_preparation             [ label="top_preparation"             URL="@ref top_preparation"             ];
 	information_extraction_ipv6 [ label="information_extraction_ipv6" URL="@ref information_extraction_ipv6" ];
 	information_extraction_ipv4 [ label="information_extraction_ipv4" URL="@ref information_extraction_ipv4" ];
 	cache_insertion_ipv6        [ label="cache_insertion_ipv6"        URL="@ref cache_insertion_ipv6"        ];
@@ -38,12 +36,12 @@ digraph overview
 	ethernet_header_ipv4        [ label="ethernet_header"             URL="@ref ethernet_header"             ];
 	axis_combiner               [ label="axis_combiner"               URL="@ref axis_combiner"               ];
 
-	input -> selective_dropping -> ethernet_dropping -> ip_version_split;
-	ip_version_split -> information_extraction_ipv6 -> cache_insertion_ipv6 -> cache_ipv6
+	input -> top_preparation;
+	top_preparation -> information_extraction_ipv6 -> cache_insertion_ipv6 -> cache_ipv6
 		-> cache_extraction_ipv6 -> ipfix_message_control_ipv6
 		-> ipfix_header_ipv6 -> udp_header_ipv6 -> ip_header_ipv6 -> ethertype_insertion_ipv6 -> vlan_insertion_ipv6 -> ethernet_header_ipv6
 		-> axis_combiner;
-	ip_version_split -> information_extraction_ipv4 -> cache_insertion_ipv4 -> cache_ipv4
+	top_preparation -> information_extraction_ipv4 -> cache_insertion_ipv4 -> cache_ipv4
 		-> cache_extraction_ipv4 -> ipfix_message_control_ipv4
 		-> ipfix_header_ipv4 -> udp_header_ipv4 -> ip_header_ipv4 -> ethertype_insertion_ipv4 -> vlan_insertion_ipv4 -> ethernet_header_ipv4
 		-> axis_combiner;

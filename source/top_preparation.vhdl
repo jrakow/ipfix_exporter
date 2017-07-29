@@ -9,6 +9,24 @@ use ipfix_exporter.pkg_types.all;
 This module is the top level for the preparational modules.
 
 It instantiates and connects the @ref selective_dropping, @ref ethernet_dropping and @ref ip_version_split modules.
+
+@dot
+digraph overview
+	{
+	node [shape=box];
+	input  [ label="input"  shape=circle ];
+	output_ipv6 [ label="output_ipv6" shape=circle ];
+	output_ipv4 [ label="output_ipv4" shape=circle ];
+
+	selective_dropping          [ label="selective_dropping" URL="@ref selective_dropping" ];
+	ethernet_dropping           [ label="ethernet_dropping"  URL="@ref ethernet_dropping"  ];
+	ip_version_split            [ label="ip_version_split"   URL="@ref ip_version_split"   ];
+
+	input -> selective_dropping -> ethernet_dropping -> ip_version_split;
+	ip_version_split -> output_ipv6;
+	ip_version_split -> output_ipv4;
+	}
+@enddot
  */
 entity top_preparation is
 	port(
