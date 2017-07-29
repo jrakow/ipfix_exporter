@@ -37,7 +37,7 @@ entity cpu_emulator is
 		address      : out std_ulogic_vector(31 downto 0);
 		read_valid   : in  std_ulogic;
 
-		finished : out std_ulogic
+		finished : out boolean
 	);
 end entity;
 
@@ -61,7 +61,7 @@ begin
 				write_enable <= '0';
 				data_out     <= (others => '0');
 				address      <= (others => '0');
-				finished     <= '0';
+				finished     <= false;
 				s_verifying  <= '0';
 			else
 				if s_verifying then
@@ -112,7 +112,7 @@ begin
 								null;
 						end case;
 					else
-						finished         <= '1';
+						finished <= true;
 					end if;
 				end if;
 			end if;

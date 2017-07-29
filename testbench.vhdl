@@ -66,11 +66,11 @@ architecture arch of testbench is
 	signal s_address      : std_ulogic_vector(31 downto 0);
 	signal s_read_valid   : std_ulogic;
 
-	signal s_generator_start    : std_ulogic := '0';
-	signal s_checker_start      : std_ulogic := '0';
-	signal s_generator_finished : std_ulogic;
-	signal s_checker_finished   : std_ulogic;
-	signal s_emulator_finished  : std_ulogic;
+	signal s_generator_start    : boolean := false;
+	signal s_checker_start      : boolean := false;
+	signal s_generator_finished : boolean;
+	signal s_checker_finished   : boolean;
+	signal s_emulator_finished  : boolean;
 begin
 	s_clk <= not s_clk after g_period / 2;
 
@@ -80,15 +80,15 @@ begin
 		wait until rising_edge(s_clk);
 		s_rst <= '0';
 
-		wait until rising_edge(s_clk) and s_emulator_finished = '1';
+		wait until rising_edge(s_clk) and s_emulator_finished;
 		report "emulator finished";
 
-		s_generator_start <= '1';
-		s_checker_start   <= '1';
+		s_generator_start <= true;
+		s_checker_start   <= true;
 
-		wait until rising_edge(s_clk) and s_generator_finished = '1';
+		wait until rising_edge(s_clk) and s_generator_finished;
 		report "generator finished";
-		wait until rising_edge(s_clk) and s_checker_finished = '1';
+		wait until rising_edge(s_clk) and s_checker_finished;
 		report "checker finished";
 		-- exit without failure
 		stop(0);

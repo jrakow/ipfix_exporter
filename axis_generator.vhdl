@@ -35,9 +35,9 @@ entity axis_generator is
 		g_tvalid_ratio  : real
 	);
 	port(
-		clk   : in  std_ulogic;
-		rst   : in  std_ulogic;
-		start : in std_ulogic;
+		clk   : in std_ulogic;
+		rst   : in std_ulogic;
+		start : in boolean;
 
 		if_axis_m_tdata  : out std_ulogic_vector(g_tdata_width     - 1 downto 0);
 		if_axis_m_tkeep  : out std_ulogic_vector(g_tdata_width / 8 - 1 downto 0);
@@ -45,7 +45,7 @@ entity axis_generator is
 		if_axis_m_tvalid : out std_ulogic;
 		if_axis_s_tready : in  std_ulogic;
 
-		finished : out std_ulogic := '0'
+		finished : out boolean := false
 	);
 end entity;
 
@@ -62,15 +62,15 @@ begin
 		variable random_seed_1 : positive := g_random_seed_1;
 		variable random        : real;
 	begin
-		if rising_edge(clk) and start = '1' then
+		if rising_edge(clk) and start then
 			if rst = '1' then
 				if_axis_m_tdata  <= (others => '0');
 				if_axis_m_tvalid <= '0';
-				finished         <= '0';
+				finished         <= false;
 				s_first_frame    <= true;
 			else
 				uniform(random_seed_0, random_seed_1, random);
-				if random < g_tvalid_ratio and finished = '0' then
+				if random < g_tvalid_ratio and not finished then
 					if_axis_m_tvalid <= '1';
 				else
 					if_axis_m_tvalid <= '0';
@@ -89,7 +89,7 @@ begin
 						if_axis_m_tvalid <= '0';
 						if_axis_m_tkeep  <= (others => '0');
 						if_axis_m_tlast  <= '0';
-						finished         <= '1';
+						finished         <= true;
 					else
 						-- get frame
 						if stimulus_line'length >= frame_string'length then

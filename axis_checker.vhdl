@@ -49,7 +49,7 @@ entity axis_checker is
 	port(
 		clk   : in std_ulogic;
 		rst   : in std_ulogic;
-		start : in std_ulogic;
+		start : in boolean;
 
 		if_axis_m_tdata  : in  std_ulogic_vector(g_tdata_width     - 1 downto 0);
 		if_axis_m_tkeep  : in  std_ulogic_vector(g_tdata_width / 8 - 1 downto 0);
@@ -57,7 +57,7 @@ entity axis_checker is
 		if_axis_m_tvalid : in  std_ulogic;
 		if_axis_s_tready : out std_ulogic;
 
-		finished         : out std_ulogic := '0'
+		finished         : out boolean := false
 	);
 end entity;
 
@@ -77,13 +77,13 @@ begin
 		variable random_seed_1 : positive := g_random_seed_1;
 		variable random        : real;
 	begin
-		if rising_edge(clk) and start = '1' then
+		if rising_edge(clk) and start  then
 			if rst = '1' then
 				if_axis_s_tready <= '0';
-				finished         <= '0';
+				finished         <= false;
 			else
 				uniform(random_seed_0, random_seed_1, random);
-				if random < g_tready_ratio and finished = '0' then
+				if random < g_tready_ratio and not finished then
 					if_axis_s_tready <= '1';
 				else
 					if_axis_s_tready <= '0';
@@ -95,7 +95,7 @@ begin
 					-- no more lines in file
 					if check_line = null then
 						if_axis_s_tready <= '0';
-						finished         <= '1';
+						finished         <= true;
 					end if;
 				end if;
 
