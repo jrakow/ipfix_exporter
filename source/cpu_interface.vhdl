@@ -230,12 +230,11 @@ begin
 					when x"CC" => s_counter_array(23) <= unsigned(data_out);
 					when x"D0" => s_counter_array(24) <= unsigned(data_out);
 					when x"D4" => s_counter_array(25) <= unsigned(data_out);
-					when x"D8" => s_counter_array(26) <= unsigned(data_out);
 					when others =>
 				end case;
 			end if;
 			if rst /= c_reset_active then
-				for i in 0 to c_number_of_counters loop
+				for i in 0 to c_number_of_counters - 1 loop
 					if events(i) then
 						s_counter_array(i) <= s_counter_array(i) + 1;
 					end if;
