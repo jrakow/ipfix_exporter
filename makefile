@@ -19,7 +19,7 @@ testbench: ${TESTBENCH_SRCS}
 
 .PHONY: clean
 clean:
-	rm -f ${TESTBENCH_SRCS:.vhdl=.o} testbench.o e~testbench.o axis_testbench-obj08.cf testbench testbench.ghw
+	rm -f ${TESTBENCH_SRCS:.vhdl=.o} testbench.o e~testbench.o axis_testbench-obj08.cf testbench testbench.ghw html
 
 .PHONY: run
 run testbench.ghw: testbench cases/*
@@ -28,3 +28,7 @@ run testbench.ghw: testbench cases/*
 .PHONY: wave
 wave: testbench.ghw
 	gtkwave testbench.ghw --save waveform.gtkw
+
+.PHONY: html
+html:
+	doxygen
