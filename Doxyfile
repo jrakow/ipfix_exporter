@@ -5,7 +5,8 @@ OPTIMIZE_OUTPUT_VHDL = YES
 INPUT = \
 	doc/data_types.md \
 	doc/modules.md \
-	readme.md
+	readme.md \
+	source
 RECURSIVE = YES
 USE_MDFILE_AS_MAINPAGE = readme.md
 
