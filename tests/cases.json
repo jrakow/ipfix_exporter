@@ -10,5 +10,15 @@
 			{ "number" : "01" , "invert" : false, "title" : "single tagged ethernet frame, various sizes" },
 			{ "number" : "02" , "invert" : false, "title" : "double tagged ethernet frame, various sizes" }
 		]
+	},
+	{
+		"name" : "selective_dropping",
+		"g_in_tdata_width" : 128,
+		"g_out_tdata_width" : 128,
+		"cases" :
+		[
+			{ "number" : "00" , "invert" : false, "title" : "dropping enabled" },
+			{ "number" : "01" , "invert" : false, "title" : "dropping disabled" }
+		]
 	}
 ]
