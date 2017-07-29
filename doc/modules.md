@@ -123,12 +123,18 @@ This module prefixes an IPv6 or IPv4 header.
 
 The IP version may be set at runtime.
 
-## VLAN / Ethertype insertion
+## Ethertype insertion
 * AXIS in: IP packet
+* AXIS out: IP packet with Ethertype
+
+This module inserts the Ethertype field.
+
+## VLAN insertion
+* AXIS in: IP packet with Ethertype
 * configuration in: `number_of_vlans`, `vlan0`, `vlan1`
 * AXIS out: IP packet with VLAN tags
 
-This module inserts VLAN tags and the Ethertype field.
+This module inserts VLAN tags.
 
 The IP packet is prefixed by one or more VLAN tags.
 `vlan0` is the earliest tag.
