@@ -16,8 +16,8 @@ digraph overview
 	information_extraction_ipv4 [ label="information_extraction_ipv4" URL="@ref information_extraction_ipv4" ];
 	cache_insertion_ipv6        [ label="cache_insertion_ipv6"        URL="@ref cache_insertion_ipv6"        ];
 	cache_insertion_ipv4        [ label="cache_insertion_ipv4"        URL="@ref cache_insertion_ipv4"        ];
-	cache_ipv6                  [ label="cache"                       URL="@ref cache" shape=octagon         ];
-	cache_ipv4                  [ label="cache"                       URL="@ref cache" shape=octagon         ];
+	cache_ipv6                  [ label="cache"                       URL="@ref ram" shape=octagon           ];
+	cache_ipv4                  [ label="cache"                       URL="@ref ram" shape=octagon           ];
 	cache_extraction_ipv6       [ label="cache_extraction_ipv6"       URL="@ref cache_extraction_ipv6"       ];
 	cache_extraction_ipv4       [ label="cache_extraction_ipv4"       URL="@ref cache_extraction_ipv4"       ];
 	ipfix_message_control_ipv6  [ label="ipfix_message_control_ipv6"  URL="@ref ipfix_message_control_ipv6"  ];
