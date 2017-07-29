@@ -16,7 +16,11 @@ There are two supported actions conforming to the following format:
 * `verify address data` : read from address and compare with data. Fail if not equal.
 * `write address data` : write data to address.
 
-`address` and `data` are not prefixed eight character hexadecimal literals, e. g. `verify 01234567 89abcde`, `write 01234567 89abcde`
+`address` and `data` are not prefixed eight character hexadecimal literals.
+
+Examples:
+* `verify 01234567 89abcdef`
+* `write 01234567 89abcdef`
  */
 entity cpu_emulator is
 	generic(
