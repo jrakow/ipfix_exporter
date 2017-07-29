@@ -33,7 +33,7 @@ if __name__ == "__main__":
 				eprint(" expecting failure", end="")
 			eprint()
 
-			case_filename_stub = module["name"] + "_" + case["number"]
+			case_filename_stub = module["name"] + "/" + case["number"]
 			args = ["./testbench",
 			        "--wave=waveforms/" + case_filename_stub + ".ghw",
 			        "-gg_in_filename=cases/" + case_filename_stub + "_in.dat",
