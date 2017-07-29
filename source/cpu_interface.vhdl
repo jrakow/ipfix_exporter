@@ -40,7 +40,7 @@ entity cpu_interface is
 		vlan_config            : out t_vlan_config;
 		ethernet_config        : out t_ethernet_config;
 
-		events : std_ulogic_vector(c_number_of_counters - 1 downto 0)
+		events : in std_ulogic_vector(c_number_of_counters - 1 downto 0)
 	);
 end entity;
 

@@ -11,7 +11,13 @@ use ieee.numeric_std.all;
 
 package pkg_types is
 	constant c_reset_active       : std_ulogic := '1';
-	constant c_number_of_counters : natural := 27;
+
+	constant c_number_of_counters_preparation : natural := 3;
+	constant c_number_of_counters_collect     : natural := 4;
+	constant c_number_of_counters_export      : natural := 7;
+	constant c_number_of_counters             : natural := c_number_of_counters_preparation
+	                                                       + 2 * (c_number_of_counters_collect + c_number_of_counters_export)
+	                                                       + 1; -- combined output frames
 
 	subtype t_timeout is unsigned(15 downto 0);
 

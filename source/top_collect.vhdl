@@ -43,10 +43,11 @@ entity top_collect is
 		if_axis_out_s : in  t_if_axis_s;
 
 		cpu_timestamp              : in  t_timestamp;
-		cpu_collision_event        : out std_ulogic;
 		cpu_cache_active_timeout   : in  t_timeout;
 		cpu_cache_inactive_timeout : in  t_timeout;
-		cpu_ipfix_message_timeout  : in  t_timeout
+		cpu_ipfix_message_timeout  : in  t_timeout;
+
+		events : out std_ulogic_vector(c_number_of_counters_collect - 1 downto 0)
 	);
 end entity;
 
@@ -70,7 +71,14 @@ architecture arch of top_collect is
 	signal s_addr_b         : std_ulogic_vector(g_addr_width - 1 downto 0);
 	signal s_data_in_b      : std_ulogic_vector(g_record_width - 1 downto 0);
 	signal s_data_out_b     : std_ulogic_vector(g_record_width - 1 downto 0);
+
+	signal s_collision_event : std_logic;
 begin
+	events(0) <= if_axis_in_m.tvalid and if_axis_in_m.tlast and if_axis_in_s.tready;
+	events(1) <= s_if_axis_m_tvalid_0 and s_if_axis_s_0.tready;
+	events(2) <= s_collision_event;
+	events(3) <= s_if_axis_m_tvalid_1 and s_if_axis_s_1.tready;
+
 	i_information_extraction : entity ipfix_exporter.information_extraction
 		generic map (
 			g_record_width => g_record_width
@@ -108,7 +116,7 @@ begin
 			data_in      => s_data_in_a      ,
 			data_out     => s_data_out_a     ,
 
-			cpu_collision_event => cpu_collision_event
+			cpu_collision_event => s_collision_event
 		);
 
 	i_cache : entity ipfix_exporter.ram

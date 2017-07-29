@@ -44,7 +44,9 @@ entity top_preparation is
 		if_axis_out_ipv4_s : in  t_if_axis_s;
 
 		cpu_drop_source_mac_enable : in std_ulogic;
-		cpu_ethernet_config        : in t_ethernet_config
+		cpu_ethernet_config        : in t_ethernet_config;
+
+		events : out std_ulogic_vector(c_number_of_counters_preparation - 1 downto 0)
 	);
 end entity;
 
@@ -55,6 +57,10 @@ architecture arch of top_preparation is
 	signal s_if_axis_m_1 : t_if_axis_frame_m;
 	signal s_if_axis_s_1 : t_if_axis_s;
 begin
+	events(0) <= if_axis_in_m.tvalid and if_axis_in_m.tlast and if_axis_in_s.tready;
+	events(1) <= s_if_axis_m_0.tvalid and s_if_axis_m_0.tlast and s_if_axis_s_0.tready;
+	events(2) <= s_if_axis_m_1.tvalid and s_if_axis_m_1.tlast and s_if_axis_s_1.tready;
+
 	i_selective_dropping : entity ipfix_exporter.selective_dropping
 		port map(
 			clk           => clk,

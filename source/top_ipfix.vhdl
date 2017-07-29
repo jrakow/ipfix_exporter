@@ -23,7 +23,14 @@ entity top_ipfix is
 		if_axis_in_s : out t_if_axis_s;
 
 		if_axis_out_m : out t_if_axis_frame_m;
-		if_axis_out_s : in  t_if_axis_s
+		if_axis_out_s : in  t_if_axis_s;
+
+		read_enable  : in  std_ulogic;
+		write_enable : in  std_ulogic;
+		data_in      : out std_ulogic_vector(31 downto 0);
+		data_out     : in  std_ulogic_vector(31 downto 0);
+		address      : in  std_ulogic_vector(31 downto 0);
+		read_valid   : out std_ulogic
 	);
 end entity;
 
@@ -44,8 +51,6 @@ architecture arch of top_ipfix is
 
 	signal s_cpu_drop_source_mac_enable : std_ulogic;
 	signal s_cpu_timestamp              : t_timestamp;
-	signal s_cpu_collision_event_ipv6   : std_ulogic;
-	signal s_cpu_collision_event_ipv4   : std_ulogic;
 	signal s_cpu_cache_active_timeout   : t_timeout;
 	signal s_cpu_cache_inactive_timeout : t_timeout;
 	signal s_cpu_ipfix_message_timeout  : t_timeout;
@@ -55,7 +60,11 @@ architecture arch of top_ipfix is
 	signal s_cpu_ip_config              : t_ip_config;
 	signal s_cpu_vlan_config            : t_vlan_config;
 	signal s_cpu_ethernet_config        : t_ethernet_config;
+
+	signal s_events : std_logic_vector(c_number_of_counters - 1 downto 0);
 begin
+	s_events(3) <= if_axis_out_m.tvalid and if_axis_out_m.tlast and if_axis_out_s.tready;
+
 	i_top_preparation : entity ipfix_exporter.top_preparation
 		port map(
 			clk                => clk,
@@ -71,7 +80,9 @@ begin
 			if_axis_out_ipv4_s => s_if_axis_ipv4_s_0,
 
 			cpu_drop_source_mac_enable => s_cpu_drop_source_mac_enable,
-			cpu_ethernet_config        => s_cpu_ethernet_config
+			cpu_ethernet_config        => s_cpu_ethernet_config,
+
+			events => s_events(2 downto 0)
 		);
 
 	i_top_collect_ipv6 : entity ipfix_exporter.top_collect
@@ -90,10 +101,11 @@ begin
 			if_axis_out_s => s_if_axis_ipv6_s_1,
 
 			cpu_timestamp              => s_cpu_timestamp,
-			cpu_collision_event        => s_cpu_collision_event_ipv6,
 			cpu_cache_active_timeout   => s_cpu_cache_active_timeout,
 			cpu_cache_inactive_timeout => s_cpu_cache_inactive_timeout,
-			cpu_ipfix_message_timeout  => s_cpu_ipfix_message_timeout
+			cpu_ipfix_message_timeout  => s_cpu_ipfix_message_timeout,
+
+			events => s_events(7 downto 4)
 		);
 
 	i_top_collect_ipv4 : entity ipfix_exporter.top_collect
@@ -112,10 +124,11 @@ begin
 			if_axis_out_s => s_if_axis_ipv4_s_1,
 
 			cpu_timestamp              => s_cpu_timestamp,
-			cpu_collision_event        => s_cpu_collision_event_ipv4,
 			cpu_cache_active_timeout   => s_cpu_cache_active_timeout,
 			cpu_cache_inactive_timeout => s_cpu_cache_inactive_timeout,
-			cpu_ipfix_message_timeout  => s_cpu_ipfix_message_timeout
+			cpu_ipfix_message_timeout  => s_cpu_ipfix_message_timeout,
+
+			events => s_events(18 downto 15)
 		);
 
 	i_top_export_ipv6 : entity ipfix_exporter.top_export
@@ -134,7 +147,9 @@ begin
 			cpu_udp_config      => s_cpu_udp_config,
 			cpu_ip_config       => s_cpu_ip_config,
 			cpu_vlan_config     => s_cpu_vlan_config,
-			cpu_ethernet_config => s_cpu_ethernet_config
+			cpu_ethernet_config => s_cpu_ethernet_config,
+
+			events => s_events(14 downto 8)
 		);
 
 	i_top_export_ipv4 : entity ipfix_exporter.top_export
@@ -153,7 +168,9 @@ begin
 			cpu_udp_config      => s_cpu_udp_config,
 			cpu_ip_config       => s_cpu_ip_config,
 			cpu_vlan_config     => s_cpu_vlan_config,
-			cpu_ethernet_config => s_cpu_ethernet_config
+			cpu_ethernet_config => s_cpu_ethernet_config,
+
+			events => s_events(25 downto 19)
 		);
 
 	i_axis_combiner : entity ipfix_exporter.axis_combiner
@@ -169,5 +186,31 @@ begin
 
 			if_axis_out_m  => if_axis_out_m,
 			if_axis_out_s  => if_axis_out_s
+		);
+
+	i_cpu_interface : entity ipfix_exporter.cpu_interface
+		port map(
+			clk                    => clk,
+			rst                    => rst,
+
+			read_enable            => read_enable,
+			write_enable           => write_enable,
+			data_in                => data_in,
+			data_out               => data_out,
+			address                => address,
+			read_valid             => read_valid,
+
+			drop_source_mac_enable => s_cpu_drop_source_mac_enable,
+			timestamp              => s_cpu_timestamp,
+			cache_active_timeout   => s_cpu_cache_active_timeout,
+			cache_inactive_timeout => s_cpu_cache_inactive_timeout,
+			ipfix_message_timeout  => s_cpu_ipfix_message_timeout,
+			ipfix_config_ipv6      => s_cpu_ipfix_config_ipv6,
+			ipfix_config_ipv4      => s_cpu_ipfix_config_ipv4,
+			udp_config             => s_cpu_udp_config,
+			ip_config              => s_cpu_ip_config,
+			vlan_config            => s_cpu_vlan_config,
+			ethernet_config        => s_cpu_ethernet_config,
+			events                 => s_events
 		);
 end architecture;
