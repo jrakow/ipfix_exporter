@@ -158,7 +158,6 @@ begin
 
 	p_timeout : process
 	begin
-		report "timeout started";
 		wait for g_timeout;
 		assert false report "timeout reached" severity failure;
 		stop(1);
