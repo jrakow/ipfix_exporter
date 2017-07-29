@@ -36,9 +36,9 @@ The following registers are provided for reading and writing by the CPU:
 | Offset | Content                                         |
 | -----: | ----------------------------------------------- |
 | `0x70` | input frames                                    |
-| `0x74` | frames after @ref axis_combiner (output frames) |
-| `0x78` | frames after @ref selective_dropping            |
-| `0x7C` | frames after @ref ethernet_dropping             |
+| `0x74` | frames after @ref selective_dropping            |
+| `0x78` | frames after @ref ethernet_dropping             |
+| `0x7C` | frames after @ref axis_combiner (output frames) |
 | `0x80` | IPv6 frames after @ref ip_version_split         |
 | `0x84` | IPv6 flows after @ref information_extraction    |
 | `0x88` | IPv6 flow hash collisions                       |
