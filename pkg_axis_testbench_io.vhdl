@@ -57,7 +57,7 @@ package body pkg_axis_testbench_io is
 		variable ret : std_ulogic_vector(0 to s'length * 4 - 1);
 	begin
 		for i in 0 to s'length - 1 loop
-			ret(i * 4 to (i + 1) * 4 - 1) := to_std_ulogic_vector(s(i));
+			ret(i * 4 to (i + 1) * 4 - 1) := to_std_ulogic_vector(s(s'left + i));
 		end loop;
 		return ret;
 	end;
