@@ -49,7 +49,7 @@ begin
 	p_checker : process(clk)
 		file emu_file     : text open read_mode is g_filename;
 		variable emu_line : line;
-		variable emu_string : string(0 to c_line_max_length - 1);
+		variable emu_string : string(1 to c_line_max_length);
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then
@@ -65,8 +65,8 @@ begin
 						report "cpu read not valid at address 0x" & to_hstring(address)
 						severity failure;
 --! @cond doxygen cannot handle ?=
-					assert(data_in ?= to_std_ulogic_vector(emu_string(16 to 23)))
-						report "cpu read data is 0x" & to_hstring(data_in) & " should be 0x" & emu_string(16 to 23)
+					assert(data_in ?= to_std_ulogic_vector(emu_string(17 to 24)))
+						report "cpu read data is 0x" & to_hstring(data_in) & " should be 0x" & emu_string(17 to 24)
 						severity failure;
 --! @endcond
 				else
@@ -76,21 +76,21 @@ begin
 						read(emu_line, emu_string);
 						read_enable  <= '0';
 						write_enable <= '0';
-						case emu_string(0 to 5) is
+						case emu_string(1 to 6) is
 							when "verify" =>
 								-- "verify aaaabbbb ccccdddd"
-								--  0         1         2
-								--  012345 78901234 67890123
+								--           1         2
+								--  123456 89012345 78901234
 								read_enable <= '1';
 								s_verifying <= '1';
-								address     <= to_std_ulogic_vector(emu_string(7 to 14));
+								address     <= to_std_ulogic_vector(emu_string(8 to 15));
 							when "write " =>
 								-- "write aaaabbbb ccccdddd"
-								--  0         1         2
-								--  01234 67890123 56789012
+								--           1         2
+								--  12345 78901234 67890123
 								write_enable <= '1';
-								address      <= to_std_ulogic_vector(emu_string( 6 to 13));
-								data_out     <= to_std_ulogic_vector(emu_string(15 to 22));
+								address      <= to_std_ulogic_vector(emu_string( 7 to 14));
+								data_out     <= to_std_ulogic_vector(emu_string(16 to 23));
 							when others =>
 								null;
 						end case;
