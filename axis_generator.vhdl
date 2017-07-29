@@ -4,6 +4,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use ieee.math_real.all;
+
 library axis_testbench;
 use axis_testbench.pkg_axis_testbench_io.all;
 
@@ -20,14 +22,17 @@ If the last line has been sent, the generator is finished.
 
 As the generator is not checking anything, it may not fail.
 
-A future version should support switching `tvalid` on and off randomly.
-The duty cycle should be accepted by a generic.
+`tvalid` is switched on and off randomly.
+The duty cycle is accepted by generic.
 This is needed to test whether an implementation of the AXIS protocol is correct.
  */
 entity axis_generator is
 	generic(
-		g_filename    : string;
-		g_tdata_width : natural
+		g_filename      : string;
+		g_tdata_width   : natural;
+		g_random_seed_0 : positive;
+		g_random_seed_1 : positive;
+		g_tvalid_ratio  : real
 	);
 	port(
 		clk   : in  std_ulogic;
@@ -40,7 +45,7 @@ entity axis_generator is
 		if_axis_m_tvalid : out std_ulogic;
 		if_axis_s_tready : in  std_ulogic;
 
-		finished : out std_ulogic
+		finished : out std_ulogic := '0'
 	);
 end entity;
 
@@ -52,6 +57,10 @@ begin
 		variable stimulus_line : line;
 
 		variable frame_string  : string(1 to g_tdata_width / 4);
+
+		variable random_seed_0 : positive := g_random_seed_0;
+		variable random_seed_1 : positive := g_random_seed_1;
+		variable random        : real;
 	begin
 		if rising_edge(clk) and start = '1' then
 			if rst = '1' then
@@ -60,27 +69,29 @@ begin
 				finished         <= '0';
 				s_first_frame    <= true;
 			else
-				if_axis_m_tvalid <= '1';
+				uniform(random_seed_0, random_seed_1, random);
+				if random < g_tvalid_ratio and finished = '0' then
+					if_axis_m_tvalid <= '1';
+				else
+					if_axis_m_tvalid <= '0';
+				end if;
 
 				-- line empty so get new line
 				if stimulus_line = null then
 					get_line_from_file(stimulus_file, stimulus_line);
-					-- no more lines in file
-					-- end condition is independent of tvalid
-					if stimulus_line = null then
-						if_axis_m_tvalid <= '0';
-						if_axis_m_tkeep  <= (others => '0');
-						if_axis_m_tlast  <= '0';
-						finished         <= '1';
-					end if;
 				end if;
 
 				if s_first_frame or (if_axis_m_tvalid = '1' and if_axis_s_tready = '1') then
 					s_first_frame <= false;
 
-					-- get frame
-					-- condition only needed if finished
-					if stimulus_line /= null then
+					-- no more lines in file
+					if stimulus_line = null then
+						if_axis_m_tvalid <= '0';
+						if_axis_m_tkeep  <= (others => '0');
+						if_axis_m_tlast  <= '0';
+						finished         <= '1';
+					else
+						-- get frame
 						if stimulus_line'length >= frame_string'length then
 							if_axis_m_tkeep <= (others => '1');
 							read(stimulus_line, frame_string);

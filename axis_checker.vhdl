@@ -5,6 +5,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use ieee.math_real.all;
+
 library axis_testbench;
 use axis_testbench.pkg_axis_testbench_io.all;
 
@@ -32,14 +34,17 @@ The following condition is unchecked.
 * More data is send than expected.
   There is no deterministic way of checking for this as more data may arrive at an arbitrary point in time.
 
-A future version should support switching `tready` on and off randomly.
-The duty cycle should be accepted by a generic.
+`tready` is switched on and off randomly.
+The duty cycle is accepted by generic.
 This is needed to test whether an implementation of the AXIS protocol is correct.
  */
 entity axis_checker is
 	generic(
-		g_filename    : string;
-		g_tdata_width : natural
+		g_filename      : string;
+		g_tdata_width   : natural;
+		g_random_seed_0 : positive;
+		g_random_seed_1 : positive;
+		g_tready_ratio  : real
 	);
 	port(
 		clk   : in std_ulogic;
@@ -52,7 +57,7 @@ entity axis_checker is
 		if_axis_m_tvalid : in  std_ulogic;
 		if_axis_s_tready : out std_ulogic;
 
-		finished         : out std_ulogic
+		finished         : out std_ulogic := '0'
 	);
 end entity;
 
@@ -67,19 +72,27 @@ begin
 		variable tlast_expected : std_ulogic := '0';
 
 		variable success : boolean := true;
+
+		variable random_seed_0 : positive := g_random_seed_0;
+		variable random_seed_1 : positive := g_random_seed_1;
+		variable random        : real;
 	begin
 		if rising_edge(clk) and start = '1' then
 			if rst = '1' then
 				if_axis_s_tready <= '0';
 				finished         <= '0';
 			else
-				if_axis_s_tready <= '1';
+				uniform(random_seed_0, random_seed_1, random);
+				if random < g_tready_ratio and finished = '0' then
+					if_axis_s_tready <= '1';
+				else
+					if_axis_s_tready <= '0';
+				end if;
 
 				-- line empty so get new line
 				if check_line = null then
 					get_line_from_file(check_file, check_line);
 					-- no more lines in file
-					-- end condition is independent of tvalid
 					if check_line = null then
 						if_axis_s_tready <= '0';
 						finished         <= '1';

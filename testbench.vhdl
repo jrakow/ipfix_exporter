@@ -32,6 +32,13 @@ entity testbench is
 		g_in_tdata_width  : natural := 64;
 		g_out_tdata_width : natural := 64;
 
+		g_random_tvalid_seed_0 : positive := 1;
+		g_random_tvalid_seed_1 : positive := 2;
+		g_random_tready_seed_0 : positive := 3;
+		g_random_tready_seed_1 : positive := 4;
+		g_tvalid_ratio         : real     := 0.5;
+		g_tready_ratio         : real     := 0.5;
+
 		g_period  : time := 10 ns;
 		g_timeout : time :=  1 ms
 	);
@@ -89,8 +96,11 @@ begin
 
 	i_axis_generator : entity axis_testbench.axis_generator
 		generic map(
-			g_filename    => g_in_filename,
-			g_tdata_width => g_in_tdata_width
+			g_filename      => g_in_filename,
+			g_tdata_width   => g_in_tdata_width,
+			g_random_seed_0 => g_random_tvalid_seed_0,
+			g_random_seed_1 => g_random_tvalid_seed_1,
+			g_tvalid_ratio  => g_tvalid_ratio
 		)
 		port map(
 			clk              => s_clk,
@@ -107,7 +117,10 @@ begin
 	i_axis_checker : entity axis_testbench.axis_checker
 		generic map(
 			g_filename          => g_out_filename,
-			g_tdata_width       => g_out_tdata_width
+			g_tdata_width       => g_out_tdata_width,
+			g_random_seed_0     => g_random_tready_seed_0,
+			g_random_seed_1     => g_random_tready_seed_1,
+			g_tready_ratio      => g_tready_ratio
 		)
 		port map(
 			clk              => s_clk,
