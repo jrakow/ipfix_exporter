@@ -32,11 +32,15 @@ architecture arch of top_ipfix is
 	signal s_if_axis_ipv6_s_0 : t_if_axis_s;
 	signal s_if_axis_ipv6_m_1 : t_if_axis_frame_m;
 	signal s_if_axis_ipv6_s_1 : t_if_axis_s;
+	signal s_if_axis_ipv6_m_2 : t_if_axis_frame_m;
+	signal s_if_axis_ipv6_s_2 : t_if_axis_s;
 
 	signal s_if_axis_ipv4_m_0 : t_if_axis_frame_m;
 	signal s_if_axis_ipv4_s_0 : t_if_axis_s;
 	signal s_if_axis_ipv4_m_1 : t_if_axis_frame_m;
 	signal s_if_axis_ipv4_s_1 : t_if_axis_s;
+	signal s_if_axis_ipv4_m_2 : t_if_axis_frame_m;
+	signal s_if_axis_ipv4_s_2 : t_if_axis_s;
 begin
 	i_top_preparation : entity ipfix_exporter.top_preparation
 		port map(
@@ -85,16 +89,40 @@ begin
 			if_axis_out_s => s_if_axis_ipv4_s_1
 		);
 
+	i_top_export_ipv6 : entity ipfix_exporter.top_export
+		port map(
+			clk           => clk,
+			rst           => rst,
+
+			if_axis_in_m  => s_if_axis_ipv6_m_1,
+			if_axis_in_s  => s_if_axis_ipv6_s_1,
+
+			if_axis_out_m => s_if_axis_ipv6_m_2,
+			if_axis_out_s => s_if_axis_ipv6_s_2
+		);
+
+	i_top_export_ipv4 : entity ipfix_exporter.top_export
+		port map(
+			clk           => clk,
+			rst           => rst,
+
+			if_axis_in_m  => s_if_axis_ipv4_m_1,
+			if_axis_in_s  => s_if_axis_ipv4_s_1,
+
+			if_axis_out_m => s_if_axis_ipv4_m_2,
+			if_axis_out_s => s_if_axis_ipv4_s_2
+		);
+
 	i_axis_combiner : entity ipfix_exporter.axis_combiner
 		port map(
 			clk            => clk,
 			rst            => rst,
 
-			if_axis_in_m_0 => s_if_axis_ipv6_m_1,
-			if_axis_in_s_0 => s_if_axis_ipv6_s_1,
+			if_axis_in_m_0 => s_if_axis_ipv6_m_2,
+			if_axis_in_s_0 => s_if_axis_ipv6_s_2,
 
-			if_axis_in_m_1 => s_if_axis_ipv4_m_1,
-			if_axis_in_s_1 => s_if_axis_ipv4_s_1,
+			if_axis_in_m_1 => s_if_axis_ipv4_m_2,
+			if_axis_in_s_1 => s_if_axis_ipv4_s_2,
 
 			if_axis_out_m  => if_axis_out_m,
 			if_axis_out_s  => if_axis_out_s

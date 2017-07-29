@@ -8,7 +8,7 @@ use ipfix_exporter.pkg_types.all;
 /*!
 This module is the top level for the IPv4 data path.
 
-It instantiates and connects the @ref information_extraction, @ref cache_insertion, @ref ram as cache, @ref cache_extraction, ipfix_message_control and @ref top_export modules.
+It instantiates and connects the @ref information_extraction, @ref cache_insertion, @ref ram as cache, @ref cache_extraction and @ref ipfix_message_control modules.
  */
 entity top_collect is
 	generic(
@@ -47,9 +47,6 @@ architecture arch of top_collect is
 	signal s_addr_b         : std_ulogic_vector(g_addr_width - 1 downto 0);
 	signal s_data_in_b      : std_ulogic_vector(g_record_width - 1 downto 0);
 	signal s_data_out_b     : std_ulogic_vector(g_record_width - 1 downto 0);
-
-	signal s_if_axis_m_2 : t_if_axis_frame_m;
-	signal s_if_axis_s_2 : t_if_axis_s;
 begin
 	i_information_extraction : entity ipfix_exporter.information_extraction
 		generic map (
@@ -139,18 +136,6 @@ begin
 			if_axis_in_m_tdata  => s_if_axis_m_tdata_1,
 			if_axis_in_m_tvalid => s_if_axis_m_tvalid_1,
 			if_axis_in_s        => s_if_axis_s_1,
-
-			if_axis_out_m => s_if_axis_m_2,
-			if_axis_out_s => s_if_axis_s_2
-		);
-
-	i_top_export : entity ipfix_exporter.top_export
-		port map(
-			clk           => clk,
-			rst           => rst,
-
-			if_axis_in_m  => s_if_axis_m_2,
-			if_axis_in_s  => s_if_axis_s_2,
 
 			if_axis_out_m => if_axis_out_m,
 			if_axis_out_s => if_axis_out_s
