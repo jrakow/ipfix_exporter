@@ -30,22 +30,22 @@ package body pkg_axis_testbench_io is
 	function to_std_ulogic_vector(c : character) return std_ulogic_vector is
 	begin
 		case c is
-			when '0'    => return x"0";
-			when '1'    => return x"1";
-			when '2'    => return x"2";
-			when '3'    => return x"3";
-			when '4'    => return x"4";
-			when '5'    => return x"5";
-			when '6'    => return x"6";
-			when '7'    => return x"7";
-			when '8'    => return x"8";
-			when '9'    => return x"9";
-			when 'a'    => return x"a";
-			when 'b'    => return x"b";
-			when 'c'    => return x"c";
-			when 'd'    => return x"d";
-			when 'e'    => return x"e";
-			when 'f'    => return x"f";
+			when '0'       => return x"0";
+			when '1'       => return x"1";
+			when '2'       => return x"2";
+			when '3'       => return x"3";
+			when '4'       => return x"4";
+			when '5'       => return x"5";
+			when '6'       => return x"6";
+			when '7'       => return x"7";
+			when '8'       => return x"8";
+			when '9'       => return x"9";
+			when 'a' | 'A' => return x"a";
+			when 'b' | 'B' => return x"b";
+			when 'c' | 'C' => return x"c";
+			when 'd' | 'D' => return x"d";
+			when 'e' | 'E' => return x"e";
+			when 'f' | 'F' => return x"f";
 --! @cond doxygen cannot handle '-'
 			when '-'    => return x"-";
 --! @endcond
