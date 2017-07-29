@@ -121,30 +121,35 @@ begin
 			finished         => s_checker_finished
 		);
 
-	i_design_under_test : if g_module = "testbench_test_dummy" generate
-		i_cond_gen : entity axis_testbench.testbench_test_dummy
-			generic map(
-				g_in_tdata_width  => g_in_tdata_width,
-				g_out_tdata_width => g_out_tdata_width
-			)
-			port map(
-				clk                  => s_clk,
-				rst                  => s_rst,
+	i_design_under_test : entity axis_testbench.module_wrapper
+		generic map(
+			g_module          => g_module,
+			g_in_tdata_width  => g_in_tdata_width,
+			g_out_tdata_width => g_out_tdata_width
+		)
+		port map(
+			clk                  => s_clk,
+			rst                  => s_rst,
 
-				if_axis_in_m_tdata   => s_if_axis_in_m_tdata,
-				if_axis_in_m_tkeep   => s_if_axis_in_m_tkeep,
-				if_axis_in_m_tlast   => s_if_axis_in_m_tlast,
-				if_axis_in_m_tvalid  => s_if_axis_in_m_tvalid,
-				if_axis_in_s_tready  => s_if_axis_in_s_tready,
-				if_axis_out_m_tdata  => s_if_axis_out_m_tdata,
-				if_axis_out_m_tkeep  => s_if_axis_out_m_tkeep,
-				if_axis_out_m_tlast  => s_if_axis_out_m_tlast,
-				if_axis_out_m_tvalid => s_if_axis_out_m_tvalid,
-				if_axis_out_s_tready => s_if_axis_out_s_tready
-			);
-		end generate;
+			if_axis_in_m_tdata   => s_if_axis_in_m_tdata,
+			if_axis_in_m_tkeep   => s_if_axis_in_m_tkeep,
+			if_axis_in_m_tlast   => s_if_axis_in_m_tlast,
+			if_axis_in_m_tvalid  => s_if_axis_in_m_tvalid,
+			if_axis_in_s_tready  => s_if_axis_in_s_tready,
 
-	-- paste more modules here
+			if_axis_out_m_tdata  => s_if_axis_out_m_tdata,
+			if_axis_out_m_tkeep  => s_if_axis_out_m_tkeep,
+			if_axis_out_m_tlast  => s_if_axis_out_m_tlast,
+			if_axis_out_m_tvalid => s_if_axis_out_m_tvalid,
+			if_axis_out_s_tready => s_if_axis_out_s_tready,
+
+			read_enable          => s_read_enable,
+			write_enable         => s_write_enable,
+			data_in              => s_data_in,
+			data_out             => s_data_out,
+			address              => s_address,
+			read_valid           => s_read_valid
+		);
 
 	i_cpu_emulator : entity axis_testbench.cpu_emulator
 		generic map(
