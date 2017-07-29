@@ -41,7 +41,8 @@ if __name__ == "__main__":
 			        "-gg_out_tdata_width=" + str(128),
 			        "-gg_check_tkeep_tlast=" + "true",
 			        "-gg_in_filename=cases/" + case_filename_stub + "_in.dat",
-			        "-gg_out_filename=cases/" + case_filename_stub + "_out.dat"
+			        "-gg_out_filename=cases/" + case_filename_stub + "_out.dat",
+			        "-gg_emu_filename=cases/" + case_filename_stub + ".emu",
 			       ]
 			# start subprocess
 			exit = subprocess.call(args, stderr=sys.stdout.buffer)
