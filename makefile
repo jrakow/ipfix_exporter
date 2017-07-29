@@ -18,23 +18,48 @@ all: testbench
 
 testbench: ${TESTBENCH_SRCS}
 	${GHDL} -i ${GHDLFLAGS} --work=axis_testbench ${TESTBENCH_SRCS}
-	${GHDL} -m ${GHDLFLAGS} --work=axis_testbench -o testbench testbench
+	${GHDL} -m ${GHDLFLAGS} --work=axis_testbench -Wc,-fprofile-arcs -Wc,-ftest-coverage -Wc,-fprofile-dir=. -Wl,-lgcov -o testbench testbench
+# gcno are generated as side effect of compiling
+# empty rule
+%.gcno: testbench ;
 
 .PHONY: clean
 clean:
 	rm -rf \
 	       ${TESTBENCH_SRCS:.vhdl=.o} \
+	       ${TESTBENCH_SRCS:.vhdl=.vhdl.gcov} \
+	       ${TESTBENCH_SRCS:.vhdl=.gcno} \
+	       ${TESTBENCH_SRCS:.vhdl=.gcda} \
+	       coverage \
+	       coverage.info \
 	       testbench.o \
 	       e~testbench.o \
+	       e~testbench.gcno \
+	       e~testbench.gcda \
 	       axis_testbench-obj08.cf \
 	       testbench \
 	       waveforms \
 	       html
 
+# use testbench.gcda as dummy for all run results
+# empty rule
+%.gcda : testbench.gcda ;
+
 .PHONY: run
-run: testbench cases/*
+testbench.gcda run: testbench cases/*
 	./run_tests.py
 
 .PHONY: html
 html:
 	doxygen 2>&1 | sed '/.*Elaborating.*/d' | sed '/^$$/d'
+
+%.vhdl.gcov: %.gcda %.gcno testbench.gcda
+	gcov $<
+
+# removing needed because e~testbench is not a source file
+coverage.info: ${TESTBENCH_SRCS:.vhdl=.vhdl.gcov}
+	rm -f e~testbench.gcno e~testbench.gcda
+	lcov -d . --capture --output-file $@
+
+coverage: coverage.info
+	genhtml $< -o $@
