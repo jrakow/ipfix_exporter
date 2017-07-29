@@ -8,14 +8,15 @@
 			{ "number" : "00" , "invert" : false, "title" : "skip comments and empty lines" },
 			{ "number" : "01" , "invert" : true,  "title" : "split frames on tlast" },
 			{ "number" : "02" , "invert" : false, "title" : "check byte order" },
-			{ "number" : "03" , "invert" : true,  "title" : "failure on wrong tkeep" },
+			{ "number" : "03" , "invert" : true,  "title" : "tkeep out too short" },
 			{ "number" : "04" , "invert" : false, "title" : "comparison with don't care" },
 			{ "number" : "05" , "invert" : false, "title" : "cpu interface scratchpad working" },
 			{ "number" : "06" , "invert" : true,  "title" : "cpu interface scratchpad wrong value" },
 			{ "number" : "07" , "invert" : true,  "title" : "cpu interface scratchpad invalid address" },
 			{ "number" : "08" , "invert" : true,  "title" : "cpu emulator wrong command" },
 			{ "number" : "09" , "invert" : true,  "title" : "cpu emulator wrong line length" },
-			{ "number" : "10" , "invert" : true,  "title" : "testbench timeout" }
+			{ "number" : "10" , "invert" : true,  "title" : "testbench timeout" },
+			{ "number" : "11" , "invert" : true,  "title" : "tkeep out too long" }
 		]
 	}
 ]
