@@ -61,6 +61,7 @@ begin
 				write_enable <= '0';
 				data_out     <= (others => '0');
 				address      <= (others => '0');
+				finished     <= '0';
 				s_verifying  <= '0';
 			else
 				if s_verifying then
@@ -73,11 +74,23 @@ begin
 						report "cpu read data is 0x" & to_hstring(data_in) & " should be 0x" & emu_string(17 to 24)
 						severity failure;
 --! @endcond
-				else
+				elsif not finished then
 					get_line_from_file(emu_file, emu_line);
 					-- no more lines in file
 					if emu_line /= null then
-						read(emu_line, emu_string);
+						if emu_line'length = c_line_max_length - 1 then
+							-- "write" line
+							read(emu_line, emu_string(1 to c_line_max_length - 1));
+							emu_string(c_line_max_length) := '1';
+						elsif emu_line'length = c_line_max_length then
+							-- "verify" line
+							read(emu_line, emu_string);
+						else
+							assert false
+								report "emu_line'length " & integer'image(emu_line'length) & " is invalid"
+								severity failure;
+						end if;
+
 						read_enable  <= '0';
 						write_enable <= '0';
 						case emu_string(1 to 6) is
