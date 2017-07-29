@@ -47,9 +47,8 @@ entity axis_checker is
 		g_tready_ratio  : real
 	);
 	port(
-		clk   : in std_ulogic;
-		rst   : in std_ulogic;
-		start : in boolean;
+		clk : in std_ulogic;
+		rst : in std_ulogic;
 
 		if_axis_m_tdata  : in  std_ulogic_vector(g_tdata_width     - 1 downto 0);
 		if_axis_m_tkeep  : in  std_ulogic_vector(g_tdata_width / 8 - 1 downto 0);
@@ -63,7 +62,7 @@ end entity;
 
 architecture arch of axis_checker is
 begin
-	p_checker : process(clk, start)
+	p_checker : process(clk)
 		file check_file     : text open read_mode is g_filename;
 		variable check_line : line;
 
@@ -77,7 +76,7 @@ begin
 		variable random_seed_1 : positive := g_random_seed_1;
 		variable random        : real;
 	begin
-		if rising_edge(clk) and start  then
+		if rising_edge(clk) then
 			if rst = '1' then
 				if_axis_s_tready <= '0';
 				finished         <= false;

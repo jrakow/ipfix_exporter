@@ -66,8 +66,8 @@ architecture arch of testbench is
 	signal s_address      : std_ulogic_vector(31 downto 0);
 	signal s_read_valid   : std_ulogic;
 
-	signal s_generator_start    : boolean := false;
-	signal s_checker_start      : boolean := false;
+	signal s_generator_reset    : std_ulogic;
+	signal s_checker_reset      : std_ulogic;
 	signal s_generator_finished : boolean;
 	signal s_checker_finished   : boolean;
 	signal s_emulator_finished  : boolean;
@@ -83,8 +83,8 @@ begin
 		wait until rising_edge(s_clk) and s_emulator_finished;
 		report "emulator finished";
 
-		s_generator_start <= true;
-		s_checker_start   <= true;
+		s_generator_reset <= '0';
+		s_checker_reset   <= '0';
 
 		wait until rising_edge(s_clk) and s_generator_finished;
 		report "generator finished";
@@ -104,8 +104,7 @@ begin
 		)
 		port map(
 			clk              => s_clk,
-			rst              => s_rst,
-			start            => s_generator_start,
+			rst              => s_generator_reset,
 			if_axis_m_tdata  => s_if_axis_in_m_tdata,
 			if_axis_m_tkeep  => s_if_axis_in_m_tkeep,
 			if_axis_m_tlast  => s_if_axis_in_m_tlast,
@@ -124,8 +123,7 @@ begin
 		)
 		port map(
 			clk              => s_clk,
-			rst              => s_rst,
-			start            => s_checker_start,
+			rst              => s_checker_reset,
 			if_axis_m_tdata  => s_if_axis_out_m_tdata,
 			if_axis_m_tvalid => s_if_axis_out_m_tvalid,
 			if_axis_m_tkeep  => s_if_axis_out_m_tkeep,
