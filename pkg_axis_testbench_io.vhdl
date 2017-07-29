@@ -54,7 +54,7 @@ package body pkg_axis_testbench_io is
 			when 'd'    => return x"d";
 			when 'e'    => return x"e";
 			when 'f'    => return x"f";
---! @cond doxygen cannot handle this
+--! @cond doxygen cannot handle '-'
 			when '-'    => return x"-";
 --! @endcond
 			when others => return x"X";

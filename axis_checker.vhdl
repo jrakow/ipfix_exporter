@@ -114,10 +114,11 @@ begin
 						end if;
 					end if;
 
+--! @cond doxygen cannot handle ?=
 					assert to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata
 						report "tdata is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & frame_string;
 					success := success and ((to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata) = '1');
-
+--! @endcond
 					if g_check_tkeep_tlast then
 						assert tkeep_expected = if_axis_m_tkeep
 							report "tkeep is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & to_hstring(tkeep_expected);
