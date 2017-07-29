@@ -18,8 +18,8 @@ package pkg_types is
 	subtype t_packet_count is unsigned(31 downto 0);
 	subtype t_octet_count  is unsigned(31 downto 0);
 
-	constant c_max_number_of_vlans : natural := 2;
-	subtype t_number_of_vlans is natural range 0 to c_max_number_of_vlans;
+	constant c_number_of_vlans_width : natural := 2;
+	subtype t_number_of_vlans is unsigned(c_number_of_vlans_width - 1 downto 0);
 	subtype t_vlan_tag is std_ulogic_vector(31 downto 0);
 
 	/**
@@ -193,7 +193,7 @@ package pkg_types is
 		tag_1           : t_vlan_tag;
 	end record;
 	constant c_vlan_config_default : t_vlan_config := (
-		number_of_vlans => 0,
+		number_of_vlans => (others => '0'),
 		tag_0           => (others => '0'),
 		tag_1           => (others => '0')
 	);
