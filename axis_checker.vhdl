@@ -121,7 +121,7 @@ begin
 --! @endcond
 					if g_check_tkeep_tlast then
 						assert tkeep_expected = if_axis_m_tkeep
-							report "tkeep is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & to_hstring(tkeep_expected);
+							report "tkeep is 0x" & to_bstring(if_axis_m_tkeep) & " should be 0x" & to_bstring(tkeep_expected);
 						success := success and (tkeep_expected = if_axis_m_tkeep);
 						assert tlast_expected = if_axis_m_tlast
 							report "tlast is 0b" & std_ulogic'image(if_axis_m_tlast) & " should be 0" & std_ulogic'image(tlast_expected);
