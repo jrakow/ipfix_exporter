@@ -16,8 +16,3 @@ Using more or less characters will result in a failed test as the `tkeep` and `t
 ## Test cases
 
 \verbinclude cases.json
-
-| module      | number | description                                    |
-| ----------- | -----: | ---------------------------------------------- |
-| `testbench` |     00 | skip comments and empty lines                  |
-| `testbench` |     01 | split frames on tlast                          |
