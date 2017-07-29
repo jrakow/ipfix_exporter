@@ -776,7 +776,7 @@ INPUT = \
         test_cases.md \
         axis_checker.vhdl \
         axis_generator.vhdl \
-        pkg_test_io.vhdl \
+        pkg_axis_testbench_io.vhdl \
         testbench.vhdl \
         testbench_test_dummy.vhdl \
         cpu_emulator.vhdl
