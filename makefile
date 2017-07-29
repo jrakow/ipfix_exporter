@@ -7,6 +7,7 @@ TESTBENCH_SRCS := pkg_axis_testbench_io.vhdl \
                   axis_checker.vhdl \
                   axis_generator.vhdl \
                   cpu_emulator.vhdl \
+                  module_wrapper.vhdl \
                   testbench.vhdl \
                   testbench_test_dummy.vhdl
 
