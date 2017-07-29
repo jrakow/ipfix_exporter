@@ -48,7 +48,9 @@ architecture arch of cpu_emulator is
 	                              + 1
 	                              + 8; -- data hex
 
-	signal s_verifying : std_ulogic;
+	-- verifying takes two steps
+	type t_verify_fsm is (idle, fetching, reading);
+	signal s_verify_fsm : t_verify_fsm;
 begin
 	p_checker : process(clk)
 		file emu_file     : text open read_mode is g_filename;
@@ -62,10 +64,12 @@ begin
 				data_out     <= (others => '0');
 				address      <= (others => '0');
 				finished     <= false;
-				s_verifying  <= '0';
+				s_verify_fsm <= idle;
 			else
-				if s_verifying then
-					s_verifying <= '0';
+				if s_verify_fsm = fetching then
+					s_verify_fsm <= reading;
+				elsif s_verify_fsm = reading then
+					s_verify_fsm <= idle;
 					assert(read_valid)
 						report "cpu read not valid at address 0x" & to_hstring(address)
 						severity failure;
@@ -98,9 +102,9 @@ begin
 								-- "verify aaaabbbb ccccdddd"
 								--           1         2
 								--  123456 89012345 78901234
-								read_enable <= '1';
-								s_verifying <= '1';
-								address     <= to_std_ulogic_vector(emu_string(8 to 15));
+								read_enable  <= '1';
+								s_verify_fsm <= fetching;
+								address      <= to_std_ulogic_vector(emu_string(8 to 15));
 							when "write " =>
 								-- "write aaaabbbb ccccdddd"
 								--           1         2
