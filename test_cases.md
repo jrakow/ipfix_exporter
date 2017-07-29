@@ -1,6 +1,6 @@
 ## Test case file format
 Test files are to be placed in the `cases` directory.
-The file ending `.dat` is recommended.
+The file name must be formatted as `<module>_<number>_{in|out}.dat`.
 
 A line in a test file may be one of:
 * a line beginning with a `#`. This line is ignored.
@@ -14,7 +14,10 @@ For AXI stream interfaces with single transaction data a single line should corr
 Using more or less characters will result in a failed test as the `tkeep` and `tlast` signal are generated / checked.
 
 ## Test cases
-| module    | in file suffix | out file suffix | description                                    |
-| --------- | -------------- | --------------- | ---------------------------------------------- |
-| testbench | `_00_in.dat`   | `_00_out.dat`   | skip comments and empty lines                  |
-| testbench | `_01_in.dat`   | `_01_out.dat`   | split frames on tlast                          |
+
+\verbinclude cases.json
+
+| module      | number | description                                    |
+| ----------- | -----: | ---------------------------------------------- |
+| `testbench` |     00 | skip comments and empty lines                  |
+| `testbench` |     01 | split frames on tlast                          |
