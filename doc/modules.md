@@ -18,17 +18,15 @@ Frames to be dropped are recognized by the source MAC address.
 This module can be enabled / disabled by setting a flag in the configuration register.
 If this module is disabled, all Ethernet frames are forwarded.
 
-## frame segmentation
+## Ethernet dropping
 * AXIS in: Ethernet frame
-* AXIS out: segmented Ethernet frame
+* AXIS out: IP packet
 
-This module inserts padding after the latest Ethertype field or VLAN tag.
+This module drops the Ethernet header.
 
 Up to three VLAN tags are supported.
-The IP header starts at an AXIS frame boundary.
-For *untagged* frames the padding is inserted after the Ethertype field and the IP header starts at the *second* frame.
-For *tagged* frames the IP header start at the *third* frame.
-The padding is inserted after the last VLAN tag.
+The output IP packet starts at the IP header.
+MAC addresses, VLAN tags and the Ethertype field are dropped.
 
 ## IP version split
 * AXIS in: segmented Ethernet frame
