@@ -47,7 +47,7 @@ package pkg_types is
 		octet_count   : t_octet_count;
 		packet_count  : t_packet_count;
 		next_header   : t_next_header;
-		traffic_class : t_traffic_class;
+		traffic_class : t_ip_traffic_class;
 		tcp_flags     : t_tcp_flags;
 		padding       : std_ulogic_vector(71 downto 0);
 	end record;
@@ -98,7 +98,7 @@ package pkg_types is
 		octet_count   : t_octet_count;
 		packet_count  : t_packet_count;
 		next_header   : t_next_header;
-		traffic_class : t_traffic_class;
+		traffic_class : t_ip_traffic_class;
 		tcp_flags     : t_tcp_flags;
 		padding       : std_ulogic_vector(7 downto 0);
 	end record;

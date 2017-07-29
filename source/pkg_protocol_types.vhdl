@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 package pkg_protocol_types is
 	subtype t_ipv6_addr           is std_ulogic_vector(127 downto 0);
 	subtype t_ipv4_addr           is std_ulogic_vector( 31 downto 0);
-	subtype t_traffic_class       is std_ulogic_vector(  7 downto 0);
+	subtype t_ip_traffic_class    is std_ulogic_vector(  7 downto 0);
 	subtype t_next_header         is std_ulogic_vector(  7 downto 0);
 	subtype t_ipv6_flow_label     is std_ulogic_vector(19 downto 0);
 	subtype t_ipv4_identification is std_ulogic_vector(15 downto 0);
@@ -37,7 +37,7 @@ package pkg_protocol_types is
 	subtype t_ip_length is unsigned(15 downto 0);
 	type t_ipv6_header is record
 		version        : std_ulogic_vector(3 downto 0);
-		traffic_class  : t_traffic_class;
+		traffic_class  : t_ip_traffic_class;
 		flow_label     : t_ipv6_flow_label;
 		payload_length : t_ip_length;
 		next_header    : t_next_header;
@@ -62,7 +62,7 @@ package pkg_protocol_types is
 	type t_ipv4_header is record
 		version         : std_ulogic_vector(3 downto 0);
 		ihl             : std_ulogic_vector(3 downto 0);
-		traffic_class   : t_traffic_class;
+		traffic_class   : t_ip_traffic_class;
 		total_length    : t_ip_length;
 		identification  : t_ipv4_identification;
 		flags           : std_ulogic_vector( 2 downto 0);
