@@ -113,7 +113,9 @@ begin
 								address      <= to_std_ulogic_vector(emu_string( 7 to 14));
 								data_out     <= to_std_ulogic_vector(emu_string(16 to 23));
 							when others =>
-								null;
+								assert false
+									report "invalid emulator command :" & emu_string(1 to 6)
+									severity failure;
 						end case;
 					else
 						finished <= true;
