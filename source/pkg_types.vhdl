@@ -3,13 +3,13 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library ipfix_exporter;
-use ipfix_exporter.protocol_types.all;
+use ipfix_exporter.pkg_protocol_types.all;
 
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-package record_types is
+package pkg_types is
 	constant c_reset_active : std_ulogic := '1';
 
 	--! AXI stream interface for packets master port
@@ -152,7 +152,7 @@ package record_types is
 	function to_tkeep(n : positive; tkeep_width : natural) return std_ulogic_vector;
 end package;
 
-package body record_types is
+package body pkg_types is
 	function to_std_ulogic_vector(dr : t_ipfix_ipv6_data_record) return std_ulogic_vector is
 		variable ret : std_ulogic_vector(c_ipfix_ipv6_data_record_width - 1 downto 0) := (others => '0');
 	begin

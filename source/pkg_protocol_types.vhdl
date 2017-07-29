@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-package protocol_types is
+package pkg_protocol_types is
 	subtype t_ipv6_addr           is std_ulogic_vector(127 downto 0);
 	subtype t_ipv4_addr           is std_ulogic_vector( 31 downto 0);
 	subtype t_traffic_class       is std_ulogic_vector(  7 downto 0);
@@ -92,7 +92,7 @@ package protocol_types is
 	);
 end package;
 
-package body protocol_types is
+package body pkg_protocol_types is
 	function to_udp_header(slv : std_ulogic_vector(c_udp_header_width - 1 downto 0)) return t_udp_header is
 		variable ret : t_udp_header := c_udp_header_default;
 	begin
