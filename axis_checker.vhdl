@@ -114,9 +114,9 @@ begin
 						end if;
 					end if;
 
-					assert to_std_ulogic_vector(frame_string) = if_axis_m_tdata
+					assert to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata
 						report "tdata is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & frame_string;
-					success := success and (to_std_ulogic_vector(frame_string) = if_axis_m_tdata);
+					success := success and ((to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata) = '1');
 
 					if g_check_tkeep_tlast then
 						assert tkeep_expected = if_axis_m_tkeep
