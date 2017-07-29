@@ -23,7 +23,7 @@ clean:
 
 .PHONY: run
 run testbench.ghw: testbench cases/*
-	./testbench --wave=testbench.ghw
+	./run_tests.py
 
 .PHONY: wave
 wave: testbench.ghw
