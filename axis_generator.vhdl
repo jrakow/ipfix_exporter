@@ -30,8 +30,9 @@ entity axis_generator is
 		g_tdata_width : natural
 	);
 	port(
-		clk              : in  std_ulogic;
-		rst              : in  std_ulogic;
+		clk   : in  std_ulogic;
+		rst   : in  std_ulogic;
+		start : in std_ulogic;
 
 		if_axis_m_tdata  : out std_ulogic_vector(g_tdata_width     - 1 downto 0);
 		if_axis_m_tkeep  : out std_ulogic_vector(g_tdata_width / 8 - 1 downto 0);
@@ -46,13 +47,13 @@ end entity;
 architecture arch of axis_generator is
 	signal s_first_frame : boolean := true;
 begin
-	p_generator : process(clk)
+	p_generator : process(clk, start)
 		file     stimulus_file : text open read_mode is g_filename;
 		variable stimulus_line : line;
 
 		variable frame_string  : string(1 to g_tdata_width / 4);
 	begin
-		if rising_edge(clk) then
+		if rising_edge(clk) and start = '1' then
 			if rst = '1' then
 				if_axis_m_tdata  <= (others => '0');
 				if_axis_m_tvalid <= '0';
