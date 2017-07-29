@@ -1,10 +1,10 @@
 # in split
 # out single line
-aaaaaaaaaaaaaaaa
-aaaaaaaaaaaaaaaa
-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+cccccccccccccccc
+cccccccccccccccc
+dddddddddddddddddddddddddddddddd
 
 # in single line
 # out split
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+cccccccccccccccccccccccccccccccc
+dddddddddddddddddddddddddddddddd
