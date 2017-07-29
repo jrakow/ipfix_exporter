@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 from sys import stderr
+from random import randint
 
 def eprint(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
@@ -34,14 +35,23 @@ if __name__ == "__main__":
 			eprint()
 
 			case_filename_stub = module["name"] + "/" + case["number"]
+			# VHDL ieee.math_real.uniform seed allowed values
+			random_ints = [(str(randint(1, 2147483562)), str(randint(1, 2147483398))) for i in range(0, 2)]
 			args = ["./testbench",
 			        "--wave=waveforms/" + case_filename_stub + ".ghw",
 			        "-gg_module=" + module["name"],
+
 			        "-gg_in_tdata_width=" + str(module["g_in_tdata_width"]),
 			        "-gg_out_tdata_width=" + str(module["g_out_tdata_width"]),
+
 			        "-gg_in_filename=cases/" + case_filename_stub + "_in.dat",
 			        "-gg_out_filename=cases/" + case_filename_stub + "_out.dat",
 			        "-gg_emu_filename=cases/" + case_filename_stub + ".emu",
+
+			        "-gg_random_tvalid_seed_0=" + random_ints[0][0],
+			        "-gg_random_tvalid_seed_1=" + random_ints[0][1],
+			        "-gg_random_tready_seed_0=" + random_ints[1][0],
+			        "-gg_random_tready_seed_1=" + random_ints[1][1]
 			       ]
 			# start subprocess
 			exit = subprocess.call(args, stderr=sys.stdout.buffer)
@@ -51,6 +61,8 @@ if __name__ == "__main__":
 			# != is xor
 			expected = (exit == 0) != inverted
 			eprint(" as expected" if expected else " unexpectedly")
+			if not expected:
+				eprint("seeds were (" + random_ints[0][0] + ", " + random_ints[0][1] + ", " + random_ints[1][0] + ", " + random_ints[1][1] + ")")
 
 			number_of_tests += 1
 			if expected:
