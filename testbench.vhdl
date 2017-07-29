@@ -29,8 +29,8 @@ entity testbench is
 		g_emu_filename : string := "this should be overwritten";
 		g_module       : string := "testbench_test_dummy";
 
-		g_in_tdata_width  : natural := 64;
-		g_out_tdata_width : natural := 64;
+		g_in_tdata_width  : natural := 0;
+		g_out_tdata_width : natural := 0;
 
 		g_random_tvalid_seed_0 : positive := 1;
 		g_random_tvalid_seed_1 : positive := 2;
