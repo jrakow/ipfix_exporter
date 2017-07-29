@@ -32,8 +32,6 @@ entity testbench is
 		g_in_tdata_width  : natural := 64;
 		g_out_tdata_width : natural := 64;
 
-		g_check_tkeep_tlast : boolean := true;
-
 		g_period  : time := 10 ns;
 		g_timeout : time :=  1 ms
 	);
@@ -100,8 +98,7 @@ begin
 	i_axis_checker : entity axis_testbench.axis_checker
 		generic map(
 			g_filename          => g_out_filename,
-			g_tdata_width       => g_out_tdata_width,
-			g_check_tkeep_tlast => g_check_tkeep_tlast
+			g_tdata_width       => g_out_tdata_width
 		)
 		port map(
 			clk              => s_clk,

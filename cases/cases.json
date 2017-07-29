@@ -3,7 +3,6 @@
 		"name" : "testbench_test_dummy",
 		"g_in_tdata_width" : 64,
 		"g_out_tdata_width" : 64,
-		"g_check_tkeep_tlast" : true,
 		"cases" :
 		[
 			{ "number" : "00" , "invert" : false, "title" : "skip comments and empty lines" },

@@ -39,9 +39,7 @@ This is needed to test whether an implementation of the AXIS protocol is correct
 entity axis_checker is
 	generic(
 		g_filename    : string;
-		g_tdata_width : natural;
-
-		g_check_tkeep_tlast : boolean
+		g_tdata_width : natural
 	);
 	port(
 		clk              : in  std_ulogic;
@@ -119,14 +117,12 @@ begin
 						report "tdata is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & frame_string;
 					success := success and ((to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata) = '1');
 --! @endcond
-					if g_check_tkeep_tlast then
-						assert tkeep_expected = if_axis_m_tkeep
-							report "tkeep is 0x" & to_bstring(if_axis_m_tkeep) & " should be 0x" & to_bstring(tkeep_expected);
-						success := success and (tkeep_expected = if_axis_m_tkeep);
-						assert tlast_expected = if_axis_m_tlast
-							report "tlast is 0b" & std_ulogic'image(if_axis_m_tlast) & " should be 0" & std_ulogic'image(tlast_expected);
-						success := success and (tlast_expected = if_axis_m_tlast);
-					end if;
+					assert tkeep_expected = if_axis_m_tkeep
+						report "tkeep is 0x" & to_bstring(if_axis_m_tkeep) & " should be 0x" & to_bstring(tkeep_expected);
+					success := success and (tkeep_expected = if_axis_m_tkeep);
+					assert tlast_expected = if_axis_m_tlast
+						report "tlast is 0b" & std_ulogic'image(if_axis_m_tlast) & " should be 0" & std_ulogic'image(tlast_expected);
+					success := success and (tlast_expected = if_axis_m_tlast);
 
 					if not success then
 						stop(2);
