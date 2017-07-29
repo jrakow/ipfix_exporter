@@ -8,6 +8,7 @@ use ipfix_exporter.pkg_types.all;
 /*!
 This module inserts new flows into the cache.
 
+Incoming information is used to update existing IPFIX data records.
 The quintuple of incoming frames is hashed and used as the address of the cache, which is a hash table.
 A cache slot is read.
 If the cache slot is empty, a new flow is created.
@@ -20,13 +21,14 @@ configuration out:
 entity cache_insertion is
 	generic(
 		g_addr_width : natural;
-		g_record_width : natural
+		g_record_width : natural;
+		g_frame_info_width : natural
 	);
 	port(
 		clk : in std_ulogic;
 		rst : in std_ulogic;
 
-		if_axis_in_m_tdata  : in  std_ulogic_vector(g_record_width - 1 downto 0);
+		if_axis_in_m_tdata  : in  std_ulogic_vector(g_frame_info_width - 1 downto 0);
 		if_axis_in_m_tvalid : in  std_ulogic;
 		if_axis_in_s        : out t_if_axis_s;
 

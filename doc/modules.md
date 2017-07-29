@@ -38,10 +38,10 @@ digraph overview
 
 ## information extraction
 * AXIS in: segmented IPvN Ethernet frame
-* AXIS out: IPFIX IPvN data record
+* AXIS out: IPvN frame info
 
 ## cache insertion
-* AXIS in: IPFIX IPvN data record
+* AXIS in: IPvN frame info
 * RAM: cache port A
 
 ## cache extraction
