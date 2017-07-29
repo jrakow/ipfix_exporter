@@ -26,6 +26,7 @@ entity testbench is
 	generic (
 		g_in_filename  : string := "cases/testbench_00_in.dat";
 		g_out_filename : string := "cases/testbench_00_out.dat";
+		g_module       : string := "testbench_test_dummy";
 
 		g_in_tdata_width  : natural := 64;
 		g_out_tdata_width : natural := 64;
@@ -106,25 +107,30 @@ begin
 			finished         => s_checker_finished
 		);
 
-	i_design_under_test : entity axis_testbench.testbench_test_dummy
-		generic map(
-			g_in_tdata_width  => g_out_tdata_width,
-			g_out_tdata_width => g_out_tdata_width
-		)
-		port map(
-			clk                  => s_clk,
-			rst                  => s_rst,
-			if_axis_in_m_tdata   => s_if_axis_in_m_tdata,
-			if_axis_in_m_tkeep   => s_if_axis_in_m_tkeep,
-			if_axis_in_m_tlast   => s_if_axis_in_m_tlast,
-			if_axis_in_m_tvalid  => s_if_axis_in_m_tvalid,
-			if_axis_in_s_tready  => s_if_axis_in_s_tready,
-			if_axis_out_m_tdata  => s_if_axis_out_m_tdata,
-			if_axis_out_m_tkeep  => s_if_axis_out_m_tkeep,
-			if_axis_out_m_tlast  => s_if_axis_out_m_tlast,
-			if_axis_out_m_tvalid => s_if_axis_out_m_tvalid,
-			if_axis_out_s_tready => s_if_axis_out_s_tready
-		);
+	i_design_under_test : if g_module = "testbench_test_dummy" generate
+		i_cond_gen : entity axis_testbench.testbench_test_dummy
+			generic map(
+				g_in_tdata_width  => g_in_tdata_width,
+				g_out_tdata_width => g_out_tdata_width
+			)
+			port map(
+				clk                  => s_clk,
+				rst                  => s_rst,
+
+				if_axis_in_m_tdata   => s_if_axis_in_m_tdata,
+				if_axis_in_m_tkeep   => s_if_axis_in_m_tkeep,
+				if_axis_in_m_tlast   => s_if_axis_in_m_tlast,
+				if_axis_in_m_tvalid  => s_if_axis_in_m_tvalid,
+				if_axis_in_s_tready  => s_if_axis_in_s_tready,
+				if_axis_out_m_tdata  => s_if_axis_out_m_tdata,
+				if_axis_out_m_tkeep  => s_if_axis_out_m_tkeep,
+				if_axis_out_m_tlast  => s_if_axis_out_m_tlast,
+				if_axis_out_m_tvalid => s_if_axis_out_m_tvalid,
+				if_axis_out_s_tready => s_if_axis_out_s_tready
+			);
+		end generate;
+
+	-- paste more modules here
 
 	p_timeout : process
 	begin
