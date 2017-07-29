@@ -24,8 +24,8 @@ One AXIS interface connects the generator to the design under test input, anothe
  */
 entity testbench is
 	generic (
-		in_filename  : string := "cases/testbench_00_in.dat";
-		out_filename : string := "cases/testbench_00_out.dat";
+		g_in_filename  : string := "cases/testbench_00_in.dat";
+		g_out_filename : string := "cases/testbench_00_out.dat";
 
 		g_in_tdata_width  : natural := 64;
 		g_out_tdata_width : natural := 64;
@@ -69,7 +69,7 @@ begin
 
 	i_axis_generator : entity axis_testbench.axis_generator
 		generic map(
-			g_filename    => in_filename,
+			g_filename    => g_in_filename,
 			g_tdata_width => g_in_tdata_width
 		)
 		port map(
@@ -83,7 +83,7 @@ begin
 
 	i_axis_checker : entity axis_testbench.axis_checker
 		generic map(
-			g_filename    => out_filename,
+			g_filename    => g_out_filename,
 			g_tdata_width => g_out_tdata_width
 		)
 		port map(
