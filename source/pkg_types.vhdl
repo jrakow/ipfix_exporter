@@ -18,6 +18,10 @@ package pkg_types is
 	subtype t_packet_count is unsigned(31 downto 0);
 	subtype t_octet_count  is unsigned(31 downto 0);
 
+	constant c_max_number_of_vlans : natural := 2;
+	subtype t_number_of_vlans is natural range 0 to c_max_number_of_vlans;
+	subtype t_vlan_tag is std_ulogic_vector(31 downto 0);
+
 	/**
 	 * IPFIX data record with information about an IPv6 flow
 	 *
@@ -141,6 +145,39 @@ package pkg_types is
 	constant c_if_axis_s_default : t_if_axis_s := (
 		tready => '0'
 	);
+
+	type t_ipfix_config is record
+		template_id           : t_ipfix_set_id;
+		observation_domain_id : t_ipfix_observation_domain_id;
+	end record;
+
+	type t_udp_config is record
+		source      : t_transport_port;
+		destination : t_transport_port;
+	end record;
+
+	type t_ip_config is record
+		version                  : t_ip_version;
+		ipv6_source_address      : t_ipv6_addr;
+		ipv6_destination_address : t_ipv6_addr;
+		ipv4_source_address      : t_ipv4_addr;
+		ipv4_destination_address : t_ipv4_addr;
+		traffic_class            : t_ip_traffic_class;
+		ipv6_flow_label          : t_ipv6_flow_label;
+		ipv4_identification      : t_ipv4_identification;
+		hop_limit                : t_ip_hop_limit;
+	end record;
+
+	type t_vlan_config is record
+		number_of_vlans : t_number_of_vlans;
+		tag_0           : t_vlan_tag;
+		tag_1           : t_vlan_tag;
+	end record;
+
+	type t_ethernet_config is record
+		destination : t_mac_addr;
+		source      : t_mac_addr;
+	end record;
 
 	/**
 	 * convert a number of bytes to a std_ulogic_vector

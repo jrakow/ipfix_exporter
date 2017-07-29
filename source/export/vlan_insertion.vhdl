@@ -11,7 +11,10 @@ This module inserts VLAN tags.
 The IP packet is prefixed by one or more VLAN tags.
 `vlan0` is the earliest tag.
 
-@todo configuration in: `number_of_vlans`, `vlan0`, `vlan1`
+configuration in:
+* `number_of_vlans`
+* `vlan_tag_0`
+* `vlan_tag_1`
  */
 entity vlan_insertion is
 	port(
@@ -22,7 +25,9 @@ entity vlan_insertion is
 		if_axis_in_s : out t_if_axis_s;
 
 		if_axis_out_m : out t_if_axis_frame_m;
-		if_axis_out_s : in  t_if_axis_s
+		if_axis_out_s : in  t_if_axis_s;
+
+		cpu_vlan_config : t_vlan_config
 	);
 end entity;
 

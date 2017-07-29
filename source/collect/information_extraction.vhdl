@@ -11,7 +11,8 @@ This module extracts flow information from the incoming Ethernet frame and fills
 The extracted information includes the quintuple use for identifying the flow and additional information (see [data types](doc/data_types.md)).
 The output format is the IPFIX data record data type for the IP version.
 
-@todo configuration in: `timestamp`
+configuration in:
+* `timestamp`
  */
 entity information_extraction is
 	generic(
@@ -26,7 +27,9 @@ entity information_extraction is
 
 		if_axis_out_m_tdata  : out std_ulogic_vector(g_record_width - 1 downto 0);
 		if_axis_out_m_tvalid : out std_ulogic;
-		if_axis_out_s        : in  t_if_axis_s
+		if_axis_out_s        : in  t_if_axis_s;
+
+		cpu_timestamp : in t_timestamp
 	);
 end entity;
 

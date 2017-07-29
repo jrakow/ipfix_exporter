@@ -40,7 +40,13 @@ entity top_collect is
 		if_axis_in_s : out t_if_axis_s;
 
 		if_axis_out_m : out t_if_axis_frame_m;
-		if_axis_out_s : in  t_if_axis_s
+		if_axis_out_s : in  t_if_axis_s;
+
+		cpu_timestamp              : in  t_timestamp;
+		cpu_collision_event        : out std_ulogic;
+		cpu_cache_active_timeout   : in  t_timeout;
+		cpu_cache_inactive_timeout : in  t_timeout;
+		cpu_ipfix_message_timeout  : in  t_timeout
 	);
 end entity;
 
@@ -78,7 +84,9 @@ begin
 
 			if_axis_out_m_tdata  => s_if_axis_m_tdata_0,
 			if_axis_out_m_tvalid => s_if_axis_m_tvalid_0,
-			if_axis_out_s        => s_if_axis_s_0
+			if_axis_out_s        => s_if_axis_s_0,
+
+			cpu_timestamp => cpu_timestamp
 		);
 
 	i_cache_insertion : entity ipfix_exporter.cache_insertion
@@ -98,7 +106,9 @@ begin
 			write_enable => s_write_enable_a ,
 			addr         => s_addr_a         ,
 			data_in      => s_data_in_a      ,
-			data_out     => s_data_out_a
+			data_out     => s_data_out_a     ,
+
+			cpu_collision_event => cpu_collision_event
 		);
 
 	i_cache : entity ipfix_exporter.ram
@@ -139,7 +149,11 @@ begin
 
 			if_axis_out_m_tdata  => s_if_axis_m_tdata_1,
 			if_axis_out_m_tvalid => s_if_axis_m_tvalid_1,
-			if_axis_out_s        => s_if_axis_s_1
+			if_axis_out_s        => s_if_axis_s_1,
+
+			cpu_cache_active_timeout   => cpu_cache_active_timeout,
+			cpu_cache_inactive_timeout => cpu_cache_inactive_timeout,
+			cpu_timestamp              => cpu_timestamp
 		);
 
 	i_ipfix_message_control : entity ipfix_exporter.ipfix_message_control
@@ -155,6 +169,8 @@ begin
 			if_axis_in_s        => s_if_axis_s_1,
 
 			if_axis_out_m => if_axis_out_m,
-			if_axis_out_s => if_axis_out_s
+			if_axis_out_s => if_axis_out_s,
+
+			cpu_ipfix_message_timeout => cpu_ipfix_message_timeout
 		);
 end architecture;

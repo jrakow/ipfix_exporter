@@ -13,7 +13,10 @@ A flows is expired, if the last frame is older than the inactive timeout or if t
 Expired flows are put directly onto the AXIS interface.
 `tkeep` and `tlast` are not used, because a whole data record is transported with each transaction.
 
-@todo configuration in: `cache_active_timeout`, `cache_inactive_timeout`, `timestamp`
+configuration in:
+* `cache_active_timeout`
+* `cache_inactive_timeout`
+* `timestamp`
  */
 entity cache_extraction is
 	generic(
@@ -32,7 +35,11 @@ entity cache_extraction is
 
 		if_axis_out_m_tdata  : out std_ulogic_vector(g_record_width - 1 downto 0);
 		if_axis_out_m_tvalid : out std_ulogic;
-		if_axis_out_s        : in  t_if_axis_s
+		if_axis_out_s        : in  t_if_axis_s;
+
+		cpu_cache_active_timeout   : in t_timeout;
+		cpu_cache_inactive_timeout : in t_timeout;
+		cpu_timestamp              : in t_timestamp
 	);
 end entity;
 

@@ -14,7 +14,8 @@ If the cache slot is empty, a new flow is created.
 If the cache slot is used and the quintuples do not match, a collision occured and the collision counter is incremented.
 If the matching flow was found, it is updated with the new frame length and a new timestamp.
 
-@todo configuration out: `collision_counter`
+configuration out:
+* `collision_event`
  */
 entity cache_insertion is
 	generic(
@@ -33,7 +34,9 @@ entity cache_insertion is
 		write_enable : out std_ulogic;
 		addr         : out std_ulogic_vector(g_addr_width - 1 downto 0);
 		data_in      : out std_ulogic_vector(g_record_width - 1 downto 0);
-		data_out     : in  std_ulogic_vector(g_record_width - 1 downto 0)
+		data_out     : in  std_ulogic_vector(g_record_width - 1 downto 0);
+
+		cpu_collision_event : out std_ulogic
 	);
 end entity;
 
