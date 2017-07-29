@@ -43,7 +43,6 @@ if __name__ == "__main__":
 			        "-gg_in_filename=cases/" + case_filename_stub + "_in.dat",
 			        "-gg_out_filename=cases/" + case_filename_stub + "_out.dat"
 			       ]
-			eprint(args)
 			# start subprocess
 			exit = subprocess.call(args, stderr=sys.stdout.buffer)
 

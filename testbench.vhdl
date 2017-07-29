@@ -60,7 +60,6 @@ begin
 
 	p_testrun : process
 	begin
-		report "start";
 		s_rst <= '1';
 		wait until rising_edge(s_clk);
 		s_rst <= '0';
@@ -69,7 +68,6 @@ begin
 		report "generator finished";
 		wait until rising_edge(s_clk) and s_checker_finished = '1';
 		report "checker finished";
-		report "simulation finished";
 		-- exit without failure
 		stop(0);
 	end process;
