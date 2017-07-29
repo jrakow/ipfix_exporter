@@ -61,7 +61,7 @@ begin
 		file check_file     : text open read_mode is g_filename;
 		variable check_line : line;
 
-		variable frame_string   : string(0 to g_tdata_width / 4 - 1);
+		variable frame_string   : string(1 to g_tdata_width / 4);
 		variable tkeep_expected : std_ulogic_vector(g_tdata_width / 8 - 1 downto 0) := (others => '0');
 		variable tlast_expected : std_ulogic := '0';
 
@@ -97,10 +97,10 @@ begin
 						else
 							-- use line length before it is changed
 							-- stimulus line length is nibbles
-							frame_string(check_line'length to g_tdata_width / 4 - 1) := (others => '-');
+							frame_string(check_line'length + 1 to g_tdata_width / 4) := (others => '-');
 							-- tkeep is bytes
 							tkeep_expected := to_tkeep(check_line'length / 2, g_tdata_width / 8);
-							read(check_line, frame_string(0 to check_line'length - 1));
+							read(check_line, frame_string(1 to check_line'length));
 						end if;
 
 						-- checkline is only /= null if it contains another frame

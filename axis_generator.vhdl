@@ -50,7 +50,7 @@ begin
 		file     stimulus_file : text open read_mode is g_filename;
 		variable stimulus_line : line;
 
-		variable frame_string  : string(0 to g_tdata_width / 4 -  1);
+		variable frame_string  : string(1 to g_tdata_width / 4);
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then
@@ -86,10 +86,10 @@ begin
 						else
 							-- use line length before it is changed
 							-- stimulus line length is nibbles
-							frame_string(stimulus_line'length to g_tdata_width / 4 - 1) := (others => '-');
+							frame_string(stimulus_line'length + 1 to g_tdata_width / 4) := (others => '-');
 							-- tkeep is bytes
 							if_axis_m_tkeep <= to_tkeep(stimulus_line'length / 2, g_tdata_width / 8);
-							read(stimulus_line, frame_string(0 to stimulus_line'length - 1));
+							read(stimulus_line, frame_string(1 to stimulus_line'length));
 						end if;
 
 						-- stimulus_line is only /= null if it contains another frame
