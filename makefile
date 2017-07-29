@@ -38,7 +38,7 @@ clean:
 	       e~testbench.gcda \
 	       axis_testbench-obj08.cf \
 	       testbench \
-	       waveforms \
+	       waveforms/*/*.ghw \
 	       html
 
 # use testbench.gcda as dummy for all run results
