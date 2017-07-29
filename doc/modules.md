@@ -4,6 +4,53 @@ Small modules shall be used with minimal tasks.
 This simplifies development and testing.
 Think of UNIX tools piped one after another.
 
+@dot
+digraph overview
+	{
+	node [shape=box];
+	input  [ label="input"  shape=circle ];
+	output [ label="output" shape=circle ];
+
+	selective_dropping         [ label="selective_dropping"    URL="@ref selective_dropping"    ];
+	ethernet_dropping          [ label="ethernet_dropping"     URL="@ref ethernet_dropping"     ];
+	ip_version_split           [ label="ip_version_split"      URL="@ref ip_version_split"      ];
+	packet_classification_ipv6 [ label="packet_classification" URL="@ref packet_classification" ];
+	packet_classification_ipv4 [ label="packet_classification" URL="@ref packet_classification" ];
+	cache_insertion_ipv6       [ label="cache_insertion"       URL="@ref cache_insertion"       ];
+	cache_insertion_ipv4       [ label="cache_insertion"       URL="@ref cache_insertion"       ];
+	cache_ipv6                 [ label="cache"                 shape=octagon                    ];
+	cache_ipv4                 [ label="cache"                 shape=octagon                    ];
+	cache_extraction_ipv6      [ label="cache_extraction"      URL="@ref cache_extraction"      ];
+	cache_extraction_ipv4      [ label="cache_extraction"      URL="@ref cache_extraction"      ];
+	ipfix_message_control_ipv6 [ label="ipfix_message_control" URL="@ref ipfix_message_control" ];
+	ipfix_message_control_ipv4 [ label="ipfix_message_control" URL="@ref ipfix_message_control" ];
+	ipfix_header_ipv6          [ label="ipfix_header"          URL="@ref ipfix_header"          ];
+	ipfix_header_ipv4          [ label="ipfix_header"          URL="@ref ipfix_header"          ];
+	udp_header_ipv6            [ label="udp_header"            URL="@ref udp_header"            ];
+	udp_header_ipv4            [ label="udp_header"            URL="@ref udp_header"            ];
+	ip_header_ipv6             [ label="ip_header"             URL="@ref ip_header"             ];
+	ip_header_ipv4             [ label="ip_header"             URL="@ref ip_header"             ];
+	ethertype_insertion_ipv6   [ label="ethertype_insertion"   URL="@ref ethertype_insertion"   ];
+	ethertype_insertion_ipv4   [ label="ethertype_insertion"   URL="@ref ethertype_insertion"   ];
+	vlan_insertion_ipv6        [ label="vlan_insertion"        URL="@ref vlan_insertion"        ];
+	vlan_insertion_ipv4        [ label="vlan_insertion"        URL="@ref vlan_insertion"        ];
+	ethernet_header_ipv6       [ label="ethernet_header"       URL="@ref ethernet_header"       ];
+	ethernet_header_ipv4       [ label="ethernet_header"       URL="@ref ethernet_header"       ];
+	axis_combiner              [ label="axis_combiner"         URL="@ref axis_combiner"         ];
+
+	input -> selective_dropping -> ethernet_dropping -> ip_version_split;
+	ip_version_split -> packet_classification_ipv6 -> cache_insertion_ipv6 -> cache_ipv6
+		-> cache_extraction_ipv6 -> ipfix_message_control_ipv6
+		-> ipfix_header_ipv6 -> udp_header_ipv6 -> ip_header_ipv6 -> ethertype_insertion_ipv6 -> vlan_insertion_ipv6 -> ethernet_header_ipv6
+		-> axis_combiner;
+	ip_version_split -> packet_classification_ipv4 -> cache_insertion_ipv4 -> cache_ipv4
+		-> cache_extraction_ipv4 -> ipfix_message_control_ipv4
+		-> ipfix_header_ipv4 -> udp_header_ipv4 -> ip_header_ipv4 -> ethertype_insertion_ipv4 -> vlan_insertion_ipv4 -> ethernet_header_ipv4
+		-> axis_combiner;
+	axis_combiner -> output;
+	}
+@enddot
+
 ## selective dropping
 * AXIS in: Ethernet frame
 * configuration in: `drop_source_mac_enable`, `export_source_mac_address`
