@@ -771,7 +771,15 @@ WARN_LOGFILE =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT = readme.md test_cases.md axis_checker.vhdl axis_generator.vhdl pkg_test_io.vhdl testbench.vhdl testbench_test_dummy.vhdl cpu_emulator.vhdl
+INPUT = \
+        readme.md \
+        test_cases.md \
+        axis_checker.vhdl \
+        axis_generator.vhdl \
+        pkg_test_io.vhdl \
+        testbench.vhdl \
+        testbench_test_dummy.vhdl \
+        cpu_emulator.vhdl
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

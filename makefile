@@ -3,7 +3,8 @@ GHDLFLAGS := --std=08 -g
 
 .SUFFIXES:
 
-TESTBENCH_SRCS := pkg_axis_testbench_io.vhdl \
+TESTBENCH_SRCS := \
+                  pkg_axis_testbench_io.vhdl \
                   axis_checker.vhdl \
                   axis_generator.vhdl \
                   cpu_emulator.vhdl \
@@ -21,7 +22,14 @@ testbench: ${TESTBENCH_SRCS}
 
 .PHONY: clean
 clean:
-	rm -rf ${TESTBENCH_SRCS:.vhdl=.o} testbench.o e~testbench.o axis_testbench-obj08.cf testbench waveforms html
+	rm -rf \
+	       ${TESTBENCH_SRCS:.vhdl=.o} \
+	       testbench.o \
+	       e~testbench.o \
+	       axis_testbench-obj08.cf \
+	       testbench \
+	       waveforms \
+	       html
 
 .PHONY: run
 run: testbench cases/*
