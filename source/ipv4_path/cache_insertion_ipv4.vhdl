@@ -19,12 +19,21 @@ This is equivalent to @ref cache_insertion_ipv6.
 @todo configuration out: `collision_counter`
  */
 entity cache_insertion_ipv4 is
+	generic(
+		g_addr_width : natural
+	);
 	port(
 		clk : in std_ulogic;
 		rst : in std_ulogic;
 
 		if_axis_in_m : in  t_if_axis_ipv4_m;
-		if_axis_in_s : out t_if_axis_s
+		if_axis_in_s : out t_if_axis_s;
+
+		enable       : out std_ulogic;
+		write_enable : out std_ulogic;
+		addr         : out std_ulogic_vector(g_addr_width - 1 downto 0);
+		data_in      : out std_ulogic_vector(c_ipfix_ipv4_data_record_width - 1 downto 0);
+		data_out     : in  std_ulogic_vector(c_ipfix_ipv4_data_record_width - 1 downto 0)
 	);
 end entity;
 

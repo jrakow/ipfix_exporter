@@ -11,6 +11,10 @@ This module is the top level for the complete `ipfix_exporter`.
 It instantiates and connects the @ref top_preparation and @ref top_ipv6_path and @ref top_ipv4_path modules.
  */
 entity top_ipfix is
+	generic(
+		g_ipv6_cache_addr_width : natural;
+		g_ipv4_cache_addr_width : natural
+	);
 	port(
 		clk : in std_ulogic;
 		rst : in std_ulogic;
@@ -50,6 +54,9 @@ begin
 		);
 
 	i_top_ipv6_path : entity ipfix_exporter.top_ipv6_path
+		generic map(
+			g_addr_width => g_ipv6_cache_addr_width
+		)
 		port map(
 			clk           => clk,
 			rst           => rst,
@@ -61,6 +68,9 @@ begin
 			if_axis_out_s => s_if_axis_ipv6_s_1
 		);
 	i_top_ipv4_path : entity ipfix_exporter.top_ipv4_path
+		generic map(
+			g_addr_width => g_ipv4_cache_addr_width
+		)
 		port map(
 			clk           => clk,
 			rst           => rst,

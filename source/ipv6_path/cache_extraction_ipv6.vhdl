@@ -18,9 +18,18 @@ This module is equivalent to @ref cache_extraction_ipv4.
 @todo configuration in: `cache_active_timeout`, `cache_inactive_timeout`, `timestamp`
  */
 entity cache_extraction_ipv6 is
+	generic(
+		g_addr_width : natural
+	);
 	port(
 		clk : in std_ulogic;
 		rst : in std_ulogic;
+
+		enable       : in  std_ulogic;
+		write_enable : in  std_ulogic;
+		addr         : in  std_ulogic_vector(g_addr_width - 1 downto 0);
+		data_in      : in  std_ulogic_vector(c_ipfix_ipv6_data_record_width - 1 downto 0);
+		data_out     : out std_ulogic_vector(c_ipfix_ipv6_data_record_width - 1 downto 0);
 
 		if_axis_out_m : out t_if_axis_ipv6_m;
 		if_axis_out_s : in  t_if_axis_s
