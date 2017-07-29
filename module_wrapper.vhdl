@@ -69,7 +69,14 @@ begin
 				if_axis_out_m_tkeep  => if_axis_out_m_tkeep,
 				if_axis_out_m_tlast  => if_axis_out_m_tlast,
 				if_axis_out_m_tvalid => if_axis_out_m_tvalid,
-				if_axis_out_s_tready => if_axis_out_s_tready
+				if_axis_out_s_tready => if_axis_out_s_tready,
+
+				read_enable  => read_enable,
+				write_enable => write_enable,
+				data_in      => data_in,
+				data_out     => data_out,
+				address      => address,
+				read_valid   => read_valid
 			);
 		end generate;
 end architecture;
