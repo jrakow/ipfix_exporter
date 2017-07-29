@@ -5,6 +5,9 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module combines the separate Ethernet frames from the IPv6 and the IPv4 data path into a single one.
+ */
 entity axis_combiner is
 	port(
 		clk : in std_ulogic;

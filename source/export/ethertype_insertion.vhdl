@@ -5,6 +5,9 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module inserts the Ethertype field.
+ */
 entity ethertype_insertion is
 	port(
 		clk : in std_ulogic;

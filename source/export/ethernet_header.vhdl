@@ -5,6 +5,11 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module prefixes MAC addresses.
+
+@todo configuration in: `destination_mac_address`, `source_mac_address`
+ */
 entity ethernet_header is
 	port(
 		clk : in std_ulogic;

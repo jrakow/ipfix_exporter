@@ -5,6 +5,11 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module is the top level for the preparational modules.
+
+It instantiates and connects the @ref selective_dropping, @ref ethernet_dropping and @ref ip_version_split modules.
+ */
 entity top_preparation is
 	port(
 		clk : in std_ulogic;

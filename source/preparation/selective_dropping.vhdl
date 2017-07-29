@@ -5,6 +5,18 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module drops frames originating from `ipfix_exporter`.
+
+This opens the possibility to insert IPFIX messages in front of the collector without them being measured.
+
+Incoming Ethernet frames are expected to start at the destination MAC address and end with transport layer payload. Network byte order is used.
+Frames to be dropped are recognized by the source MAC address.
+This module can be enabled / disabled by setting a flag in the configuration register.
+If this module is disabled, all Ethernet frames are forwarded.
+
+@todo configuration in: `drop_source_mac_enable`, `export_source_mac_address`
+*/
 entity selective_dropping is
 	port(
 		clk : in std_ulogic;

@@ -5,6 +5,11 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module is the top level for the IPv6 data path.
+
+It instantiates and connects the @ref information_extraction_ipv6, @ref cache_insertion_ipv6, @ref cache, @ref cache_extraction_ipv6, ipfix_message_control_ipv6 and @ref top_export modules.
+ */
 entity top_ipv6_path is
 	port(
 		clk : in std_ulogic;

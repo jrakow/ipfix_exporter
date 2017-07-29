@@ -5,6 +5,15 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module extracts flow information from the incoming Ethernet frame and fills an IPFIX data record.
+
+The extracted information includes the quintuple use for identifying the flow and additional information (see [data types](doc/data_types.md)).
+The output format is the IPFIX data record data type for the IP version six.
+See also @ref information_extraction_ipv4 which is equivalent.
+
+@todo configuration in: `timestamp`
+ */
 entity information_extraction_ipv6 is
 	port(
 		clk : in std_ulogic;

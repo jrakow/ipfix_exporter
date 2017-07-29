@@ -5,6 +5,11 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module is the top level for the export path.
+
+It instantiates and connects the @ref ipfix_header, @ref udp_header, @ref ip_header, @ref ethertype_insertion, @ref vlan_insertion and @ref ethernet_header modules.
+ */
 entity top_export is
 	port(
 		clk : in std_ulogic;

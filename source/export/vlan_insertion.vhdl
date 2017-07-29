@@ -5,6 +5,14 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module inserts VLAN tags.
+
+The IP packet is prefixed by one or more VLAN tags.
+`vlan0` is the earliest tag.
+
+@todo configuration in: `number_of_vlans`, `vlan0`, `vlan1`
+ */
 entity vlan_insertion is
 	port(
 		clk : in std_ulogic;

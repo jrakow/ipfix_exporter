@@ -5,6 +5,13 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module drops the Ethernet header.
+
+Up to three VLAN tags are supported.
+The output IP packet starts at the IP header.
+MAC addresses, VLAN tags and the Ethertype field are dropped.
+ */
 entity ethernet_dropping is
 	port(
 		clk : in std_ulogic;

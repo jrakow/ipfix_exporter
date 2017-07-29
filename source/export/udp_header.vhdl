@@ -5,6 +5,17 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module prefixes an arbitrary payload with an UDP header.
+
+This module buffers a whole packet.
+While buffering the length and checksum are computed.
+This module does not use information from the payload.
+
+The IP version may be set at runtime.
+
+@todo configuration in: `ip_version`, `ipvN_source_address`, `ipvN_destination_address`, `source_port`, `destination_port`
+ */
 entity udp_header is
 	port(
 		clk : in std_ulogic;

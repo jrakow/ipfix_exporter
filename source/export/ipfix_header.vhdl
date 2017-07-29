@@ -5,6 +5,18 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module generates an IPFIX header for an incoming stream of IPFIX sets.
+
+The sequence number is kept track of.
+For the length field the length field of the set header is used.
+
+Multiple sets in a single message are not supported.
+A new header is prefixed for every set.
+The whole IPFIX message is forwarded.
+
+@todo configuration in: `ipfix_ipvN_template_id`, `ipfix_observation_domain_id`, `timestamp`
+ */
 entity ipfix_header is
 	port(
 		clk : in std_ulogic;

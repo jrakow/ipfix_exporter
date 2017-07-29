@@ -5,6 +5,14 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
+/*!
+This module splits the incoming data by IP version.
+
+The first one or two frames (depending on the number of VLANs) are buffered.
+Only the IP version field of the IP header at the beginning of the third frame is considered.
+
+This splits the data path into an IPv6 and an IPv4 path.
+ */
 entity ip_version_split is
 	port(
 		clk : in std_ulogic;
