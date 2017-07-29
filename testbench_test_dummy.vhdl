@@ -12,11 +12,15 @@ entity testbench_test_dummy is
 		clk : in std_ulogic;
 		rst : in std_ulogic;
 
-		if_axis_in_m_tdata  : in  std_ulogic_vector(g_in_tdata_width - 1 downto 0);
+		if_axis_in_m_tdata  : in  std_ulogic_vector(g_in_tdata_width     - 1 downto 0);
+		if_axis_in_m_tkeep  : in  std_ulogic_vector(g_in_tdata_width / 8 - 1 downto 0);
+		if_axis_in_m_tlast  : in  std_ulogic;
 		if_axis_in_m_tvalid : in  std_ulogic;
 		if_axis_in_s_tready : out std_ulogic;
 
-		if_axis_out_m_tdata  : out std_ulogic_vector(g_out_tdata_width - 1 downto 0);
+		if_axis_out_m_tdata  : out std_ulogic_vector(g_out_tdata_width     - 1 downto 0);
+		if_axis_out_m_tkeep  : out std_ulogic_vector(g_out_tdata_width / 8 - 1 downto 0);
+		if_axis_out_m_tlast  : out std_ulogic;
 		if_axis_out_m_tvalid : out std_ulogic;
 		if_axis_out_s_tready : in  std_ulogic
 	);
@@ -26,6 +30,8 @@ architecture arch of testbench_test_dummy is
 begin
 	if_axis_out_m_tdata  <= if_axis_in_m_tdata;
 	if_axis_out_m_tvalid <= if_axis_in_m_tvalid;
+	if_axis_out_m_tkeep  <= if_axis_in_m_tkeep;
+	if_axis_out_m_tlast  <= if_axis_in_m_tlast;
 	if_axis_in_s_tready  <= if_axis_out_s_tready;
 
 	assert g_in_tdata_width = g_out_tdata_width

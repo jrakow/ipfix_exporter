@@ -1,4 +1,5 @@
 use std.textio.all;
+use std.env.all;
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -38,13 +39,17 @@ This is needed to test whether an implementation of the AXIS protocol is correct
 entity axis_checker is
 	generic(
 		g_filename    : string;
-		g_tdata_width : natural
+		g_tdata_width : natural;
+
+		g_check_tkeep_tlast : boolean
 	);
 	port(
 		clk              : in  std_ulogic;
 		rst              : in  std_ulogic;
 
-		if_axis_m_tdata  : in  std_ulogic_vector(g_tdata_width - 1 downto 0);
+		if_axis_m_tdata  : in  std_ulogic_vector(g_tdata_width     - 1 downto 0);
+		if_axis_m_tkeep  : in  std_ulogic_vector(g_tdata_width / 8 - 1 downto 0);
+		if_axis_m_tlast  : in  std_ulogic;
 		if_axis_m_tvalid : in  std_ulogic;
 		if_axis_s_tready : out std_ulogic;
 
@@ -58,7 +63,11 @@ begin
 		file check_file     : text open read_mode is g_filename;
 		variable check_line : line;
 
-		variable frame_string : string(0 to g_tdata_width / 4 - 1);
+		variable frame_string   : string(0 to g_tdata_width / 4 - 1);
+		variable tkeep_expected : std_ulogic_vector(g_tdata_width / 8 - 1 downto 0) := (others => '0');
+		variable tlast_expected : std_ulogic := '0';
+
+		variable success : boolean := true;
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then
@@ -83,20 +92,45 @@ begin
 					-- get frame
 					-- condition only needed if finished
 					if check_line /= null then
-						-- TODO tkeep check
-						-- TODO tlast check
-						read(check_line, frame_string);
+
+						if check_line'length >= frame_string'length then
+							tkeep_expected := (others => '1');
+							read(check_line, frame_string);
+						else
+							-- use line length before it is changed
+							-- stimulus line length is nibbles
+							frame_string(check_line'length to g_tdata_width / 4 - 1) := (others => '-');
+							-- tkeep is bytes
+							tkeep_expected := to_tkeep(check_line'length / 2, g_tdata_width / 8);
+							read(check_line, frame_string(0 to check_line'length - 1));
+						end if;
 
 						-- checkline is only /= null if it contains another frame
 						if check_line'length = 0 then
-							check_line := null;
+							tlast_expected := '1';
+							check_line     := null;
+						else
+							tlast_expected := '0';
 						end if;
 					end if;
 
-					-- compare frames
 					assert to_std_ulogic_vector(frame_string) = if_axis_m_tdata
-						report "tdata is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & frame_string
-						severity failure;
+						report "tdata is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & frame_string;
+					success := success and (to_std_ulogic_vector(frame_string) = if_axis_m_tdata);
+
+					if g_check_tkeep_tlast then
+						assert tkeep_expected = if_axis_m_tkeep
+							report "tkeep is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & to_hstring(tkeep_expected);
+						success := success and (tkeep_expected = if_axis_m_tkeep);
+						assert tlast_expected = if_axis_m_tlast
+							report "tlast is 0b" & std_ulogic'image(if_axis_m_tlast) & " should be 0" & std_ulogic'image(tlast_expected);
+						success := success and (tlast_expected = if_axis_m_tlast);
+					end if;
+
+					if not success then
+						stop(2);
+					end if;
+					-- compare frames
 					report "tdata is correct 0x" & to_hstring(if_axis_m_tdata);
 				end if;
 			end if;

@@ -30,6 +30,8 @@ entity testbench is
 		g_in_tdata_width  : natural := 64;
 		g_out_tdata_width : natural := 64;
 
+		g_check_tkeep_tlast : boolean := true;
+
 		g_period  : time := 10 ns;
 		g_timeout : time :=  1 ms
 	);
@@ -39,10 +41,14 @@ architecture arch of testbench is
 	signal s_clk : std_ulogic := '1';
 	signal s_rst : std_ulogic;
 
-	signal s_if_axis_in_m_tdata   : std_ulogic_vector(g_in_tdata_width - 1 downto 0);
+	signal s_if_axis_in_m_tdata   : std_ulogic_vector(g_in_tdata_width     - 1 downto 0);
+	signal s_if_axis_in_m_tkeep   : std_ulogic_vector(g_in_tdata_width / 8 - 1 downto 0);
+	signal s_if_axis_in_m_tlast   : std_ulogic;
 	signal s_if_axis_in_m_tvalid  : std_ulogic;
 	signal s_if_axis_in_s_tready  : std_ulogic;
-	signal s_if_axis_out_m_tdata  : std_ulogic_vector(g_out_tdata_width - 1 downto 0);
+	signal s_if_axis_out_m_tdata  : std_ulogic_vector(g_out_tdata_width     - 1 downto 0);
+	signal s_if_axis_out_m_tkeep  : std_ulogic_vector(g_out_tdata_width / 8 - 1 downto 0);
+	signal s_if_axis_out_m_tlast  : std_ulogic;
 	signal s_if_axis_out_m_tvalid : std_ulogic;
 	signal s_if_axis_out_s_tready : std_ulogic;
 
@@ -76,6 +82,8 @@ begin
 			clk              => s_clk,
 			rst              => s_rst,
 			if_axis_m_tdata  => s_if_axis_in_m_tdata,
+			if_axis_m_tkeep  => s_if_axis_in_m_tkeep,
+			if_axis_m_tlast  => s_if_axis_in_m_tlast,
 			if_axis_m_tvalid => s_if_axis_in_m_tvalid,
 			if_axis_s_tready => s_if_axis_in_s_tready,
 			finished         => s_generator_finished
@@ -83,14 +91,17 @@ begin
 
 	i_axis_checker : entity axis_testbench.axis_checker
 		generic map(
-			g_filename    => g_out_filename,
-			g_tdata_width => g_out_tdata_width
+			g_filename          => g_out_filename,
+			g_tdata_width       => g_out_tdata_width,
+			g_check_tkeep_tlast => g_check_tkeep_tlast
 		)
 		port map(
 			clk              => s_clk,
 			rst              => s_rst,
 			if_axis_m_tdata  => s_if_axis_out_m_tdata,
 			if_axis_m_tvalid => s_if_axis_out_m_tvalid,
+			if_axis_m_tkeep  => s_if_axis_out_m_tkeep,
+			if_axis_m_tlast  => s_if_axis_out_m_tlast,
 			if_axis_s_tready => s_if_axis_out_s_tready,
 			finished         => s_checker_finished
 		);
@@ -104,9 +115,13 @@ begin
 			clk                  => s_clk,
 			rst                  => s_rst,
 			if_axis_in_m_tdata   => s_if_axis_in_m_tdata,
+			if_axis_in_m_tkeep   => s_if_axis_in_m_tkeep,
+			if_axis_in_m_tlast   => s_if_axis_in_m_tlast,
 			if_axis_in_m_tvalid  => s_if_axis_in_m_tvalid,
 			if_axis_in_s_tready  => s_if_axis_in_s_tready,
 			if_axis_out_m_tdata  => s_if_axis_out_m_tdata,
+			if_axis_out_m_tkeep  => s_if_axis_out_m_tkeep,
+			if_axis_out_m_tlast  => s_if_axis_out_m_tlast,
 			if_axis_out_m_tvalid => s_if_axis_out_m_tvalid,
 			if_axis_out_s_tready => s_if_axis_out_s_tready
 		);

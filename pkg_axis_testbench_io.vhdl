@@ -21,6 +21,15 @@ package pkg_axis_testbench_io is
 	--!
 	--! empty lines and lines having a `#` in the first column are ignored
 	procedure get_line_from_file(file f : text; line : out line);
+
+	/**
+	 * convert a number of bytes to a std_ulogic_vector
+	 *
+	 * @param number of valid bytes in tdata
+	 * @param tkeep_width width of return tkeep std_ulogic_vector
+	 * @return filled with n `'1'`s from the left
+	 */
+	function to_tkeep(n : positive; tkeep_width : natural) return std_ulogic_vector;
 end package;
 
 package body pkg_axis_testbench_io is
@@ -75,5 +84,18 @@ package body pkg_axis_testbench_io is
 			line := null;
 			return;
 		end if;
+	end;
+
+	function to_tkeep(n : positive; tkeep_width : natural) return std_ulogic_vector is
+		variable ret : std_ulogic_vector(tkeep_width - 1 downto 0) := (others => '0');
+	begin
+		assert n <= tkeep_width;
+		for i in 0 to tkeep_width - 1 loop
+			ret(tkeep_width - i - 1) := '1';
+			if i >= n then
+				return ret;
+			end if;
+		end loop;
+		return ret;
 	end;
 end package body;

@@ -33,7 +33,9 @@ entity axis_generator is
 		clk              : in  std_ulogic;
 		rst              : in  std_ulogic;
 
-		if_axis_m_tdata  : out std_ulogic_vector(g_tdata_width - 1 downto 0);
+		if_axis_m_tdata  : out std_ulogic_vector(g_tdata_width     - 1 downto 0);
+		if_axis_m_tkeep  : out std_ulogic_vector(g_tdata_width / 8 - 1 downto 0);
+		if_axis_m_tlast  : out std_ulogic;
 		if_axis_m_tvalid : out std_ulogic;
 		if_axis_s_tready : in  std_ulogic;
 
@@ -66,6 +68,8 @@ begin
 					-- end condition is independent of tvalid
 					if stimulus_line = null then
 						if_axis_m_tvalid <= '0';
+						if_axis_m_tkeep  <= (others => '0');
+						if_axis_m_tlast  <= '0';
 						finished         <= '1';
 					end if;
 				end if;
@@ -76,13 +80,24 @@ begin
 					-- get frame
 					-- condition only needed if finished
 					if stimulus_line /= null then
-						-- TODO tkeep generation
-						-- TODO tlast generation
-						read(stimulus_line, frame_string);
+						if stimulus_line'length >= frame_string'length then
+							if_axis_m_tkeep <= (others => '1');
+							read(stimulus_line, frame_string);
+						else
+							-- use line length before it is changed
+							-- stimulus line length is nibbles
+							frame_string(stimulus_line'length to g_tdata_width / 4 - 1) := (others => '-');
+							-- tkeep is bytes
+							if_axis_m_tkeep <= to_tkeep(stimulus_line'length / 2, g_tdata_width / 8);
+							read(stimulus_line, frame_string(0 to stimulus_line'length - 1));
+						end if;
 
 						-- stimulus_line is only /= null if it contains another frame
 						if stimulus_line'length = 0 then
-							stimulus_line := null;
+							if_axis_m_tlast <= '1' ;
+							stimulus_line   := null;
+						else
+							if_axis_m_tlast <= '0' ;
 						end if;
 					end if;
 
