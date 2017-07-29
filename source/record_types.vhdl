@@ -139,26 +139,6 @@ package record_types is
 		traffic_class => (others => '0'),
 		padding       => (others => '0')
 	);
-
-	--! AXI stream master interface for single IPv6 record transactions
-	type t_if_axis_ipv6_record_m is record
-		tvalid : std_ulogic;
-		tdata  : t_ipfix_ipv6_data_record;
-	end record;
-	constant c_if_axis_ipv6_record_m_default : t_if_axis_ipv6_record_m := (
-		tvalid => '0',
-		tdata  => c_ipfix_ipv6_data_record_default
-	);
-
-	--! AXI stream master interface for single IPv4 record transactions
-	type t_if_axis_ipv4_record_m is record
-		tvalid : std_ulogic;
-		tdata  : t_ipfix_ipv4_data_record;
-	end record;
-	constant c_if_axis_ipv4_record_m_default : t_if_axis_ipv4_record_m := (
-		tvalid => '0',
-		tdata  => c_ipfix_ipv4_data_record_default
-	);
 end package;
 
 package body record_types is
