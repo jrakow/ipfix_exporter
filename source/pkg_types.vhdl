@@ -12,28 +12,6 @@ use ieee.numeric_std.all;
 package pkg_types is
 	constant c_reset_active : std_ulogic := '1';
 
-	--! AXI stream interface for packets master port
-	type t_if_axis_packet_m is record
-		tvalid : std_ulogic;
-		tdata  : std_ulogic_vector(127 downto 0);
-		tkeep  : std_ulogic_vector(15  downto 0);
-		tlast  : std_ulogic;
-	end record;
-	constant c_if_axis_packet_m_default : t_if_axis_packet_m := (
-		tvalid => '0',
-		tdata  => (others => '0'),
-		tkeep  => (others => '0'),
-		tlast  => '0'
-	);
-
-	--! common AXI stream slave interface
-	type t_if_axis_s is record
-		tready : std_ulogic;
-	end record;
-	constant c_if_axis_s_default : t_if_axis_s := (
-		tready => '0'
-	);
-
 	subtype t_timeout is unsigned(15 downto 0);
 
 	subtype t_timestamp    is unsigned(31 downto 0);
@@ -140,6 +118,48 @@ package pkg_types is
 		tcp_flags     => (others => '0'),
 		traffic_class => (others => '0'),
 		padding       => (others => '0')
+	);
+
+	--! AXI stream interface for frames master port
+	type t_if_axis_frame_m is record
+		tvalid : std_ulogic;
+		tdata  : std_ulogic_vector(127 downto 0);
+		tkeep  : std_ulogic_vector(15  downto 0);
+		tlast  : std_ulogic;
+	end record;
+	constant c_if_axis_packet_m_default : t_if_axis_frame_m := (
+		tvalid => '0',
+		tdata  => (others => '0'),
+		tkeep  => (others => '0'),
+		tlast  => '0'
+	);
+
+	--! AXI stream interface for IPv6 records master port
+	type t_if_axis_ipv6_m is record
+		tvalid : std_ulogic;
+		tdata  : t_ipfix_ipv6_data_record;
+	end record;
+	constant c_if_axis_ipv6_m_default : t_if_axis_ipv6_m := (
+		tvalid => '0',
+		tdata  => c_ipfix_ipv6_data_record_default
+	);
+
+	--! AXI stream interface for IPv4 records master port
+	type t_if_axis_ipv4_m is record
+		tvalid : std_ulogic;
+		tdata  : t_ipfix_ipv4_data_record;
+	end record;
+	constant c_if_axis_ipv4_m_default : t_if_axis_ipv4_m := (
+		tvalid => '0',
+		tdata  => c_ipfix_ipv4_data_record_default
+	);
+
+	--! common AXI stream slave interface
+	type t_if_axis_s is record
+		tready : std_ulogic;
+	end record;
+	constant c_if_axis_s_default : t_if_axis_s := (
+		tready => '0'
 	);
 
 	/**
