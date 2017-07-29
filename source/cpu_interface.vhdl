@@ -40,16 +40,14 @@ entity cpu_interface is
 		vlan_config            : out t_vlan_config;
 		ethernet_config        : out t_ethernet_config;
 
-		collision_event_ipv6   : in std_ulogic;
-		collision_event_ipv4   : in std_ulogic
+		events : std_ulogic_vector(c_number_of_counters - 1 downto 0)
 	);
 end entity;
 
 architecture arch of cpu_interface is
 	constant c_used_width         : natural := 8;
-	constant c_number_of_counters : natural := 27;
 
-	type t_counter_array is array(0 to c_number_of_counters - 1) of std_ulogic_vector(31 downto 0);
+	type t_counter_array is array(0 to c_number_of_counters - 1) of unsigned(31 downto 0);
 	signal s_counter_array : t_counter_array;
 
 	signal s_scratchpad : std_ulogic_vector(31 downto 0);
@@ -101,33 +99,33 @@ begin
 					when x"68" => data_in <= ethernet_config.destination(31 downto  0);
 					when x"6C" => data_in <= x"0000" & ethernet_config.destination(47 downto 32);
 					-- counters
-					when x"70" => data_in <= s_counter_array( 0);
-					when x"74" => data_in <= s_counter_array( 1);
-					when x"78" => data_in <= s_counter_array( 2);
-					when x"7C" => data_in <= s_counter_array( 3);
-					when x"80" => data_in <= s_counter_array( 4);
-					when x"84" => data_in <= s_counter_array( 5);
-					when x"88" => data_in <= s_counter_array( 6);
-					when x"8C" => data_in <= s_counter_array( 7);
-					when x"90" => data_in <= s_counter_array( 8);
-					when x"94" => data_in <= s_counter_array( 9);
-					when x"98" => data_in <= s_counter_array(10);
-					when x"9C" => data_in <= s_counter_array(11);
-					when x"A0" => data_in <= s_counter_array(12);
-					when x"A4" => data_in <= s_counter_array(13);
-					when x"A8" => data_in <= s_counter_array(14);
-					when x"AC" => data_in <= s_counter_array(15);
-					when x"B0" => data_in <= s_counter_array(16);
-					when x"B4" => data_in <= s_counter_array(17);
-					when x"B8" => data_in <= s_counter_array(18);
-					when x"BC" => data_in <= s_counter_array(19);
-					when x"C0" => data_in <= s_counter_array(20);
-					when x"C4" => data_in <= s_counter_array(21);
-					when x"C8" => data_in <= s_counter_array(22);
-					when x"CC" => data_in <= s_counter_array(23);
-					when x"D0" => data_in <= s_counter_array(24);
-					when x"D4" => data_in <= s_counter_array(25);
-					when x"D8" => data_in <= s_counter_array(26);
+					when x"70" => data_in <= std_ulogic_vector(s_counter_array( 0));
+					when x"74" => data_in <= std_ulogic_vector(s_counter_array( 1));
+					when x"78" => data_in <= std_ulogic_vector(s_counter_array( 2));
+					when x"7C" => data_in <= std_ulogic_vector(s_counter_array( 3));
+					when x"80" => data_in <= std_ulogic_vector(s_counter_array( 4));
+					when x"84" => data_in <= std_ulogic_vector(s_counter_array( 5));
+					when x"88" => data_in <= std_ulogic_vector(s_counter_array( 6));
+					when x"8C" => data_in <= std_ulogic_vector(s_counter_array( 7));
+					when x"90" => data_in <= std_ulogic_vector(s_counter_array( 8));
+					when x"94" => data_in <= std_ulogic_vector(s_counter_array( 9));
+					when x"98" => data_in <= std_ulogic_vector(s_counter_array(10));
+					when x"9C" => data_in <= std_ulogic_vector(s_counter_array(11));
+					when x"A0" => data_in <= std_ulogic_vector(s_counter_array(12));
+					when x"A4" => data_in <= std_ulogic_vector(s_counter_array(13));
+					when x"A8" => data_in <= std_ulogic_vector(s_counter_array(14));
+					when x"AC" => data_in <= std_ulogic_vector(s_counter_array(15));
+					when x"B0" => data_in <= std_ulogic_vector(s_counter_array(16));
+					when x"B4" => data_in <= std_ulogic_vector(s_counter_array(17));
+					when x"B8" => data_in <= std_ulogic_vector(s_counter_array(18));
+					when x"BC" => data_in <= std_ulogic_vector(s_counter_array(19));
+					when x"C0" => data_in <= std_ulogic_vector(s_counter_array(20));
+					when x"C4" => data_in <= std_ulogic_vector(s_counter_array(21));
+					when x"C8" => data_in <= std_ulogic_vector(s_counter_array(22));
+					when x"CC" => data_in <= std_ulogic_vector(s_counter_array(23));
+					when x"D0" => data_in <= std_ulogic_vector(s_counter_array(24));
+					when x"D4" => data_in <= std_ulogic_vector(s_counter_array(25));
+					when x"D8" => data_in <= std_ulogic_vector(s_counter_array(26));
 					when others =>
 						read_valid <= '0';
 				end case;
@@ -206,35 +204,42 @@ begin
 					when x"68" => ethernet_config.destination(31 downto  0) <= data_out;
 					when x"6C" => ethernet_config.destination(47 downto 32) <= data_out(15 downto 0);
 					-- counters
-					when x"70" => s_counter_array( 0) <= data_out;
-					when x"74" => s_counter_array( 1) <= data_out;
-					when x"78" => s_counter_array( 2) <= data_out;
-					when x"7C" => s_counter_array( 3) <= data_out;
-					when x"80" => s_counter_array( 4) <= data_out;
-					when x"84" => s_counter_array( 5) <= data_out;
-					when x"88" => s_counter_array( 6) <= data_out;
-					when x"8C" => s_counter_array( 7) <= data_out;
-					when x"90" => s_counter_array( 8) <= data_out;
-					when x"94" => s_counter_array( 9) <= data_out;
-					when x"98" => s_counter_array(10) <= data_out;
-					when x"9C" => s_counter_array(11) <= data_out;
-					when x"A0" => s_counter_array(12) <= data_out;
-					when x"A4" => s_counter_array(13) <= data_out;
-					when x"A8" => s_counter_array(14) <= data_out;
-					when x"AC" => s_counter_array(15) <= data_out;
-					when x"B0" => s_counter_array(16) <= data_out;
-					when x"B4" => s_counter_array(17) <= data_out;
-					when x"B8" => s_counter_array(18) <= data_out;
-					when x"BC" => s_counter_array(19) <= data_out;
-					when x"C0" => s_counter_array(20) <= data_out;
-					when x"C4" => s_counter_array(21) <= data_out;
-					when x"C8" => s_counter_array(22) <= data_out;
-					when x"CC" => s_counter_array(23) <= data_out;
-					when x"D0" => s_counter_array(24) <= data_out;
-					when x"D4" => s_counter_array(25) <= data_out;
-					when x"D8" => s_counter_array(26) <= data_out;
+					when x"70" => s_counter_array( 0) <= unsigned(data_out);
+					when x"74" => s_counter_array( 1) <= unsigned(data_out);
+					when x"78" => s_counter_array( 2) <= unsigned(data_out);
+					when x"7C" => s_counter_array( 3) <= unsigned(data_out);
+					when x"80" => s_counter_array( 4) <= unsigned(data_out);
+					when x"84" => s_counter_array( 5) <= unsigned(data_out);
+					when x"88" => s_counter_array( 6) <= unsigned(data_out);
+					when x"8C" => s_counter_array( 7) <= unsigned(data_out);
+					when x"90" => s_counter_array( 8) <= unsigned(data_out);
+					when x"94" => s_counter_array( 9) <= unsigned(data_out);
+					when x"98" => s_counter_array(10) <= unsigned(data_out);
+					when x"9C" => s_counter_array(11) <= unsigned(data_out);
+					when x"A0" => s_counter_array(12) <= unsigned(data_out);
+					when x"A4" => s_counter_array(13) <= unsigned(data_out);
+					when x"A8" => s_counter_array(14) <= unsigned(data_out);
+					when x"AC" => s_counter_array(15) <= unsigned(data_out);
+					when x"B0" => s_counter_array(16) <= unsigned(data_out);
+					when x"B4" => s_counter_array(17) <= unsigned(data_out);
+					when x"B8" => s_counter_array(18) <= unsigned(data_out);
+					when x"BC" => s_counter_array(19) <= unsigned(data_out);
+					when x"C0" => s_counter_array(20) <= unsigned(data_out);
+					when x"C4" => s_counter_array(21) <= unsigned(data_out);
+					when x"C8" => s_counter_array(22) <= unsigned(data_out);
+					when x"CC" => s_counter_array(23) <= unsigned(data_out);
+					when x"D0" => s_counter_array(24) <= unsigned(data_out);
+					when x"D4" => s_counter_array(25) <= unsigned(data_out);
+					when x"D8" => s_counter_array(26) <= unsigned(data_out);
 					when others =>
 				end case;
+			end if;
+			if rst /= c_reset_active then
+				for i in 0 to c_number_of_counters loop
+					if events(i) then
+						s_counter_array(i) <= s_counter_array(i) + 1;
+					end if;
+				end loop;
 			end if;
 		end if;
 	end process;

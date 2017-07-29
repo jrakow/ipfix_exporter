@@ -10,7 +10,8 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 package pkg_types is
-	constant c_reset_active : std_ulogic := '1';
+	constant c_reset_active       : std_ulogic := '1';
+	constant c_number_of_counters : natural := 27;
 
 	subtype t_timeout is unsigned(15 downto 0);
 
