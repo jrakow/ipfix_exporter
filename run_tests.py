@@ -36,6 +36,10 @@ if __name__ == "__main__":
 			case_filename_stub = module["name"] + "/" + case["number"]
 			args = ["./testbench",
 			        "--wave=waveforms/" + case_filename_stub + ".ghw",
+			        "-gg_module=" + module["name"],
+			        "-gg_in_tdata_width=" + str(128),
+			        "-gg_out_tdata_width=" + str(128),
+			        "-gg_check_tkeep_tlast=" + "true",
 			        "-gg_in_filename=cases/" + case_filename_stub + "_in.dat",
 			        "-gg_out_filename=cases/" + case_filename_stub + "_out.dat"
 			       ]
