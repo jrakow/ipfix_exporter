@@ -26,6 +26,7 @@ entity testbench is
 	generic (
 		g_in_filename  : string := "cases/testbench_00_in.dat";
 		g_out_filename : string := "cases/testbench_00_out.dat";
+		g_emu_filename : string := "cases/testbench_00_emu.dat";
 		g_module       : string := "testbench_test_dummy";
 
 		g_in_tdata_width  : natural := 64;
@@ -53,8 +54,16 @@ architecture arch of testbench is
 	signal s_if_axis_out_m_tvalid : std_ulogic;
 	signal s_if_axis_out_s_tready : std_ulogic;
 
+	signal s_read_enable  : std_ulogic;
+	signal s_write_enable : std_ulogic;
+	signal s_data_in      : std_ulogic_vector(31 downto 0);
+	signal s_data_out     : std_ulogic_vector(31 downto 0);
+	signal s_address      : std_ulogic_vector(31 downto 0);
+	signal s_read_valid   : std_ulogic;
+
 	signal s_generator_finished : std_ulogic;
 	signal s_checker_finished   : std_ulogic;
+	signal s_emulator_finished  : std_ulogic;
 begin
 	s_clk <= not s_clk after g_period / 2;
 
@@ -129,6 +138,24 @@ begin
 		end generate;
 
 	-- paste more modules here
+
+	i_cpu_emulator : entity axis_testbench.cpu_emulator
+		generic map(
+			g_filename => g_emu_filename
+		)
+		port map(
+			clk          => s_clk,
+			rst          => s_rst,
+
+			read_enable  => s_read_enable,
+			write_enable => s_write_enable,
+			data_in      => s_data_in,
+			data_out     => s_data_out,
+			address      => s_address,
+			read_valid   => s_read_valid,
+
+			finished     => s_emulator_finished
+		);
 
 	p_timeout : process
 	begin
