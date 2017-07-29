@@ -66,8 +66,8 @@ architecture arch of testbench is
 	signal s_address      : std_ulogic_vector(31 downto 0);
 	signal s_read_valid   : std_ulogic;
 
-	signal s_generator_reset    : std_ulogic;
-	signal s_checker_reset      : std_ulogic;
+	signal s_generator_reset    : std_ulogic := '1';
+	signal s_checker_reset      : std_ulogic := '1';
 	signal s_generator_finished : boolean;
 	signal s_checker_finished   : boolean;
 	signal s_emulator_finished  : boolean;
