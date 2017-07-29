@@ -33,9 +33,11 @@ if __name__ == "__main__":
 				eprint(" expecting failure", end="")
 			eprint()
 
+			case_filename_stub = module["name"] + "_" + case["number"]
 			args = ["./testbench",
-			        "-gg_in_filename=cases/" + module["name"] + "_" + case["number"] + "_in.dat",
-			        "-gg_out_filename=cases/" + module["name"] + "_" + case["number"] + "_out.dat"
+			        "--wave=waveforms/" + case_filename_stub + ".ghw",
+			        "-gg_in_filename=cases/" + case_filename_stub + "_in.dat",
+			        "-gg_out_filename=cases/" + case_filename_stub + "_out.dat"
 			       ]
 			eprint(args)
 			# start subprocess

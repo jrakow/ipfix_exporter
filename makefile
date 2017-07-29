@@ -19,15 +19,11 @@ testbench: ${TESTBENCH_SRCS}
 
 .PHONY: clean
 clean:
-	rm -f ${TESTBENCH_SRCS:.vhdl=.o} testbench.o e~testbench.o axis_testbench-obj08.cf testbench testbench.ghw html
+	rm -rf ${TESTBENCH_SRCS:.vhdl=.o} testbench.o e~testbench.o axis_testbench-obj08.cf testbench waveforms html
 
 .PHONY: run
-run testbench.ghw: testbench cases/*
+run: testbench cases/*
 	./run_tests.py
-
-.PHONY: wave
-wave: testbench.ghw
-	gtkwave testbench.ghw --save waveform.gtkw
 
 .PHONY: html
 html:
