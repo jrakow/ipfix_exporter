@@ -1,0 +1,19 @@
+# 4 | sourceIPv4Address        |
+# 4 | destinationIPv4Address   |
+# 2 | sourceTransportPort      |
+# 2 | destinationTransportPort |
+# 4 | flowStartSeconds         |
+# 4 | flowEndSeconds           |
+# 4 | octetDeltaCount          |
+# 4 | packetDeltaCount         |
+# 1 | protocolIdentifier       |
+# 1 | ipClassOfService         |
+# 1 | tcpControlBits           |
+# 1 | paddingOctets            |
+
+# 5 data records
+333333334444444455556666CCCCCCCCDDDDDDDD012345670000000111220000
+333333334444444455556666CCCCCCCCDDDDDDDD012345670000000211220000
+333333334444444455556666CCCCCCCCDDDDDDDD012345670000000311220000
+333333334444444455556666CCCCCCCCDDDDDDDD012345670000000411220000
+333333334444444455556666CCCCCCCCDDDDDDDD012345670000000511220000
