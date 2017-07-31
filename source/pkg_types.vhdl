@@ -297,6 +297,11 @@ package pkg_types is
 	 * Failing is delayed until run.
 	 */
 	procedure static_assert(b : in boolean; s : in string; f : in severity_level);
+
+	-- safe IP packet total length : 1500 bytes
+	constant c_ipfix_message_max_length  : natural := 1500 - 40 - 8;
+	constant c_ipv6_ipfix_records_per_message : natural := (c_ipfix_message_max_length - 20) * 8 / c_ipfix_ipv6_data_record_width;
+	constant c_ipv4_ipfix_records_per_message : natural := (c_ipfix_message_max_length - 20) * 8 / c_ipfix_ipv4_data_record_width;
 end package;
 
 package body pkg_types is
