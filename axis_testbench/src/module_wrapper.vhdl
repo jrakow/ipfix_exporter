@@ -174,7 +174,7 @@ begin
 	i_ipfix_message_control : if g_module = "ipfix_message_control" generate
 		i_cond_gen : entity ipfix_exporter.ipfix_message_control
 			generic map (
-				g_record_width => g_out_tdata_width
+				g_record_width => g_in_tdata_width
 				)
 			port map(
 				clk           => clk,
