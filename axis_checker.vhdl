@@ -140,8 +140,6 @@ begin
 					if not success then
 						stop(2);
 					end if;
-					-- compare frames
-					report "tdata is correct 0x" & to_hstring(if_axis_m_tdata);
 				end if;
 			end if;
 		end if;
