@@ -216,6 +216,9 @@ begin
 			cpu_ipfix_message_timeout => cpu_ipfix_message_timeout
 		);
 	i_ipfix_header : entity ipfix_exporter.ipfix_header
+		generic map (
+			g_ip_version => g_ip_version
+			)
 		port map(
 			clk           => clk,
 			rst           => rst,

@@ -22,6 +22,9 @@ configuration in:
 * `timestamp`
  */
 entity ipfix_header is
+	generic(
+		g_ip_version : natural
+	);
 	port(
 		clk : in std_ulogic;
 		rst : in std_ulogic;

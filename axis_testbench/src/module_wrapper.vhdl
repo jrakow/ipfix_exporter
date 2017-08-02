@@ -22,6 +22,9 @@ The following modules are not tested, as they do not fit into the testbench:
 entity module_wrapper is
 	generic(
 		g_module          : string;
+		-- g_ip_version is only used for ipfix_header
+		-- all other ip version dependent modules can derive it from the port widths
+		g_ip_version      : natural;
 		g_in_tdata_width  : natural;
 		g_out_tdata_width : natural
 	);
@@ -58,6 +61,7 @@ architecture arch of module_wrapper is
 	signal s_ipfix_message_timeout  : t_timeout;
 	signal s_ipfix_config_ipv6      : t_ipfix_config;
 	signal s_ipfix_config_ipv4      : t_ipfix_config;
+	signal s_ipfix_config_used      : t_ipfix_config;
 	signal s_udp_config             : t_udp_config;
 	signal s_ip_config              : t_ip_config;
 	signal s_vlan_config            : t_vlan_config;
@@ -190,8 +194,12 @@ begin
 			);
 		end generate;
 
+	s_ipfix_config_used <= s_ipfix_config_ipv6 when g_ip_version = 6 else s_ipfix_config_ipv4;
 	i_ipfix_header : if g_module = "ipfix_header" generate
 		i_cond_gen : entity ipfix_exporter.ipfix_header
+			generic map (
+				g_ip_version => g_ip_version
+				)
 			port map(
 				clk           => clk,
 				rst           => rst,
@@ -208,8 +216,7 @@ begin
 				if_axis_out_m.tvalid => if_axis_out_m_tvalid,
 				if_axis_out_s.tready => if_axis_out_s_tready,
 
-				-- always uses ipv6 config
-				cpu_ipfix_config => s_ipfix_config_ipv6,
+				cpu_ipfix_config => s_ipfix_config_used,
 				cpu_timestamp    => s_timestamp
 			);
 		end generate;

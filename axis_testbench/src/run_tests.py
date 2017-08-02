@@ -23,6 +23,7 @@ def make_args(module, case):
 
 	        "-gg_in_tdata_width=" + str(module["g_in_tdata_width"]),
 	        "-gg_out_tdata_width=" + str(module["g_out_tdata_width"]),
+	        "-gg_ip_version=" + str(module.get("g_ip_version", 0)),
 
 	        "-gg_in_filename="  + (case_filename_stub + "_in.dat"  if os.path.isfile(case_filename_stub + "_in.dat")  else "/dev/null"),
 	        "-gg_out_filename=" + (case_filename_stub + "_out.dat" if os.path.isfile(case_filename_stub + "_out.dat") else "/dev/null"),

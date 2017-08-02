@@ -31,6 +31,7 @@ entity testbench is
 
 		g_in_tdata_width  : natural := 0;
 		g_out_tdata_width : natural := 0;
+		g_ip_version      : natural := 0;
 
 		g_random_tvalid_seed_0 : positive := 1;
 		g_random_tvalid_seed_1 : positive := 2;
@@ -149,7 +150,8 @@ begin
 		generic map(
 			g_module          => g_module,
 			g_in_tdata_width  => g_in_tdata_width,
-			g_out_tdata_width => g_out_tdata_width
+			g_out_tdata_width => g_out_tdata_width,
+			g_ip_version      => g_ip_version
 		)
 		port map(
 			clk                  => s_clk,
