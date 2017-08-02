@@ -11,6 +11,7 @@ def eprint(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
 
 if __name__ == "__main__":
+	eprint("starting test run")
 	with open("cases/cases.json") as file:
 		json = json.load(file)
 
@@ -20,14 +21,14 @@ if __name__ == "__main__":
 	unexpected_tests = 0
 
 	for module in json:
-		eprint("starting " + module["name"] + " test")
+		eprint(" starting " + module["name"] + " test")
 
 		for case in module["cases"]:
 			# default value is not False
 			inverted = case.get("invert", False)
 
 			# print header line
-			eprint("starting " + module["name"] + " test case: " + case["number"], end="")
+			eprint("  starting " + module["name"] + " test case: " + case["number"], end="")
 			if "title" in case:
 				eprint(" \"" + case["title"] + "\"", end="")
 			if inverted:
@@ -56,13 +57,13 @@ if __name__ == "__main__":
 			# start subprocess
 			exit = subprocess.call(args, stderr=sys.stdout.buffer)
 
-			eprint(module["name"] + " " + case["number"], end="")
+			eprint("  " + module["name"] + " " + case["number"], end="")
 			eprint(" succeeded" if exit == 0 else " failed", end="")
 			# != is xor
 			expected = (exit == 0) != inverted
 			eprint(" as expected" if expected else " unexpectedly")
 			if not expected:
-				eprint("seeds were (" + random_ints[0][0] + ", " + random_ints[0][1] + ", " + random_ints[1][0] + ", " + random_ints[1][1] + ")")
+				eprint("  seeds were (" + random_ints[0][0] + ", " + random_ints[0][1] + ", " + random_ints[1][0] + ", " + random_ints[1][1] + ")")
 
 			number_of_tests += 1
 			if expected:
@@ -70,7 +71,7 @@ if __name__ == "__main__":
 			else:
 				unexpected_tests += 1
 
-		eprint("all tests run for module " + module["name"])
+		eprint(" all tests run for module " + module["name"])
 
 	eprint("all tests run")
 	eprint("number of tests:  ", number_of_tests)
