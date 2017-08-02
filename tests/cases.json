@@ -76,7 +76,9 @@
 		[
 			{ "number" : "60" , "invert" : false, "title" : "single not full message" },
 			{ "number" : "61" , "invert" : false, "title" : "single full message" },
-			{ "number" : "62" , "invert" : false, "title" : "one full, one not full message" }
+			{ "number" : "62" , "invert" : false, "title" : "one full, one not full message" },
+			{ "number" : "63" , "invert" : false, "title" : "timestamp change" },
+			{ "number" : "64" , "invert" : false, "title" : "observation id change" }
 		]
 	},
 	{
@@ -88,7 +90,9 @@
 		[
 			{ "number" : "40" , "invert" : false, "title" : "single not full message" },
 			{ "number" : "41" , "invert" : false, "title" : "single full message" },
-			{ "number" : "42" , "invert" : false, "title" : "one full, one not full message" }
+			{ "number" : "42" , "invert" : false, "title" : "one full, one not full message" },
+			{ "number" : "43" , "invert" : false, "title" : "timestamp change" },
+			{ "number" : "44" , "invert" : false, "title" : "observation id change" }
 		]
 	}
 ]
