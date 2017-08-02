@@ -44,8 +44,8 @@
 	{
 		"name" : "ipfix_message_control",
 		"g_in_tdata_width" : 512,
-		"comment" : "ipv6",
 		"g_out_tdata_width" : 128,
+		"g_ip_version" : 6,
 		"cases" :
 		[
 			{ "number" : "60" , "invert" : false, "title" : "single not full message" },
@@ -56,8 +56,8 @@
 	{
 		"name" : "ipfix_message_control",
 		"g_in_tdata_width" : 256,
-		"comment" : "ipv4",
 		"g_out_tdata_width" : 128,
+		"g_ip_version" : 4,
 		"cases" :
 		[
 			{ "number" : "40" , "invert" : false, "title" : "single not full message" },
