@@ -1,0 +1,16 @@
+# 4 sourceIPv4Address
+# 4 destinationIPv4Address
+# 2 sourceTransportPort
+# 2 destinationTransportPort
+# 4 flowStartSeconds
+# 4 flowEndSeconds
+# 4 octetDeltaCount
+# 4 packetDeltaCount
+# 1 protocolIdentifier
+# 1 ipClassOfService
+# 1 tcpControlBits
+# 1 paddingOctets
+
+# reorder if necessary
+3333333344444444555566660000000000000000000004A00000000311EF0000
+3333333344444444555566660000000000000000000004C40000000306EF0700
