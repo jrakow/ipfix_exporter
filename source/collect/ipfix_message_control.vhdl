@@ -14,6 +14,7 @@ If the message is ready, the IPFIX set header is computed and it and the whole s
 
 configuration in:
 * `ipfix_message_timeout`
+* `ipfix_template_id`
  */
 entity ipfix_message_control is
 	generic(
@@ -30,6 +31,7 @@ entity ipfix_message_control is
 		if_axis_out_m : out t_if_axis_frame_m;
 		if_axis_out_s : in  t_if_axis_s;
 
+		cpu_ipfix_config          : in t_ipfix_config;
 		cpu_ipfix_message_timeout : in t_timeout
 	);
 end entity;

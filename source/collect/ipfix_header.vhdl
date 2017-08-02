@@ -17,7 +17,6 @@ A new header is prefixed for every set.
 The whole IPFIX message is forwarded.
 
 configuration in:
-* `ipfix_template_id`
 * `ipfix_observation_domain_id`
 * `timestamp`
  */

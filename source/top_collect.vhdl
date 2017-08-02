@@ -213,6 +213,7 @@ begin
 			if_axis_out_m => s_if_axis_m_2,
 			if_axis_out_s => s_if_axis_s_2,
 
+			cpu_ipfix_config          => cpu_ipfix_config,
 			cpu_ipfix_message_timeout => cpu_ipfix_message_timeout
 		);
 	i_ipfix_header : entity ipfix_exporter.ipfix_header

@@ -190,6 +190,7 @@ begin
 				if_axis_out_m.tvalid => if_axis_out_m_tvalid,
 				if_axis_out_s.tready => if_axis_out_s_tready,
 
+				cpu_ipfix_config          => s_ipfix_config_used,
 				cpu_ipfix_message_timeout => s_ipfix_message_timeout
 			);
 		end generate;
