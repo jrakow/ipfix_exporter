@@ -32,27 +32,21 @@ end entity;
 
 architecture arch of ram is
 	type t_ram is array (2**g_addr_width - 1 downto 0) of std_ulogic_vector(g_data_width - 1 downto 0);
-	shared variable ram : t_ram;
+	signal s_ram : t_ram;
 begin
 	process(clk)
 	begin
 		if rising_edge(clk) then
 			if enable_a then
-				data_out_a <= ram(to_integer(unsigned(addr_a)));
+				data_out_a <= s_ram(to_integer(unsigned(addr_a)));
 				if write_enable_a then
-					ram(to_integer(unsigned(addr_a))) := data_in_a;
+					s_ram(to_integer(unsigned(addr_a))) <= data_in_a;
 				end if;
 			end if;
-		end if;
-	end process;
-
-	process(clk)
-	begin
-		if rising_edge(clk) then
 			if enable_b then
-				data_out_b <= ram(to_integer(unsigned(addr_b)));
+				data_out_b <= s_ram(to_integer(unsigned(addr_b)));
 				if write_enable_b then
-					ram(to_integer(unsigned(addr_b))) := data_in_b;
+					s_ram(to_integer(unsigned(addr_b))) <= data_in_b;
 				end if;
 			end if;
 		end if;
