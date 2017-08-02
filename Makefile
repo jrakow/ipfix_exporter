@@ -6,6 +6,7 @@ GHDLFLAGS ?= --std=08 -g
 AXIS_TESTBENCH_SRCS := \
 	axis_testbench/src/axis_checker.vhdl \
 	axis_testbench/src/axis_generator.vhdl \
+	axis_testbench/src/cache_wrapper.vhdl \
 	axis_testbench/src/cpu_emulator.vhdl \
 	axis_testbench/src/module_wrapper.vhdl \
 	axis_testbench/src/pkg_axis_testbench_io.vhdl \

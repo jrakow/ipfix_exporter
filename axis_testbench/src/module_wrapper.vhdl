@@ -15,8 +15,6 @@ The design under test is chosen based on the g_module generic.
 
 The following modules are not tested, as they do not fit into the testbench:
 * ip_version_split
-* cache_insertion
-* cache_extraction
 * axis_combiner
  */
 entity module_wrapper is
@@ -169,6 +167,32 @@ begin
 			);
 		if_axis_out_m_tkeep <= (others => '1');
 		if_axis_out_m_tlast <= '1';
+		end generate;
+
+	i_cache_wrapper : if g_module = "cache_wrapper" generate
+		i_cond_gen : entity axis_testbench.cache_wrapper
+			generic map(
+				g_in_tdata_width  => g_in_tdata_width,
+				g_out_tdata_width => g_out_tdata_width
+			)
+			port map(
+				clk                        => clk,
+				rst                        => rst,
+				if_axis_in_m_tdata         => if_axis_in_m_tdata,
+				if_axis_in_m_tvalid        => if_axis_in_m_tvalid,
+				if_axis_in_s.tready        => if_axis_in_s_tready,
+
+				if_axis_out_m_tdata        => if_axis_out_m_tdata,
+				if_axis_out_m_tvalid       => if_axis_out_m_tvalid,
+				if_axis_out_s.tready       => if_axis_out_s_tready,
+
+				cpu_collision_event        => s_events(6),
+				cpu_cache_active_timeout   => s_cache_active_timeout,
+				cpu_cache_inactive_timeout => s_cache_inactive_timeout,
+
+				cpu_timestamp              => s_timestamp
+			);
+			s_events(17) <= s_events(6);
 		end generate;
 
 	i_ipfix_message_control : if g_module = "ipfix_message_control" generate
