@@ -20,13 +20,13 @@ IPFIX_EXPORTER_SRCS := \
 	source/collect/cache_extraction.vhdl \
 	source/collect/cache_insertion.vhdl \
 	source/collect/information_extraction.vhdl \
+	source/collect/ipfix_header.vhdl \
 	source/collect/ipfix_message_control.vhdl \
 	source/top_collect.vhdl \
 	source/axis_combiner.vhdl \
 	source/export/ethernet_header.vhdl \
 	source/export/ethertype_insertion.vhdl \
 	source/export/ip_header.vhdl \
-	source/export/ipfix_header.vhdl \
 	source/export/udp_header.vhdl \
 	source/export/vlan_insertion.vhdl \
 	source/preparation/ethernet_dropping.vhdl \

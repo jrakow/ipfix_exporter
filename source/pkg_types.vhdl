@@ -14,8 +14,8 @@ package pkg_types is
 	constant c_reset_active       : std_ulogic := '1';
 
 	constant c_number_of_counters_preparation : natural := 3;
-	constant c_number_of_counters_collect     : natural := 4;
-	constant c_number_of_counters_export      : natural := 7;
+	constant c_number_of_counters_collect     : natural := 5;
+	constant c_number_of_counters_export      : natural := 6;
 	constant c_number_of_counters             : natural := c_number_of_counters_preparation
 	                                                       + 2 * (c_number_of_counters_collect + c_number_of_counters_export)
 	                                                       + 1; -- combined output frames

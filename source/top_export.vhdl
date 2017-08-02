@@ -9,7 +9,7 @@ use ipfix_exporter.pkg_types.all;
 /*!
 This module is the top level for the export path.
 
-It instantiates and connects the @ref ipfix_header, @ref udp_header, @ref ip_header, @ref ethertype_insertion, @ref vlan_insertion and @ref ethernet_header modules.
+It instantiates and connects the @ref udp_header, @ref ip_header, @ref ethertype_insertion, @ref vlan_insertion and @ref ethernet_header modules.
 
 @dot
 digraph overview
@@ -18,14 +18,13 @@ digraph overview
 	input  [ label="input"  shape=circle ];
 	output [ label="output" shape=circle ];
 
-	ipfix_header        [ label="ipfix_header"        URL="@ref ipfix_header"        ];
 	udp_header          [ label="udp_header"          URL="@ref udp_header"          ];
 	ip_header           [ label="ip_header"           URL="@ref ip_header"           ];
 	ethertype_insertion [ label="ethertype_insertion" URL="@ref ethertype_insertion" ];
 	vlan_insertion      [ label="vlan_insertion"      URL="@ref vlan_insertion"      ];
 	ethernet_header     [ label="ethernet_header"     URL="@ref ethernet_header"     ];
 
-	input -> ipfix_header -> udp_header -> ip_header -> ethertype_insertion -> vlan_insertion -> ethernet_header -> output;
+	input -> udp_header -> ip_header -> ethertype_insertion -> vlan_insertion -> ethernet_header -> output;
 	}
 @enddot
  */
@@ -40,8 +39,6 @@ entity top_export is
 		if_axis_out_m : out t_if_axis_frame_m;
 		if_axis_out_s : in  t_if_axis_s;
 
-		cpu_timestamp       : in t_timestamp;
-		cpu_ipfix_config    : in t_ipfix_config;
 		cpu_udp_config      : in t_udp_config;
 		cpu_ip_config       : in t_ip_config;
 		cpu_vlan_config     : in t_vlan_config;
@@ -52,9 +49,6 @@ entity top_export is
 end entity;
 
 architecture arch of top_export is
-	signal s_if_axis_m_0 : t_if_axis_frame_m;
-	signal s_if_axis_s_0 : t_if_axis_s;
-
 	signal s_if_axis_m_1 : t_if_axis_frame_m;
 	signal s_if_axis_s_1 : t_if_axis_s;
 
@@ -68,34 +62,19 @@ architecture arch of top_export is
 	signal s_if_axis_s_4 : t_if_axis_s;
 begin
 	events(0) <= if_axis_in_m.tvalid and if_axis_in_m.tlast and if_axis_in_s.tready;
-	events(1) <= s_if_axis_m_0.tvalid and s_if_axis_m_0.tlast and s_if_axis_s_0.tready;
-	events(2) <= s_if_axis_m_1.tvalid and s_if_axis_m_1.tlast and s_if_axis_s_1.tready;
-	events(3) <= s_if_axis_m_2.tvalid and s_if_axis_m_2.tlast and s_if_axis_s_2.tready;
-	events(4) <= s_if_axis_m_3.tvalid and s_if_axis_m_3.tlast and s_if_axis_s_3.tready;
-	events(5) <= s_if_axis_m_4.tvalid and s_if_axis_m_4.tlast and s_if_axis_s_4.tready;
-	events(6) <= if_axis_out_m.tvalid and if_axis_out_m.tlast and if_axis_out_s.tready;
+	events(1) <= s_if_axis_m_1.tvalid and s_if_axis_m_1.tlast and s_if_axis_s_1.tready;
+	events(2) <= s_if_axis_m_2.tvalid and s_if_axis_m_2.tlast and s_if_axis_s_2.tready;
+	events(3) <= s_if_axis_m_3.tvalid and s_if_axis_m_3.tlast and s_if_axis_s_3.tready;
+	events(4) <= s_if_axis_m_4.tvalid and s_if_axis_m_4.tlast and s_if_axis_s_4.tready;
+	events(5) <= if_axis_out_m.tvalid and if_axis_out_m.tlast and if_axis_out_s.tready;
 
-	i_ipfix_header : entity ipfix_exporter.ipfix_header
+	i_udp_header : entity ipfix_exporter.udp_header
 		port map(
 			clk           => clk,
 			rst           => rst,
 
 			if_axis_in_m  => if_axis_in_m,
 			if_axis_in_s  => if_axis_in_s,
-
-			if_axis_out_m => s_if_axis_m_0,
-			if_axis_out_s => s_if_axis_s_0,
-
-			cpu_ipfix_config => cpu_ipfix_config,
-			cpu_timestamp    => cpu_timestamp
-		);
-	i_udp_header : entity ipfix_exporter.udp_header
-		port map(
-			clk           => clk,
-			rst           => rst,
-
-			if_axis_in_m  => s_if_axis_m_0,
-			if_axis_in_s  => s_if_axis_s_0,
 
 			if_axis_out_m => s_if_axis_m_1,
 			if_axis_out_s => s_if_axis_s_1,
