@@ -34,19 +34,19 @@ if __name__ == "__main__":
 				eprint(" expecting failure", end="")
 			eprint()
 
-			case_filename_stub = module["name"] + "/" + case["number"]
+			case_filename_stub = "cases/" + module["name"] + "/" + case["number"]
 			# VHDL ieee.math_real.uniform seed allowed values
 			random_ints = [(str(randint(1, 2147483562)), str(randint(1, 2147483398))) for i in range(0, 2)]
 			args = ["./testbench",
-			        "--wave=waveforms/" + case_filename_stub + ".ghw",
+			        "--wave=waveforms/" + module["name"] + "/" + case["number"] + ".ghw",
 			        "-gg_module=" + module["name"],
 
 			        "-gg_in_tdata_width=" + str(module["g_in_tdata_width"]),
 			        "-gg_out_tdata_width=" + str(module["g_out_tdata_width"]),
 
-			        "-gg_in_filename=cases/" + case_filename_stub + "_in.dat",
-			        "-gg_out_filename=cases/" + case_filename_stub + "_out.dat",
-			        "-gg_emu_filename=cases/" + case_filename_stub + ".emu",
+			        "-gg_in_filename="  + (case_filename_stub + "_in.dat"  if os.path.isfile(case_filename_stub + "_in.dat")  else "/dev/null"),
+			        "-gg_out_filename=" + (case_filename_stub + "_out.dat" if os.path.isfile(case_filename_stub + "_out.dat") else "/dev/null"),
+			        "-gg_emu_filename=" + (case_filename_stub + ".emu"     if os.path.isfile(case_filename_stub + ".emu")     else "/dev/null"),
 
 			        "-gg_random_tvalid_seed_0=" + random_ints[0][0],
 			        "-gg_random_tvalid_seed_1=" + random_ints[0][1],
