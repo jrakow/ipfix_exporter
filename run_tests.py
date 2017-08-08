@@ -11,9 +11,14 @@ def eprint(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
 
 if __name__ == "__main__":
+	assert len(sys.argv) > 1, 'specify either module names or "all"'
 	eprint("starting test run")
 	with open("cases/cases.json") as file:
 		json = json.load(file)
+
+	if sys.argv[1] != "all":
+		for name in sys.argv[1:]:
+			assert name in [module["name"] for module in json], 'module "' + name + '" not found'
 
 	# statistics
 	number_of_tests = 0
@@ -21,6 +26,10 @@ if __name__ == "__main__":
 	unexpected_tests = 0
 
 	for module in json:
+		if sys.argv[1] != "all" and module["name"] not in sys.argv[1:]:
+			# skip test if specified neither by "all" nor by name
+			continue
+
 		eprint(" starting " + module["name"] + " test")
 
 		for case in module["cases"]:
