@@ -137,7 +137,7 @@ package pkg_types is
 	type t_if_axis_frame_m is record
 		tvalid : std_ulogic;
 		tdata  : std_ulogic_vector(127 downto 0);
-		tkeep  : std_ulogic_vector(15  downto 0);
+		tkeep  : std_ulogic_vector( 15 downto 0);
 		tlast  : std_ulogic;
 	end record;
 	constant c_if_axis_frame_m_default : t_if_axis_frame_m := (
