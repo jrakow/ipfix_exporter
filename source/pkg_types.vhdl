@@ -290,6 +290,11 @@ package pkg_types is
 	function to_tkeep(n : positive; tkeep_width : natural) return std_ulogic_vector;
 
 	/**
+	 * convert a tkeep std_ulogic_vector to a number of bytes
+	 */
+	function tkeep_to_integer(tkeep : std_ulogic_vector) return positive;
+
+	/**
 	 * check a condition like `assert`
 	 *
 	 * This is equivalent to normal `assert`.
@@ -446,6 +451,20 @@ package body pkg_types is
 				return ret;
 			end if;
 		end loop;
+		return ret;
+	end;
+
+	function tkeep_to_integer(tkeep : std_ulogic_vector) return positive is
+		variable ret : natural := 0;
+	begin
+		for i in tkeep'range loop
+			if tkeep(i) then
+				ret := ret + 1;
+			end if;
+		end loop;
+		assert ret /= 0
+			report "tkeep may not be null"
+			severity error;
 		return ret;
 	end;
 
