@@ -9,7 +9,7 @@ use ipfix_exporter.pkg_types.all;
 /*!
 This module is the top level for the preparational modules.
 
-It instantiates and connects the @ref selective_dropping, @ref ethernet_dropping and @ref ip_version_split modules.
+It instantiates and connects the @ref selective_dropping, @ref ethernet_dropping, @ref vlan_dropping, @ref ethertype_dropping and @ref ip_version_split modules.
 
 @dot
 digraph overview
@@ -19,11 +19,14 @@ digraph overview
 	output_ipv6 [ label="output_ipv6" shape=circle ];
 	output_ipv4 [ label="output_ipv4" shape=circle ];
 
-	selective_dropping          [ label="selective_dropping" URL="@ref selective_dropping" ];
-	ethernet_dropping           [ label="ethernet_dropping"  URL="@ref ethernet_dropping"  ];
-	ip_version_split            [ label="ip_version_split"   URL="@ref ip_version_split"   ];
+	selective_dropping [ label="selective_dropping" URL="@ref selective_dropping" ];
+	ethernet_dropping  [ label="ethernet_dropping"  URL="@ref ethernet_dropping"  ];
+	vlan_dropping_0    [ label="vlan_dropping 0"    URL="@ref vlan_dropping"      ];
+	vlan_dropping_1    [ label="vlan_dropping 1"    URL="@ref vlan_dropping"      ];
+	ethertype_dropping [ label="ethertype_dropping" URL="@ref ethertype_dropping" ];
+	ip_version_split   [ label="ip_version_split"   URL="@ref ip_version_split"   ];
 
-	input -> selective_dropping -> ethernet_dropping -> ip_version_split;
+	input -> selective_dropping -> ethernet_dropping -> vlan_dropping_0 -> vlan_dropping_1 -> ip_version_split;
 	ip_version_split -> output_ipv6;
 	ip_version_split -> output_ipv4;
 	}
@@ -56,6 +59,15 @@ architecture arch of top_preparation is
 
 	signal s_if_axis_m_1 : t_if_axis_frame_m;
 	signal s_if_axis_s_1 : t_if_axis_s;
+
+	signal s_if_axis_m_2 : t_if_axis_frame_m;
+	signal s_if_axis_s_2 : t_if_axis_s;
+
+	signal s_if_axis_m_3 : t_if_axis_frame_m;
+	signal s_if_axis_s_3 : t_if_axis_s;
+
+	signal s_if_axis_m_4 : t_if_axis_frame_m;
+	signal s_if_axis_s_4 : t_if_axis_s;
 begin
 	events(0) <= if_axis_in_m.tvalid and if_axis_in_m.tlast and if_axis_in_s.tready;
 	events(1) <= s_if_axis_m_0.tvalid and s_if_axis_m_0.tlast and s_if_axis_s_0.tready;
@@ -86,13 +98,43 @@ begin
 			if_axis_out_s => s_if_axis_s_1
 		);
 
+	i_vlan_dropping_0 : entity ipfix_exporter.vlan_dropping
+		port map(
+			clk           => clk,
+			rst           => rst,
+			if_axis_in_m  => s_if_axis_m_1,
+			if_axis_in_s  => s_if_axis_s_1,
+			if_axis_out_m => s_if_axis_m_2,
+			if_axis_out_s => s_if_axis_s_2
+		);
+
+	i_vlan_dropping_1 : entity ipfix_exporter.vlan_dropping
+		port map(
+			clk           => clk,
+			rst           => rst,
+			if_axis_in_m  => s_if_axis_m_2,
+			if_axis_in_s  => s_if_axis_s_2,
+			if_axis_out_m => s_if_axis_m_3,
+			if_axis_out_s => s_if_axis_s_3
+		);
+
+	i_ethertype_dropping : entity ipfix_exporter.ethertype_dropping
+		port map(
+			clk           => clk,
+			rst           => rst,
+			if_axis_in_m  => s_if_axis_m_3,
+			if_axis_in_s  => s_if_axis_s_3,
+			if_axis_out_m => s_if_axis_m_4,
+			if_axis_out_s => s_if_axis_s_4
+		);
+
 	i_ip_version_split : entity ipfix_exporter.ip_version_split
 		port map(
 			clk                => clk,
 			rst                => rst,
 
-			if_axis_in_m       => s_if_axis_m_1,
-			if_axis_in_s       => s_if_axis_s_1,
+			if_axis_in_m       => s_if_axis_m_4,
+			if_axis_in_s       => s_if_axis_s_4,
 
 			if_axis_out_ipv6_m => if_axis_out_ipv6_m,
 			if_axis_out_ipv6_s => if_axis_out_ipv6_s,

@@ -6,10 +6,9 @@ library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
 /*!
-This module drops the Ethernet header.
-MAC addresses are dropped.
+This module drops a single VLAN tag.
  */
-entity ethernet_dropping is
+entity vlan_dropping is
 	port(
 		clk : in std_ulogic;
 		rst : in std_ulogic;
@@ -22,6 +21,6 @@ entity ethernet_dropping is
 	);
 end entity;
 
-architecture arch of ethernet_dropping is
+architecture arch of vlan_dropping is
 begin
 end architecture;

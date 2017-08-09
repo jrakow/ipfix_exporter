@@ -144,6 +144,46 @@ begin
 			);
 		end generate;
 
+	i_vlan_dropping : if g_module = "vlan_dropping" generate
+		i_cond_gen : entity ipfix_exporter.vlan_dropping
+			port map(
+				clk           => clk,
+				rst           => rst,
+
+				if_axis_in_m.tdata  => if_axis_in_m_tdata ,
+				if_axis_in_m.tkeep  => if_axis_in_m_tkeep ,
+				if_axis_in_m.tlast  => if_axis_in_m_tlast ,
+				if_axis_in_m.tvalid => if_axis_in_m_tvalid,
+				if_axis_in_s.tready => if_axis_in_s_tready,
+
+				if_axis_out_m.tdata  => if_axis_out_m_tdata ,
+				if_axis_out_m.tkeep  => if_axis_out_m_tkeep ,
+				if_axis_out_m.tlast  => if_axis_out_m_tlast ,
+				if_axis_out_m.tvalid => if_axis_out_m_tvalid,
+				if_axis_out_s.tready => if_axis_out_s_tready
+			);
+		end generate;
+
+	i_ethertype_dropping : if g_module = "ethertype_dropping" generate
+		i_cond_gen : entity ipfix_exporter.ethertype_dropping
+			port map(
+				clk           => clk,
+				rst           => rst,
+
+				if_axis_in_m.tdata  => if_axis_in_m_tdata ,
+				if_axis_in_m.tkeep  => if_axis_in_m_tkeep ,
+				if_axis_in_m.tlast  => if_axis_in_m_tlast ,
+				if_axis_in_m.tvalid => if_axis_in_m_tvalid,
+				if_axis_in_s.tready => if_axis_in_s_tready,
+
+				if_axis_out_m.tdata  => if_axis_out_m_tdata ,
+				if_axis_out_m.tkeep  => if_axis_out_m_tkeep ,
+				if_axis_out_m.tlast  => if_axis_out_m_tlast ,
+				if_axis_out_m.tvalid => if_axis_out_m_tvalid,
+				if_axis_out_s.tready => if_axis_out_s_tready
+			);
+		end generate;
+
 	i_information_extraction : if g_module = "information_extraction" generate
 		i_cond_gen : entity ipfix_exporter.information_extraction
 			generic map (

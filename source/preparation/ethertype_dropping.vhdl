@@ -6,10 +6,12 @@ library ipfix_exporter;
 use ipfix_exporter.pkg_types.all;
 
 /*!
-This module drops the Ethernet header.
-MAC addresses are dropped.
+This module drops the Ethertype field.
+
+The output IP packet starts at the IP header.
+The Ethertype field is dropped.
  */
-entity ethernet_dropping is
+entity ethertype_dropping is
 	port(
 		clk : in std_ulogic;
 		rst : in std_ulogic;
@@ -22,6 +24,6 @@ entity ethernet_dropping is
 	);
 end entity;
 
-architecture arch of ethernet_dropping is
+architecture arch of ethertype_dropping is
 begin
 end architecture;

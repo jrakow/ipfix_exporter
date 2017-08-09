@@ -31,8 +31,10 @@ IPFIX_EXPORTER_SRCS := \
 	source/export/udp_header.vhdl \
 	source/export/vlan_insertion.vhdl \
 	source/preparation/ethernet_dropping.vhdl \
+	source/preparation/ethertype_dropping.vhdl \
 	source/preparation/ip_version_split.vhdl \
 	source/preparation/selective_dropping.vhdl \
+	source/preparation/vlan_dropping.vhdl \
 	source/ram.vhdl \
 	source/top_export.vhdl \
 	source/top_ipfix.vhdl
