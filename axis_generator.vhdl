@@ -54,6 +54,7 @@ begin
 	p_generator : process(clk)
 		file     stimulus_file : text open read_mode is g_filename;
 		variable stimulus_line : line;
+		variable line_number   : natural := 0;
 
 		variable frame_string  : string(1 to g_tdata_width / 4);
 
@@ -77,7 +78,7 @@ begin
 
 				-- line empty so get new line
 				if stimulus_line = null then
-					get_line_from_file(stimulus_file, stimulus_line);
+					get_line_from_file(stimulus_file, stimulus_line, line_number);
 				end if;
 
 				if s_first_frame or (if_axis_m_tvalid = '1' and if_axis_s_tready = '1') then

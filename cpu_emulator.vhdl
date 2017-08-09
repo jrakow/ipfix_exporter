@@ -53,9 +53,10 @@ architecture arch of cpu_emulator is
 	signal s_verify_fsm : t_verify_fsm;
 begin
 	p_checker : process(clk)
-		file emu_file     : text open read_mode is g_filename;
-		variable emu_line : line;
-		variable emu_string : string(1 to c_line_max_length);
+		file emu_file        : text open read_mode is g_filename;
+		variable emu_line    : line;
+		variable line_number : natural := 0;
+		variable emu_string  : string(1 to c_line_max_length);
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then
@@ -71,15 +72,15 @@ begin
 				elsif s_verify_fsm = reading then
 					s_verify_fsm <= idle;
 					assert(read_valid)
-						report "cpu read not valid at address 0x" & to_hstring(address)
+						report "line " & integer'image(line_number) & ": cpu read not valid at address 0x" & to_hstring(address)
 						severity failure;
 --! @cond doxygen cannot handle ?=
 					assert(data_in ?= to_std_ulogic_vector(emu_string(17 to 24)))
-						report "cpu read data is 0x" & to_hstring(data_in) & " should be 0x" & emu_string(17 to 24)
+						report "line " & integer'image(line_number) & ": cpu read data is 0x" & to_hstring(data_in) & " should be 0x" & emu_string(17 to 24)
 						severity failure;
 --! @endcond
 				elsif not finished then
-					get_line_from_file(emu_file, emu_line);
+					get_line_from_file(emu_file, emu_line, line_number);
 					-- no more lines in file
 					if emu_line /= null then
 						if emu_line'length = c_line_max_length - 1 then
@@ -91,7 +92,7 @@ begin
 							read(emu_line, emu_string);
 						else
 							assert false
-								report "emu_line'length " & integer'image(emu_line'length) & " is invalid"
+								report "line " & integer'image(line_number) & ": emu_line'length " & integer'image(emu_line'length) & " is invalid"
 								severity failure;
 						end if;
 
@@ -114,7 +115,7 @@ begin
 								data_out     <= to_std_ulogic_vector(emu_string(16 to 23));
 							when others =>
 								assert false
-									report "invalid emulator command: '" & emu_string(1 to 6) & "'"
+									report "line " & integer'image(line_number) & ": invalid emulator command: '" & emu_string(1 to 6) & "'"
 									severity failure;
 						end case;
 					else

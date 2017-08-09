@@ -63,8 +63,9 @@ end entity;
 architecture arch of axis_checker is
 begin
 	p_checker : process(clk)
-		file check_file     : text open read_mode is g_filename;
-		variable check_line : line;
+		file check_file      : text open read_mode is g_filename;
+		variable check_line  : line;
+		variable line_number : natural := 0;
 
 		variable frame_string   : string(1 to g_tdata_width / 4);
 		variable tkeep_expected : std_ulogic_vector(g_tdata_width / 8 - 1 downto 0) := (others => '0');
@@ -90,7 +91,7 @@ begin
 
 				-- line empty so get new line
 				if check_line = null then
-					get_line_from_file(check_file, check_line);
+					get_line_from_file(check_file, check_line, line_number);
 					-- no more lines in file
 					if check_line = null then
 						if_axis_s_tready <= '0';
@@ -127,14 +128,14 @@ begin
 
 --! @cond doxygen cannot handle ?=
 					assert to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata
-						report "tdata is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & frame_string;
+						report "line " & integer'image(line_number) & ": tdata is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & frame_string;
 					success := success and ((to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata) = '1');
 --! @endcond
 					assert tkeep_expected = if_axis_m_tkeep
-						report "tkeep is 0x" & to_bstring(if_axis_m_tkeep) & " should be 0x" & to_bstring(tkeep_expected);
+						report "line " & integer'image(line_number) & ": tkeep is 0x" & to_bstring(if_axis_m_tkeep) & " should be 0x" & to_bstring(tkeep_expected);
 					success := success and (tkeep_expected = if_axis_m_tkeep);
 					assert tlast_expected = if_axis_m_tlast
-						report "tlast is 0b" & std_ulogic'image(if_axis_m_tlast) & " should be 0" & std_ulogic'image(tlast_expected);
+						report "line " & integer'image(line_number) & ": tlast is 0b" & std_ulogic'image(if_axis_m_tlast) & " should be 0" & std_ulogic'image(tlast_expected);
 					success := success and (tlast_expected = if_axis_m_tlast);
 
 					if not success then
