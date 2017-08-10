@@ -1,5 +1,4 @@
-# empty dix frame
-0800
+0800000000
 
 # dix + 16 byte
 08000123456789abcdef0123456789abcdef

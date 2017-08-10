@@ -8,6 +8,8 @@ use ipfix_exporter.pkg_types.all;
 /*!
 This module drops the Ethernet header.
 MAC addresses are dropped.
+
+This module assumes there are more than 4 byte following the mac addresses (i. e. there is a second frame).
  */
 entity ethernet_dropping is
 	port(
