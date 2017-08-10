@@ -87,10 +87,15 @@ package body pkg_axis_testbench_io is
 	function to_tkeep(n : positive; tkeep_width : natural) return std_ulogic_vector is
 		variable ret : std_ulogic_vector(tkeep_width - 1 downto 0) := (others => '0');
 	begin
-		assert n <= tkeep_width;
+		assert 1 <= n
+			report "tkeep must be <= 1 is " & integer'image(n)
+			severity error;
+		assert n <= tkeep_width
+			report "tkeep must be <= tkeep_width is " & integer'image(n) & " not <= " & integer'image(tkeep_width)
+			severity error;
 		for i in 0 to tkeep_width - 1 loop
 			ret(tkeep_width - i - 1) := '1';
-			if i >= n then
+			if i + 1 >= n then
 				return ret;
 			end if;
 		end loop;
