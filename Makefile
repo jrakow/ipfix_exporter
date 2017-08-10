@@ -32,6 +32,7 @@ IPFIX_EXPORTER_SRCS := \
 	source/export/vlan_insertion.vhdl \
 	source/preparation/ethernet_dropping.vhdl \
 	source/preparation/ethertype_dropping.vhdl \
+	source/preparation/generic_dropping.vhdl \
 	source/preparation/ip_version_split.vhdl \
 	source/preparation/selective_dropping.vhdl \
 	source/preparation/vlan_dropping.vhdl \
