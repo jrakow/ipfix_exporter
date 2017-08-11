@@ -26,4 +26,18 @@ end entity;
 
 architecture arch of ethertype_dropping is
 begin
+	i_generic_dropping : entity ipfix_exporter.generic_dropping
+		generic map(
+			g_kept_bytes => 14
+		)
+		port map(
+			clk => clk,
+			rst => rst,
+
+			if_axis_in_m => if_axis_in_m,
+			if_axis_in_s => if_axis_in_s,
+
+			if_axis_out_m => if_axis_out_m,
+			if_axis_out_s => if_axis_out_s
+		);
 end architecture;
