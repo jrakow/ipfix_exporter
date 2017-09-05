@@ -29,9 +29,11 @@ architecture arch of axis_combiner is
 	type t_fsm is (init, forward);
 	type t_reg is record
 		switch : t_switch;
+		fsm    : t_fsm;
 	end record;
 	constant c_reg_default : t_reg := (
-		switch => a
+		switch => in_0,
+		fsm    => init
 	);
 	signal r, r_nxt : t_reg := c_reg_default;
 begin
@@ -62,13 +64,13 @@ begin
 				end if;
 
 			when forward =>
-				if switch = in_0 and if_axis_in_m_0.tvalid and if_axis_in_m_0.tlast and if_axis_in_s_0.tready then
+				if r.switch = in_0 and if_axis_in_m_0.tvalid = '1' and if_axis_in_m_0.tlast = '1' and if_axis_in_s_0.tready = '1' then
 					-- last frame on in_0
 					-- switch if other is valid
 					if if_axis_in_m_1.tvalid then
 						v.switch := in_1;
 					end if;
-				elsif switch = in_1 and if_axis_in_m_1.tvalid and if_axis_in_m_1.tlast and if_axis_in_s_1.tready then
+				elsif r.switch = in_1 and if_axis_in_m_1.tvalid = '1' and if_axis_in_m_1.tlast = '1' and if_axis_in_s_1.tready = '1' then
 					-- last frame on in_1
 					-- switch if other is valid
 					if if_axis_in_m_0.tvalid then
@@ -81,8 +83,8 @@ begin
 	end process;
 
 	-- switch outputs directly
-	if_axis_in_s_0.tready <= if_axis_out_s.tready when switch = in_0 else '0';
-	if_axis_in_s_1.tready <= if_axis_out_s.tready when switch = in_1 else '0';
-	if_axis_out_m         <= if_axis_in_m_0       when switch = in_0 else if_axis_in_m_1;
+	if_axis_in_s_0.tready <= if_axis_out_s.tready when r.switch = in_0 else '0';
+	if_axis_in_s_1.tready <= if_axis_out_s.tready when r.switch = in_1 else '0';
+	if_axis_out_m         <= if_axis_in_m_0       when r.switch = in_0 else if_axis_in_m_1;
 
 end architecture;
