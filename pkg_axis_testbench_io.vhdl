@@ -14,7 +14,7 @@ package pkg_axis_testbench_io is
 	 *
 	 * empty lines and lines having a `#` in the first column are ignored
 	 */
-	procedure get_line_from_file(file f : text; line : out line; line_number : inout natural);
+	procedure get_line_from_file(file f : text; line : inout line; line_number : inout natural);
 
 	/**
 	 * convert a number of bytes to a std_ulogic_vector
@@ -62,7 +62,7 @@ package body pkg_axis_testbench_io is
 		return ret;
 	end;
 
-	procedure get_line_from_file(file f : text; line : out line; line_number : inout natural) is
+	procedure get_line_from_file(file f : text; line : inout line; line_number : inout natural) is
 	begin
 		if not endfile(f) then
 			-- get line
