@@ -16,6 +16,9 @@ AXIS_TESTBENCH_SRCS := \
 IPFIX_EXPORTER_SRCS := \
 	source/pkg_protocol_types.vhdl \
 	source/pkg_types.vhdl \
+	source/generic/axis_combiner.vhdl \
+	source/generic/conditional_split.vhdl \
+	source/generic/generic_dropping.vhdl \
 	source/cpu_interface.vhdl \
 	source/top_preparation.vhdl \
 	source/collect/cache_extraction.vhdl \
@@ -24,16 +27,13 @@ IPFIX_EXPORTER_SRCS := \
 	source/collect/ipfix_header.vhdl \
 	source/collect/ipfix_message_control.vhdl \
 	source/top_collect.vhdl \
-	source/axis_combiner.vhdl \
 	source/export/ethernet_header.vhdl \
 	source/export/ethertype_insertion.vhdl \
 	source/export/ip_header.vhdl \
 	source/export/udp_header.vhdl \
 	source/export/vlan_insertion.vhdl \
-	source/preparation/conditional_split.vhdl \
 	source/preparation/ethernet_dropping.vhdl \
 	source/preparation/ethertype_dropping.vhdl \
-	source/preparation/generic_dropping.vhdl \
 	source/preparation/ip_version_split.vhdl \
 	source/preparation/selective_dropping.vhdl \
 	source/preparation/vlan_dropping.vhdl \
