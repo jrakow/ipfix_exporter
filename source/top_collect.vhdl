@@ -6,6 +6,7 @@ library ipfix_exporter;
 use ipfix_exporter.pkg_axi_stream.all;
 use ipfix_exporter.pkg_common_subtypes.all;
 use ipfix_exporter.pkg_config.all;
+use ipfix_exporter.pkg_frame_info.all;
 use ipfix_exporter.pkg_ipfix_data_record.all;
 use ipfix_exporter.pkg_types.all;
 
