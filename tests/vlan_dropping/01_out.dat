@@ -1,7 +1,3 @@
-# empty single vlan frame
-0800
-86DD
-
 # single vlan + 16 byte
 08000123456789abcdef0123456789abcdef
 86DD0123456789abcdef0123456789abcdef

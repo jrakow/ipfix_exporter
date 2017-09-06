@@ -1,8 +1,5 @@
 # documentation unicast mac addresses 00-53-00 to 00-53-FF
 # ipv4 and ipv6 for all test cases
-# empty double vlan frame
-88A80CCC81000AAA0800
-88A80CCC81000AAA86DD
 
 # double vlan + 16 byte
 88A80CCC81000AAA08000123456789abcdef0123456789abcdef
