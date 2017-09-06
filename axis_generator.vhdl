@@ -70,7 +70,8 @@ begin
 				s_first_frame    <= true;
 			else
 				uniform(random_seed_0, random_seed_1, random);
-				if random < g_tvalid_ratio and not finished then
+				-- if set once, tvalid must be held
+				if random < g_tvalid_ratio and if_axis_m_tvalid = '0' and not finished then
 					if_axis_m_tvalid <= '1';
 				else
 					if_axis_m_tvalid <= '0';
