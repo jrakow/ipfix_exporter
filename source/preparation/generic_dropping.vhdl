@@ -47,7 +47,7 @@ architecture arch of generic_dropping is
 		last_frame      => false,
 		prev_tdata_part => (others => '0'),
 		prev_tkeep      => (others => '0'),
-		if_axis_in_s    => c_if_axis_s_default,
+		if_axis_in_s    => ( tready => '1' ),
 		if_axis_out_m   => c_if_axis_frame_m_default
 	);
 	signal r, r_nxt : t_reg := c_reg_default;
