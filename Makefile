@@ -28,8 +28,8 @@ IPFIX_EXPORTER_SRCS := \
 	source/generic/axis_combiner.vhdl \
 	source/generic/conditional_split.vhdl \
 	source/generic/generic_dropping.vhdl \
-	source/pkg_protocol_types.vhdl \
-	source/pkg_types.vhdl \
+	source/packages/pkg_protocol_types.vhdl \
+	source/packages/pkg_types.vhdl \
 	source/preparation/ethernet_dropping.vhdl \
 	source/preparation/ethertype_dropping.vhdl \
 	source/preparation/ip_version_split.vhdl \
