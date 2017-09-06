@@ -2,23 +2,13 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library ipfix_exporter;
+use ipfix_exporter.pkg_common_subtypes.all;
+
 package pkg_protocol_types is
-	subtype t_ip_version          is std_ulogic_vector(  3 downto 0);
-	subtype t_ipv6_addr           is std_ulogic_vector(127 downto 0);
-	subtype t_ipv4_addr           is std_ulogic_vector( 31 downto 0);
-	subtype t_ip_traffic_class    is std_ulogic_vector(  7 downto 0);
-	subtype t_next_header         is std_ulogic_vector(  7 downto 0);
-	subtype t_ipv6_flow_label     is std_ulogic_vector(19 downto 0);
-	subtype t_ipv4_identification is std_ulogic_vector(15 downto 0);
-	subtype t_ip_hop_limit        is std_ulogic_vector( 7 downto 0);
 	constant c_protocol_udp : t_next_header := x"11";
 	constant c_protocol_tcp : t_next_header := x"06";
 
-	subtype t_transport_port is std_ulogic_vector(15 downto 0);
-	subtype t_tcp_flags      is std_ulogic_vector( 7 downto 0);
-	subtype t_mac_addr       is std_ulogic_vector(47 downto 0);
-
-	subtype t_udp_checksum is std_ulogic_vector(15 downto 0);
 	type t_udp_header is record
 		source      : t_transport_port;
 		destination : t_transport_port;
@@ -35,7 +25,6 @@ package pkg_protocol_types is
 		checksum    => (others => '0')
 	);
 
-	subtype t_ip_length is unsigned(15 downto 0);
 	type t_ipv6_header is record
 		version        : std_ulogic_vector(3 downto 0);
 		traffic_class  : t_ip_traffic_class;
@@ -92,12 +81,6 @@ package pkg_protocol_types is
 		destination     => (others => '0')
 	);
 
-	subtype t_ipfix_version_number        is std_ulogic_vector(15 downto 0);
-	subtype t_ipfix_export_time           is std_ulogic_vector(31 downto 0);
-	subtype t_ipfix_sequence_number       is unsigned(31 downto 0);
-	subtype t_ipfix_observation_domain_id is std_ulogic_vector(31 downto 0);
-	subtype t_ipfix_set_id                is std_ulogic_vector(15 downto 0);
-	subtype t_ipfix_length                is unsigned(15 downto 0);
 	type t_ipfix_header is record
 		version_number        : t_ipfix_version_number;
 		length                : t_ipfix_length;

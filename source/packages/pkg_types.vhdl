@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library ipfix_exporter;
+use ipfix_exporter.pkg_common_subtypes.all;
 use ipfix_exporter.pkg_protocol_types.all;
 
 --! data types and conversion functions
@@ -16,16 +17,6 @@ package pkg_types is
 	                                                       + 2 * (c_number_of_counters_collect + c_number_of_counters_export)
 	                                                       + 1; -- combined output frames
 
-	subtype t_timeout is unsigned(15 downto 0);
-
-	subtype t_timestamp         is unsigned(31 downto 0);
-	subtype t_packet_count      is unsigned(31 downto 0);
-	subtype t_octet_count       is unsigned(31 downto 0);
-	subtype t_small_octet_count is unsigned(15 downto 0);
-
-	constant c_number_of_vlans_width : natural := 2;
-	subtype t_number_of_vlans is unsigned(c_number_of_vlans_width - 1 downto 0);
-	subtype t_vlan_tag is std_ulogic_vector(31 downto 0);
 
 	/**
 	 * IPFIX data record with information about an IPv6 flow
