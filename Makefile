@@ -30,6 +30,7 @@ IPFIX_EXPORTER_SRCS := \
 	source/generic/generic_dropping.vhdl \
 	source/packages/pkg_axi_stream.vhdl \
 	source/packages/pkg_common_subtypes.vhdl \
+	source/packages/pkg_config.vhdl \
 	source/packages/pkg_ipfix_data_record.vhdl \
 	source/packages/pkg_protocol_types.vhdl \
 	source/packages/pkg_types.vhdl \
