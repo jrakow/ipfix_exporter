@@ -3,6 +3,8 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library ipfix_exporter;
+use ipfix_exporter.pkg_axi_stream.all;
+use ipfix_exporter.pkg_protocol_types.all;
 use ipfix_exporter.pkg_types.all;
 
 /*!

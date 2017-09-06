@@ -1,12 +1,12 @@
 use std.textio.all;
 use std.env.all;
 
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library ipfix_exporter;
+use ipfix_exporter.pkg_axi_stream.all;
 use ipfix_exporter.pkg_types.all;
 
 /*!

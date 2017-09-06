@@ -5,10 +5,6 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_protocol_types.all;
 
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-
 --! data types and conversion functions
 package pkg_types is
 	constant c_reset_active       : std_ulogic := '1';
@@ -131,28 +127,6 @@ package pkg_types is
 		tcp_flags     => (others => '0'),
 		traffic_class => (others => '0'),
 		padding       => (others => '0')
-	);
-
-	--! AXI stream master interface
-	type t_if_axis_frame_m is record
-		tvalid : std_ulogic;
-		tdata  : std_ulogic_vector(127 downto 0);
-		tkeep  : std_ulogic_vector( 15 downto 0);
-		tlast  : std_ulogic;
-	end record;
-	constant c_if_axis_frame_m_default : t_if_axis_frame_m := (
-		tvalid => '0',
-		tdata  => (others => '0'),
-		tkeep  => (others => '0'),
-		tlast  => '0'
-	);
-
-	--! AXI stream slave interface
-	type t_if_axis_s is record
-		tready : std_ulogic;
-	end record;
-	constant c_if_axis_s_default : t_if_axis_s := (
-		tready => '0'
 	);
 
 	type t_ipfix_config is record
@@ -279,20 +253,6 @@ package pkg_types is
 		traffic_class => (others => '0'),
 		tcp_flags     => (others => '0')
 	);
-
-	/**
-	 * convert a number of bytes to a std_ulogic_vector
-	 *
-	 * @param number of valid bytes in tdata
-	 * @param tkeep_width width of return tkeep std_ulogic_vector
-	 * @return filled with n `'1'`s from the left
-	 */
-	function to_tkeep(n : positive; tkeep_width : natural) return std_ulogic_vector;
-
-	/**
-	 * convert a tkeep std_ulogic_vector to a number of bytes
-	 */
-	function tkeep_to_integer(tkeep : std_ulogic_vector) return positive;
 
 	/**
 	 * check a condition like `assert`
@@ -438,38 +398,6 @@ package body pkg_types is
 		ret.next_header   := slv( 23 downto  16);
 		ret.traffic_class := slv( 15 downto   8);
 		ret.tcp_flags     := slv(  7 downto   0);
-		return ret;
-	end;
-
-	function to_tkeep(n : positive; tkeep_width : natural) return std_ulogic_vector is
-		variable ret : std_ulogic_vector(tkeep_width - 1 downto 0) := (others => '0');
-	begin
-		assert 1 <= n
-			report "tkeep must be <= 1 is " & integer'image(n)
-			severity error;
-		assert n <= tkeep_width
-			report "tkeep must be <= tkeep_width is " & integer'image(n) & " not <= " & integer'image(tkeep_width)
-			severity error;
-		for i in 0 to tkeep_width - 1 loop
-			ret(tkeep_width - i - 1) := '1';
-			if i + 1 >= n then
-				return ret;
-			end if;
-		end loop;
-		return ret;
-	end;
-
-	function tkeep_to_integer(tkeep : std_ulogic_vector) return positive is
-		variable ret : natural := 0;
-	begin
-		for i in tkeep'range loop
-			if tkeep(i) then
-				ret := ret + 1;
-			end if;
-		end loop;
-		assert ret /= 0
-			report "tkeep may not be null"
-			severity error;
 		return ret;
 	end;
 
