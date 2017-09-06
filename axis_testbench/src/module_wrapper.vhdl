@@ -395,6 +395,25 @@ begin
 			);
 		end generate;
 
+	-- never tested
+	-- only for compile checks
+	i_ip_version_split : if g_module="i_ip_version_split" generate
+		i_never_happens : entity ipfix_exporter.ip_version_split
+			port map(
+				clk                    => clk,
+				rst                    => rst,
+
+				if_axis_in_m => c_if_axis_frame_m_default ,
+				if_axis_in_s => open,
+
+				if_axis_out_ipv6_m => open,
+				if_axis_out_ipv6_s => c_if_axis_s_default,
+
+				if_axis_out_ipv4_m => open,
+				if_axis_out_ipv4_s => c_if_axis_s_default
+			);
+		end generate;
+
 	i_cpu_interface : if g_module /= "testbench_test_dummy" generate
 		i_cond_gen : entity ipfix_exporter.cpu_interface
 			port map(
