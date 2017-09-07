@@ -66,8 +66,10 @@ architecture arch of testbench is
 	signal s_address      : std_ulogic_vector(31 downto 0);
 	signal s_read_valid   : std_ulogic;
 
-	signal s_generator_reset    : std_ulogic := '1';
-	signal s_checker_reset      : std_ulogic := '1';
+	signal s_generator_event    : boolean;
+	signal s_checker_event      : boolean;
+	signal s_emulator_event     : boolean;
+
 	signal s_generator_finished : boolean;
 	signal s_checker_finished   : boolean;
 	signal s_emulator_finished  : boolean;
@@ -80,18 +82,23 @@ begin
 		wait until rising_edge(s_clk);
 		s_rst <= '0';
 
-		wait until rising_edge(s_clk) and s_emulator_finished;
-		report "emulator finished";
+		loop
+			wait until rising_edge(s_clk);
+			if rising_edge(s_generator_finished) then
+				report "generator finished";
+			end if;
+			if rising_edge(s_checker_finished) then
+				report "checker finished";
+			end if;
+			if rising_edge(s_emulator_finished) then
+				report "emulator finished";
+			end if;
 
-		s_generator_reset <= '0';
-		s_checker_reset   <= '0';
-
-		wait until rising_edge(s_clk) and s_generator_finished;
-		report "generator finished";
-		wait until rising_edge(s_clk) and s_checker_finished;
-		report "checker finished";
-		-- exit without failure
-		stop(0);
+			if s_generator_finished and s_checker_finished and s_emulator_finished then
+				-- exit without failure
+				stop(0);
+			end if;
+		end loop;
 	end process;
 
 	i_axis_generator : entity axis_testbench.axis_generator
@@ -104,13 +111,16 @@ begin
 		)
 		port map(
 			clk              => s_clk,
-			rst              => s_generator_reset,
+			rst              => s_rst,
 			if_axis_m_tdata  => s_if_axis_in_m_tdata,
 			if_axis_m_tkeep  => s_if_axis_in_m_tkeep,
 			if_axis_m_tlast  => s_if_axis_in_m_tlast,
 			if_axis_m_tvalid => s_if_axis_in_m_tvalid,
 			if_axis_s_tready => s_if_axis_in_s_tready,
-			finished         => s_generator_finished
+			finished         => s_generator_finished,
+			generator_event  => s_generator_event,
+			checker_event    => s_checker_event,
+			emulator_event   => s_emulator_event
 		);
 
 	i_axis_checker : entity axis_testbench.axis_checker
@@ -123,13 +133,16 @@ begin
 		)
 		port map(
 			clk              => s_clk,
-			rst              => s_checker_reset,
+			rst              => s_rst,
 			if_axis_m_tdata  => s_if_axis_out_m_tdata,
 			if_axis_m_tvalid => s_if_axis_out_m_tvalid,
 			if_axis_m_tkeep  => s_if_axis_out_m_tkeep,
 			if_axis_m_tlast  => s_if_axis_out_m_tlast,
 			if_axis_s_tready => s_if_axis_out_s_tready,
-			finished         => s_checker_finished
+			finished         => s_checker_finished,
+			generator_event  => s_generator_event,
+			checker_event    => s_checker_event,
+			emulator_event   => s_emulator_event
 		);
 
 	i_design_under_test : entity axis_testbench.module_wrapper
@@ -177,7 +190,10 @@ begin
 			address      => s_address,
 			read_valid   => s_read_valid,
 
-			finished     => s_emulator_finished
+			finished     => s_emulator_finished,
+			generator_event  => s_generator_event,
+			checker_event    => s_checker_event,
+			emulator_event   => s_emulator_event
 		);
 
 	p_timeout : process

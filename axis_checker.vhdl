@@ -56,11 +56,16 @@ entity axis_checker is
 		if_axis_m_tvalid : in  std_ulogic;
 		if_axis_s_tready : out std_ulogic;
 
-		finished         : out boolean := false
+		finished        : out boolean := false;
+		generator_event : in  boolean;
+		checker_event   : out boolean;
+		emulator_event  : in  boolean
 	);
 end entity;
 
 architecture arch of axis_checker is
+	signal wait_for_generator : boolean := false;
+	signal wait_for_emulator  : boolean := false;
 begin
 	p_checker : process(clk)
 		file check_file      : text open read_mode is g_filename;
@@ -79,67 +84,103 @@ begin
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then
-				if_axis_s_tready <= '0';
-				finished         <= false;
+				if_axis_s_tready   <= '0';
+				finished           <= false;
+				checker_event      <= false;
+				wait_for_generator <= false;
+				wait_for_emulator  <= false;
 			else
-				uniform(random_seed_0, random_seed_1, random);
-				if random < g_tready_ratio and not finished then
-					if_axis_s_tready <= '1';
+				if    (wait_for_generator  and not generator_event)
+				   or (wait_for_emulator   and not emulator_event) then
+					-- sleep while waiting
+					null;
 				else
-					if_axis_s_tready <= '0';
-				end if;
+					if wait_for_generator and generator_event then
+						wait_for_generator <= false;
+					end if;
+					if wait_for_emulator and emulator_event then
+						wait_for_emulator <= false;
+					end if;
 
-				-- line empty so get new line
-				if check_line = null then
-					get_line_from_file(check_file, check_line, line_number);
-					-- no more lines in file
-					if check_line = null then
+					uniform(random_seed_0, random_seed_1, random);
+					if random < g_tready_ratio and not finished then
+						if_axis_s_tready <= '1';
+					else
 						if_axis_s_tready <= '0';
-						finished         <= true;
 					end if;
-				end if;
+	
+					checker_event <= false;
 
-				-- axis transaction on tvalid and tready
-				if if_axis_m_tvalid = '1' and if_axis_s_tready = '1' then
-					-- get frame
-					-- condition only needed if finished
-					if check_line /= null then
-
-						if check_line'length >= frame_string'length then
-							tkeep_expected := (others => '1');
-							read(check_line, frame_string);
+					-- line empty so get new line
+					if check_line = null then
+						get_line_from_file(check_file, check_line, line_number);
+						-- no more lines in file
+						if check_line = null then
+							if_axis_s_tready <= '0';
+							finished         <= true;
 						else
-							-- use line length before it is changed
-							-- stimulus line length is nibbles
-							frame_string(check_line'length + 1 to g_tdata_width / 4) := (others => '-');
-							-- tkeep is bytes
-							tkeep_expected := to_tkeep(check_line'length / 2, g_tdata_width / 8);
-							read(check_line, frame_string(1 to check_line'length));
-						end if;
-
-						-- checkline is only /= null if it contains another frame
-						if check_line'length = 0 then
-							tlast_expected := '1';
-							check_line     := null;
-						else
-							tlast_expected := '0';
+							if check_line.all(1) = '%' then
+								if check_line.all(1 to 6) = "%EVENT" then
+									report "chk event";
+									check_line    := null;
+									checker_event <= true;
+								elsif check_line.all(1 to 9) = "%WAIT_GEN" then
+									report "chk waits for gen";
+									check_line         := null;
+									wait_for_generator <= true;
+									if_axis_s_tready <= '0';
+								elsif check_line.all(1 to 9) = "%WAIT_EMU" then
+									report "chk waits for emu";
+									check_line   := null;
+									wait_for_emulator <= true;
+									if_axis_s_tready <= '0';
+								end if;
+							end if;
 						end if;
 					end if;
 
---! @cond doxygen cannot handle ?=
-					assert to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata
-						report "line " & integer'image(line_number) & ": tdata is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & frame_string;
-					success := success and ((to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata) = '1');
---! @endcond
-					assert tkeep_expected = if_axis_m_tkeep
-						report "line " & integer'image(line_number) & ": tkeep is 0x" & to_bstring(if_axis_m_tkeep) & " should be 0x" & to_bstring(tkeep_expected);
-					success := success and (tkeep_expected = if_axis_m_tkeep);
-					assert tlast_expected = if_axis_m_tlast
-						report "line " & integer'image(line_number) & ": tlast is 0b" & std_ulogic'image(if_axis_m_tlast) & " should be 0" & std_ulogic'image(tlast_expected);
-					success := success and (tlast_expected = if_axis_m_tlast);
-
-					if not success then
-						stop(2);
+					-- axis transaction on tvalid and tready
+					if if_axis_m_tvalid = '1' and if_axis_s_tready = '1' then
+						-- get frame
+						-- condition only needed if finished
+						if check_line /= null then
+	
+							if check_line'length >= frame_string'length then
+								tkeep_expected := (others => '1');
+								read(check_line, frame_string);
+							else
+								-- use line length before it is changed
+								-- stimulus line length is nibbles
+								frame_string(check_line'length + 1 to g_tdata_width / 4) := (others => '-');
+								-- tkeep is bytes
+								tkeep_expected := to_tkeep(check_line'length / 2, g_tdata_width / 8);
+								read(check_line, frame_string(1 to check_line'length));
+							end if;
+	
+							-- checkline is only /= null if it contains another frame
+							if check_line'length = 0 then
+								tlast_expected := '1';
+								check_line     := null;
+							else
+								tlast_expected := '0';
+							end if;
+						end if;
+	
+	--! @cond doxygen cannot handle ?=
+						assert to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata
+							report "line " & integer'image(line_number) & ": tdata is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & frame_string;
+						success := success and ((to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata) = '1');
+	--! @endcond
+						assert tkeep_expected = if_axis_m_tkeep
+							report "line " & integer'image(line_number) & ": tkeep is 0x" & to_bstring(if_axis_m_tkeep) & " should be 0x" & to_bstring(tkeep_expected);
+						success := success and (tkeep_expected = if_axis_m_tkeep);
+						assert tlast_expected = if_axis_m_tlast
+							report "line " & integer'image(line_number) & ": tlast is 0b" & std_ulogic'image(if_axis_m_tlast) & " should be 0" & std_ulogic'image(tlast_expected);
+						success := success and (tlast_expected = if_axis_m_tlast);
+	
+						if not success then
+							stop(2);
+						end if;
 					end if;
 				end if;
 			end if;
