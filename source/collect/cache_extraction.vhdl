@@ -5,6 +5,7 @@ use ieee.numeric_std.all;
 library ipfix_exporter;
 use ipfix_exporter.pkg_axi_stream.all;
 use ipfix_exporter.pkg_common_subtypes.all;
+use ipfix_exporter.pkg_ipfix_data_record.all;
 use ipfix_exporter.pkg_types.all;
 
 /*!
@@ -29,11 +30,11 @@ entity cache_extraction is
 		clk : in std_ulogic;
 		rst : in std_ulogic;
 
-		enable       : in  std_ulogic;
-		write_enable : in  std_ulogic;
-		addr         : in  std_ulogic_vector(g_addr_width - 1 downto 0);
-		data_in      : in  std_ulogic_vector(g_record_width - 1 downto 0);
-		data_out     : out std_ulogic_vector(g_record_width - 1 downto 0);
+		enable       : out std_ulogic;
+		write_enable : out std_ulogic;
+		addr         : out std_ulogic_vector(g_addr_width - 1 downto 0);
+		data_in      : out std_ulogic_vector(g_record_width - 1 downto 0);
+		data_out     : in  std_ulogic_vector(g_record_width - 1 downto 0);
 
 		if_axis_out_m_tdata  : out std_ulogic_vector(g_record_width - 1 downto 0);
 		if_axis_out_m_tvalid : out std_ulogic;
