@@ -107,6 +107,8 @@ package pkg_ipfix_data_record is
 		traffic_class => (others => '0'),
 		padding       => (others => '0')
 	);
+
+	function get_ip_version_from_ipfix_data_record_width(width : natural) return positive;
 end package;
 
 package body pkg_ipfix_data_record is
@@ -179,5 +181,14 @@ package body pkg_ipfix_data_record is
 		ret.tcp_flags     :=          slv( 15 downto   8);
 		ret.padding       :=          slv(  7 downto   0);
 		return ret;
+	end;
+
+	function get_ip_version_from_ipfix_data_record_width(width : natural) return positive is
+	begin
+		if width = c_ipfix_ipv6_data_record_width then
+			return 6;
+		else
+			return 4;
+		end if;
 	end;
 end;
