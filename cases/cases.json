@@ -16,7 +16,8 @@
 			{ "number" : "08" , "invert" : true,  "title" : "cpu emulator wrong command" },
 			{ "number" : "09" , "invert" : true,  "title" : "cpu emulator wrong line length" },
 			{ "number" : "10" , "invert" : true,  "title" : "testbench timeout" },
-			{ "number" : "11" , "invert" : true,  "title" : "tkeep out too long" }
+			{ "number" : "11" , "invert" : true,  "title" : "tkeep out too long" },
+			{ "number" : "12" , "invert" : false, "title" : "sequencing check" }
 		]
 	}
 ]

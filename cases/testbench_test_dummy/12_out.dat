@@ -1,0 +1,5 @@
+# wait for gen
+%WAIT_GEN
+%WAIT_EMU
+%EVENT
+%EVENT
