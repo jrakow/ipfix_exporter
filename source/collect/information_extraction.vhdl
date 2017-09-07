@@ -170,6 +170,10 @@ begin
 							end if;
 
 							v.fsm                  := wait_read;
+						when 0 =>
+							assert false
+								report "remaining_frames may not be 0 in this state"
+								severity error;
 					end case;
 					v.remaining_frames := r.remaining_frames - 1;
 				end if;
