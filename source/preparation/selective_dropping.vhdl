@@ -39,93 +39,32 @@ entity selective_dropping is
 end entity;
 
 architecture arch of selective_dropping is
-	type t_fsm is (idle, dropping, forwarding);
-	type t_reg is record
-		fsm : t_fsm;
-
-		-- output
-		if_axis_in_s  : t_if_axis_s;
-		if_axis_out_m : t_if_axis_frame_m;
-	end record;
-	constant c_reg_default : t_reg := (
-		fsm             => idle,
-		if_axis_in_s    => c_if_axis_s_default,
-		if_axis_out_m   => c_if_axis_frame_m_default
-	);
-	signal r, r_nxt : t_reg := c_reg_default;
+	signal s_frame_is_dropped : std_ulogic;
 begin
-	p_seq : process(clk)
+	p_condition : process(all)
 	begin
-		if rising_edge(clk) then
-			if rst = c_reset_active then
-				r <= c_reg_default;
-			else
-				r <= r_nxt;
-			end if;
+		if cpu_drop_source_mac_enable = '1' and if_axis_in_m.tdata(79 downto 32) = cpu_ethernet_config.source then
+			s_frame_is_dropped <= '1';
+		else
+			s_frame_is_dropped <= '0';
 		end if;
 	end process;
 
-	p_comb : process(if_axis_in_m, if_axis_in_s,
-	                 if_axis_out_m, if_axis_out_s,
-	                 cpu_drop_source_mac_enable, cpu_ethernet_config,
-	                 r)
-		variable v : t_reg := c_reg_default;
-	begin
-		v := r;
+	i_conditional_split : entity ipfix_exporter.conditional_split
+		port map(
+			clk             => clk,
+			rst             => rst,
 
-		case r.fsm is
-			when idle =>
-				v.if_axis_in_s.tready  := '1';
-				v.if_axis_out_m.tvalid := '0';
+			target_1_not_0  => s_frame_is_dropped,
 
-				-- master may not change after tvalid
-				if if_axis_in_m.tvalid then
-					if cpu_drop_source_mac_enable = '1' and if_axis_in_m.tdata(79 downto 32) = cpu_ethernet_config.source then
-						v.fsm := dropping;
-					else
-						-- forward ongoing transaction
-						-- forwarding needs to start with either in ready or out valid
-						-- start with out valid
-						if if_axis_in_s.tready then
-							v.if_axis_out_m := if_axis_in_m;
-						end if;
-						v.if_axis_in_s.tready := '0';
-						v.fsm := forwarding;
-					end if;
-				end if;
-			when dropping =>
-				-- accept everything
-				v.if_axis_in_s.tready  := '1';
-				v.if_axis_out_m.tvalid := '0';
+			if_axis_in_m    => if_axis_in_m,
+			if_axis_in_s    => if_axis_in_s,
 
-				-- until tlast
-				if if_axis_in_m.tvalid and if_axis_in_m.tlast then
-					v.fsm := idle;
-				end if;
+			if_axis_out_0_m => if_axis_out_m,
+			if_axis_out_0_s => if_axis_out_s,
 
-			when forwarding =>
-				-- in transaction
-				if if_axis_in_m.tvalid and if_axis_in_s.tready then
-					v.if_axis_in_s.tready := '0';
-					-- especially out.valid := '1'
-					v.if_axis_out_m       := if_axis_in_m;
-				end if;
-
-				-- out transaction
-				if if_axis_out_m.tvalid and if_axis_out_s.tready then
-					v.if_axis_in_s.tready  := '1';
-					v.if_axis_out_m.tvalid := '0';
-
-					-- end on tlast
-					if if_axis_out_m.tlast then
-						v.fsm := idle;
-					end if;
-				end if;
-			end case;
-
-		r_nxt <= v;
-	end process;
-
-	if_axis_in_s  <= r.if_axis_in_s;
-	if_axis_out_m <= r.if_axis_out_m;
+			-- all those frames are dropped
+			if_axis_out_1_m => open,
+			if_axis_out_1_s => ( tready => '1' )
+		);
 end architecture;
