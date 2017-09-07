@@ -49,7 +49,9 @@ begin
 		end if;
 	end process;
 
-	p_comb : process(if_axis_in_m_0, if_axis_in_m_1, if_axis_out_s, r)
+	p_comb : process(if_axis_in_m_0, if_axis_in_s_0,
+	                 if_axis_in_m_1, if_axis_in_s_1,
+	                 r)
 		variable v : t_reg := c_reg_default;
 	begin
 		v := r;
