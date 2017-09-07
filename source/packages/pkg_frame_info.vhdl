@@ -69,6 +69,8 @@ package pkg_frame_info is
 		traffic_class => (others => '0'),
 		tcp_flags     => (others => '0')
 	);
+
+	function get_ip_version_from_frame_info_width(width : natural) return positive;
 end;
 
 package body pkg_frame_info is
@@ -131,4 +133,13 @@ package body pkg_frame_info is
 		ret.tcp_flags     := slv(  7 downto   0);
 		return ret;
 	end;
+
+	function get_ip_version_from_frame_info_width(width : natural) return positive is
+	begin
+		if width = c_ipv6_frame_info_width then
+			return 6;
+		else
+			return 4;
+		end if;
+	end function;
 end;

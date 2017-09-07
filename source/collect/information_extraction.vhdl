@@ -38,15 +38,7 @@ entity information_extraction is
 end entity;
 
 architecture arch of information_extraction is
-	function get_ip_version(width : natural) return positive is
-	begin
-		if width = c_ipv6_frame_info_width then
-			return 6;
-		else
-			return 4;
-		end if;
-	end function;
-	constant c_ip_version : positive := get_ip_version(g_frame_info_width);
+	constant c_ip_version : positive := get_ip_version_from_frame_info_width(g_frame_info_width);
 
 	-- incoming frames are collected until the ip header and the udp header are filled
 	-- if remaining frames is 0 then all the information is collected
