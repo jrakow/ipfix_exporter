@@ -32,6 +32,7 @@ IPFIX_EXPORTER_SRCS := \
 	source/packages/pkg_common_subtypes.vhdl \
 	source/packages/pkg_config.vhdl \
 	source/packages/pkg_frame_info.vhdl \
+	source/packages/pkg_hash.vhdl \
 	source/packages/pkg_ipfix_data_record.vhdl \
 	source/packages/pkg_protocol_types.vhdl \
 	source/packages/pkg_types.vhdl \
