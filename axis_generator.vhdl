@@ -112,12 +112,15 @@ begin
 								stimulus_line   := null;
 								wait_for_checker <= true;
 								if_axis_m_tvalid <= '0';
+								s_first_frame    <= true;
 							elsif stimulus_line.all(1 to 9) = "%WAIT_EMU" then
 								report "gen waits for emu";
 								stimulus_line   := null;
 								wait_for_emulator <= true;
 								if_axis_m_tvalid <= '0';
+								s_first_frame    <= true;
 							end if;
+							get_line_from_file(stimulus_file, stimulus_line, line_number);
 						end if;
 					end if;
 
