@@ -8,3 +8,4 @@
 /coverage.info
 /testbench
 /waveforms/*/*.ghw
+junit.xml

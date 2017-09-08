@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import glob
 import json
+import junitparser as junit
 import os
 import subprocess
 import sys
@@ -25,12 +26,20 @@ if __name__ == "__main__":
 	expected_tests = 0
 	unexpected_tests = 0
 
+	# use junit XML as output format
+	junit_xml = junit.JUnitXml()
+	test_suites = {}
+
 	for module in json:
 		if sys.argv[1] != "all" and module["name"] not in sys.argv[1:]:
 			# skip test if specified neither by "all" nor by name
 			continue
 
 		eprint(" starting " + module["name"] + " test")
+
+		# add module test suite in global list if it does not exist
+		if module["name"] not in test_suites:
+			test_suites[module["name"]] = junit.TestSuite(module["name"])
 
 		for case in module["cases"]:
 			# default value is not False
@@ -74,6 +83,15 @@ if __name__ == "__main__":
 			if not expected:
 				eprint("  seeds were (" + random_ints[0][0] + ", " + random_ints[0][1] + ", " + random_ints[1][0] + ", " + random_ints[1][1] + ")")
 
+			# add test to suite
+			test_case = junit.TestCase(case["number"])
+			if case["title"]:
+				test_case.name += " " + case["title"]
+			if not expected:
+				test_case.result = junit.Failure("succeeded" if exit == 0 else "failed" + " unexpectedly")
+
+			test_suites[module["name"]].add_testcase(test_case)
+
 			number_of_tests += 1
 			if expected:
 				expected_tests += 1
@@ -81,6 +99,11 @@ if __name__ == "__main__":
 				unexpected_tests += 1
 
 		eprint(" all tests run for module " + module["name"])
+
+	for name in test_suites:
+		junit_xml.add_testsuite(test_suites[name])
+	eprint("writing JUnit XML")
+	junit_xml.write("junit.xml")
 
 	eprint("all tests run")
 	eprint("number of tests:  ", number_of_tests)
