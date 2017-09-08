@@ -168,7 +168,7 @@ begin
 						-- copy timestamp to both start and end time
 						v.data_in_ipv6.start_time    := v.in_ipv6_frame_info.timestamp    ;
 						v.data_in_ipv6.end_time      := v.in_ipv6_frame_info.timestamp    ;
-						v.data_in_ipv6.octet_count   := x"00000000" & v.in_ipv6_frame_info.octet_count;
+						v.data_in_ipv6.octet_count   := x"0000" & v.in_ipv6_frame_info.octet_count;
 						-- set packet count to 1
 						v.data_in_ipv6.packet_count  := to_unsigned(1, 32);
 						v.data_in_ipv6.next_header   := v.in_ipv6_frame_info.next_header  ;
@@ -199,7 +199,7 @@ begin
 						-- copy timestamp to both start and end time
 						v.data_in_ipv4.start_time    := v.in_ipv4_frame_info.timestamp    ;
 						v.data_in_ipv4.end_time      := v.in_ipv4_frame_info.timestamp    ;
-						v.data_in_ipv4.octet_count   := x"00000000" & v.in_ipv4_frame_info.octet_count  ;
+						v.data_in_ipv4.octet_count   := x"0000" & v.in_ipv4_frame_info.octet_count  ;
 						-- set packet count to 1
 						v.data_in_ipv4.packet_count  := to_unsigned(1, 32);
 						v.data_in_ipv4.next_header   := v.in_ipv4_frame_info.next_header  ;
