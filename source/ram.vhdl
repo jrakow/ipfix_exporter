@@ -32,7 +32,7 @@ end entity;
 
 architecture arch of ram is
 	type t_ram is array (2**g_addr_width - 1 downto 0) of std_ulogic_vector(g_data_width - 1 downto 0);
-	signal s_ram : t_ram;
+	signal s_ram : t_ram := (others => (others => '0'));
 begin
 	process(clk)
 	begin
