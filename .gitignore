@@ -9,3 +9,4 @@
 /testbench
 /waveforms/*/*.ghw
 junit.xml
+report.html

@@ -46,7 +46,7 @@ clean:
 %.gcda : testbench.gcda ;
 
 .PHONY: run
-testbench.gcda run: testbench cases/*
+junit.xml testbench.gcda run: testbench cases/*
 	./run_tests.py all
 
 html:
@@ -54,6 +54,9 @@ html:
 
 %.vhdl.gcov: %.gcda %.gcno testbench.gcda
 	gcov $<
+
+report.html: junit.xml
+	xsltproc junit2html.xsl junit.xml > report.html
 
 # removing needed because e~testbench is not a source file
 coverage.info: ${TESTBENCH_SRCS:.vhdl=.vhdl.gcov}
