@@ -21,11 +21,6 @@ if __name__ == "__main__":
 		for name in sys.argv[1:]:
 			assert name in [module["name"] for module in json], 'module "' + name + '" not found'
 
-	# statistics
-	number_of_tests = 0
-	expected_tests = 0
-	unexpected_tests = 0
-
 	# use junit XML as output format
 	junit_xml = junit.JUnitXml()
 	test_suites = {}
@@ -96,12 +91,6 @@ if __name__ == "__main__":
 
 			test_suites[module["name"]].add_testcase(test_case)
 
-			number_of_tests += 1
-			if expected:
-				expected_tests += 1
-			else:
-				unexpected_tests += 1
-
 		eprint(" all tests run for module " + module["name"])
 
 	for name in test_suites:
@@ -110,6 +99,3 @@ if __name__ == "__main__":
 	junit_xml.write("junit.xml")
 
 	eprint("all tests run")
-	eprint("number of tests:  ", number_of_tests)
-	eprint("expected tests:   ", expected_tests)
-	eprint("unexpected tests: ", unexpected_tests)
