@@ -108,7 +108,7 @@ begin
 					else
 						if_axis_s_tready <= '0';
 					end if;
-	
+
 					checker_event <= false;
 
 					-- line empty so get new line
@@ -144,7 +144,7 @@ begin
 						-- get frame
 						-- condition only needed if finished
 						if check_line /= null then
-	
+
 							if check_line'length >= frame_string'length then
 								tkeep_expected := (others => '1');
 								read(check_line, frame_string);
@@ -156,7 +156,7 @@ begin
 								tkeep_expected := to_tkeep(check_line'length / 2, g_tdata_width / 8);
 								read(check_line, frame_string(1 to check_line'length));
 							end if;
-	
+
 							-- checkline is only /= null if it contains another frame
 							if check_line'length = 0 then
 								tlast_expected := '1';
@@ -165,7 +165,7 @@ begin
 								tlast_expected := '0';
 							end if;
 						end if;
-	
+
 	--! @cond doxygen cannot handle ?=
 						assert to_std_ulogic_vector(frame_string) ?= if_axis_m_tdata
 							report "line " & integer'image(line_number) & ": tdata is 0x" & to_hstring(if_axis_m_tdata) & " should be 0x" & frame_string;
@@ -177,7 +177,7 @@ begin
 						assert tlast_expected = if_axis_m_tlast
 							report "line " & integer'image(line_number) & ": tlast is 0b" & std_ulogic'image(if_axis_m_tlast) & " should be 0" & std_ulogic'image(tlast_expected);
 						success := success and (tlast_expected = if_axis_m_tlast);
-	
+
 						if not success then
 							stop(2);
 						end if;

@@ -88,7 +88,7 @@ begin
 						wait_for_checker <= false;
 					end if;
 					emulator_event <= false;
-	
+
 					if s_verify_fsm = fetching then
 						s_verify_fsm <= reading;
 					elsif s_verify_fsm = reading then
@@ -130,7 +130,7 @@ begin
 										report "line " & integer'image(line_number) & ": emu_line'length " & integer'image(emu_line'length) & " is invalid"
 										severity failure;
 								end if;
-		
+
 								read_enable  <= '0';
 								write_enable <= '0';
 								case emu_string(1 to 6) is

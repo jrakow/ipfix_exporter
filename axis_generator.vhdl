@@ -89,13 +89,13 @@ begin
 					if wait_for_emulator and emulator_event then
 						wait_for_emulator <= false;
 					end if;
-	
+
 					uniform(random_seed_0, random_seed_1, random);
 					-- if set once, tvalid must be held
 					if random < g_tvalid_ratio and not finished then
 						if_axis_m_tvalid <= '1';
 					end if;
-	
+
 					generator_event <= false;
 					-- line empty so get new line
 					if stimulus_line = null then
@@ -144,7 +144,7 @@ begin
 								if_axis_m_tkeep <= to_tkeep(stimulus_line'length / 2, g_tdata_width / 8);
 								read(stimulus_line, frame_string(1 to stimulus_line'length));
 							end if;
-	
+
 							-- stimulus_line is only /= null if it contains another frame
 							if stimulus_line'length = 0 then
 								if_axis_m_tlast <= '1' ;
@@ -153,7 +153,7 @@ begin
 								if_axis_m_tlast <= '0' ;
 							end if;
 						end if;
-	
+
 						if_axis_m_tdata <= to_std_ulogic_vector(frame_string);
 					end if;
 				end if;
