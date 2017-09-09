@@ -133,6 +133,8 @@ begin
 					v.if_axis_out_m_tdata := to_std_ulogic_vector(ram_out_ipv6) when c_ip_version = 6 else to_std_ulogic_vector(ram_out_ipv4);
 					v.if_axis_out_m_tvalid := '1';
 					v.fsm := wait_read;
+				else
+					v.fsm := read;
 				end if;
 
 			when wait_read =>
