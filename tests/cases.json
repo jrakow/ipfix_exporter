@@ -65,7 +65,7 @@
 		"g_out_tdata_width" : 512,
 		"cases" :
 		[
-			{ "number" : "60" , "invert" : false, "title" : "basic udp and tcp aggregation (reorder according to hash function)" }
+			{ "number" : "60" , "invert" : false, "title" : "basic udp and tcp aggregation" }
 		]
 	},
 	{
@@ -75,7 +75,7 @@
 		"g_out_tdata_width" : 256,
 		"cases" :
 		[
-			{ "number" : "40" , "invert" : false, "title" : "basic udp and tcp aggregation (reorder according to hash function)" }
+			{ "number" : "40" , "invert" : false, "title" : "basic udp and tcp aggregation" }
 		]
 	},
 	{
