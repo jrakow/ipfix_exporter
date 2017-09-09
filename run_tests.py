@@ -72,21 +72,25 @@ if __name__ == "__main__":
 			        "-gg_random_tready_seed_0=" + random_ints[1][0],
 			        "-gg_random_tready_seed_1=" + random_ints[1][1]
 			       ]
+
 			# start subprocess
-			exit = subprocess.call(args, stderr=sys.stdout.buffer)
+			completed = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			exit = completed.returncode
 
 			eprint("  " + module["name"] + " " + case["number"], end="")
 			eprint(" succeeded" if exit == 0 else " failed", end="")
 			# != is xor
 			expected = (exit == 0) != inverted
 			eprint(" as expected" if expected else " unexpectedly")
-			if not expected:
-				eprint("  seeds were (" + random_ints[0][0] + ", " + random_ints[0][1] + ", " + random_ints[1][0] + ", " + random_ints[1][1] + ")")
+
+			seeds_were = "seeds were (" + random_ints[0][0] + ", " + random_ints[0][1] + ", " + random_ints[1][0] + ", " + random_ints[1][1] + ")"
 
 			# add test to suite
 			test_case = junit.TestCase(case["number"])
 			if case["title"]:
 				test_case.name += " " + case["title"]
+			test_case.system_err = '\n'.join(completed.stderr.decode("utf-8").split('\0'))
+			test_case.system_out = '\n'.join((completed.stdout.decode("utf-8") + '\0' + seeds_were).split('\0'))
 			if not expected:
 				test_case.result = junit.Failure("succeeded" if exit == 0 else "failed" + " unexpectedly")
 
