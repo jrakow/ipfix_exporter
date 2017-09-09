@@ -106,7 +106,6 @@ begin
 		-- single cycle active signals
 		v.enable               := '0';
 		v.write_enable         := '0';
-		v.if_axis_out_m_tvalid := '0';
 
 		case v.fsm is
 			when read =>
