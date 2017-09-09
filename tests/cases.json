@@ -45,7 +45,9 @@
 		"g_out_tdata_width" : 360,
 		"cases" :
 		[
-			{ "number" : "60" , "invert" : false, "title" : "empty, udp and tcp" }
+			{ "number" : "60" , "invert" : false, "title" : "empty packets" },
+			{ "number" : "61" , "invert" : false, "title" : "udp packets" },
+			{ "number" : "62" , "invert" : false, "title" : "tcp packets" }
 		]
 	},
 	{
@@ -55,7 +57,9 @@
 		"g_out_tdata_width" : 168,
 		"cases" :
 		[
-			{ "number" : "40" , "invert" : false, "title" : "empty, udp and tcp" }
+			{ "number" : "40" , "invert" : false, "title" : "empty packets" },
+			{ "number" : "41" , "invert" : false, "title" : "udp packets" },
+			{ "number" : "42" , "invert" : false, "title" : "tcp packets" }
 		]
 	},
 	{
