@@ -28,7 +28,7 @@ digraph overview
 	ethertype_dropping [ label="ethertype_dropping" URL="@ref ethertype_dropping" ];
 	ip_version_split   [ label="ip_version_split"   URL="@ref ip_version_split"   ];
 
-	input -> selective_dropping -> ethernet_dropping -> vlan_dropping_0 -> vlan_dropping_1 -> ip_version_split;
+	input -> selective_dropping -> ethernet_dropping -> vlan_dropping_0 -> vlan_dropping_1 -> ethertype_dropping -> ip_version_split;
 	ip_version_split -> output_ipv6;
 	ip_version_split -> output_ipv4;
 	}
