@@ -17,7 +17,7 @@ This entity wraps these modules.
  */
 entity cache_wrapper is
 	generic(
-		g_addr_width      : natural := 12;
+		g_addr_width      : natural := 8;
 		g_in_tdata_width  : natural;
 		g_out_tdata_width : natural
 	);
@@ -58,7 +58,7 @@ architecture arch of cache_wrapper is
 begin
 	i_cache_insertion : entity ipfix_exporter.cache_insertion
 		generic map(
-			g_addr_width       => g_addr_width,
+			g_addr_width       => 12,
 			g_frame_info_width => c_frame_info_width,
 			g_record_width     => c_record_width
 		)
@@ -72,7 +72,7 @@ begin
 
 			enable              => s_enable_a,
 			write_enable        => s_write_enable_a,
-			addr                => s_addr_a,
+			addr(7 downto 0)    => s_addr_a,
 			data_in             => s_data_in_a,
 			data_out            => s_data_out_a,
 
@@ -100,7 +100,7 @@ begin
 		);
 	i_cache_extraction : entity ipfix_exporter.cache_extraction
 		generic map(
-			g_addr_width   => g_addr_width,
+			g_addr_width   => 12,
 			g_record_width => c_record_width
 		)
 		port map(
@@ -109,7 +109,7 @@ begin
 
 			enable                     => s_enable_b,
 			write_enable               => s_write_enable_b,
-			addr                       => s_addr_b,
+			addr(7 downto 0)           => s_addr_b,
 			data_in                    => s_data_in_b,
 			data_out                   => s_data_out_b,
 
