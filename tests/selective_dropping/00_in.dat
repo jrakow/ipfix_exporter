@@ -1,3 +1,5 @@
+# wait for dropping to be enabled
+%WAIT_EMU
 # documentation unicast mac addresses 00-53-00 to 00-53-FF
 # empty dix frame
 005300FEDCBA0053FF0123450800
