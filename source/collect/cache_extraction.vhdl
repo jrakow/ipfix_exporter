@@ -123,10 +123,12 @@ begin
 				end if;
 
 			when compareandsend =>
-				if    (c_ip_version = 6 and (   ram_out_ipv6.end_time   + cpu_cache_inactive_timeout > cpu_timestamp
-				                             or ram_out_ipv6.start_time + cpu_cache_active_timeout   > cpu_timestamp))
-				   or (c_ip_version = 4 and (   ram_out_ipv4.end_time   + cpu_cache_inactive_timeout > cpu_timestamp
-				                             or ram_out_ipv4.start_time + cpu_cache_active_timeout   > cpu_timestamp)) then
+				if    (c_ip_version = 6 and (   ram_out_ipv6.end_time   + cpu_cache_inactive_timeout < cpu_timestamp
+				                             or ram_out_ipv6.start_time + cpu_cache_active_timeout   < cpu_timestamp)
+				                        and (ram_out_ipv6.start_time /= 0 or ram_out_ipv6.end_time /= 0))
+				   or (c_ip_version = 4 and (   ram_out_ipv4.end_time   + cpu_cache_inactive_timeout < cpu_timestamp
+				                             or ram_out_ipv4.start_time + cpu_cache_active_timeout   < cpu_timestamp)
+				                        and (ram_out_ipv4.start_time /= 0 or ram_out_ipv4.end_time /= 0)) then
 					-- timeout reached
 					v.enable       := '1';
 					v.write_enable := '1';
