@@ -58,6 +58,10 @@ html:
 report.html: junit.xml
 	xsltproc junit2html.xsl junit.xml > report.html
 
+.PHONY: report
+report: junit.xml
+	xsltproc junit2txt.xsl junit.xml
+
 # removing needed because e~testbench is not a source file
 coverage.info: ${TESTBENCH_SRCS:.vhdl=.vhdl.gcov}
 	rm -f e~testbench.gcno e~testbench.gcda
