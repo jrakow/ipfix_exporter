@@ -236,6 +236,8 @@ begin
 				cpu_timestamp              => s_timestamp
 			);
 			s_events(17) <= s_events(6);
+		if_axis_out_m_tkeep <= (others => '1');
+		if_axis_out_m_tlast <= '1';
 		end generate;
 
 	i_ipfix_message_control : if g_module = "ipfix_message_control" generate
