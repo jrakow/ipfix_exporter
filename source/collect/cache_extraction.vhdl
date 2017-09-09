@@ -81,8 +81,8 @@ architecture arch of cache_extraction is
 	signal ram_out_ipv6 : t_ipfix_ipv6_data_record;
 	signal ram_out_ipv4 : t_ipfix_ipv4_data_record;
 begin
-	ram_out_ipv6 <= to_ipfix_ipv6_data_record(data_out);
-	ram_out_ipv4 <= to_ipfix_ipv4_data_record(data_out);
+	ram_out_ipv6 <= to_ipfix_ipv6_data_record(data_out) when c_ip_version = 6 else c_ipfix_ipv6_data_record_default;
+	ram_out_ipv4 <= to_ipfix_ipv4_data_record(data_out) when c_ip_version = 4 else c_ipfix_ipv4_data_record_default;
 
 	p_seq : process(clk)
 	begin
