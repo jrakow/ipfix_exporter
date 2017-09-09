@@ -153,6 +153,6 @@ begin
 	write_enable <= r.write_enable;
 	addr         <= r.addr        ;
 	data_in      <= r.data_in     ;
-	if_axis_out_m_tdata  <= (others => '0');
+	if_axis_out_m_tdata  <= r.if_axis_out_m_tdata;
 	if_axis_out_m_tvalid <= r.if_axis_out_m_tvalid;
 end architecture;
