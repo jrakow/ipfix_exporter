@@ -43,12 +43,33 @@
       </head>
       <body>
         <h1> VHDL Unit Test Results </h1>
-        <!-- <xsl:call-template name="summary" /> -->
+        <xsl:call-template name="summary" />
         <xsl:apply-templates select="testsuite">
           <xsl:sort select="name" />
         </xsl:apply-templates>
       </body>
     </html>
+  </xsl:template>
+
+  <xsl:template name="summary">
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Successes</th>
+        <th>Failures</th>
+        <th>Total</th>
+      </tr>
+      <xsl:apply-templates select="testsuite" mode="summary" />
+    </table>
+  </xsl:template>
+
+  <xsl:template match="testsuite" mode="summary">
+    <tr>
+      <td><xsl:value-of select="@name"/> </td>
+      <td><xsl:value-of select="count(testcase) - count(testcase/failure)"/> </td>
+      <td><xsl:value-of select="count(testcase/failure)"/> </td>
+      <td><xsl:value-of select="count(testcase)"/> </td>
+    </tr>
   </xsl:template>
 
   <xsl:template match="testsuite">
