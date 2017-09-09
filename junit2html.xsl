@@ -96,9 +96,9 @@
         <details>
           <summary>Output</summary>
           <h3>System out</h3>
-          <xsl:value-of select="system-out" />
+          <code><xsl:value-of select="system-out" /></code>
           <h3>System error</h3>
-          <xsl:value-of select="system-err" />
+          <code><xsl:value-of select="system-err" /></code>
         </details>
       </td>
     </tr>
