@@ -58,7 +58,7 @@ architecture arch of ipfix_message_control is
 	-- g_record_width is always a multiple of 128
 	constant c_frames_per_record : natural := g_record_width / 128;
 
-	type t_fsm is (collect, send, wait_read);
+	type t_fsm is (collect, send_header, send, wait_read);
 	type t_records is array (c_max_records_per_message - 1 downto 0) of std_ulogic_vector(g_record_width - 1 downto 0);
 
 	type t_reg is record
@@ -68,7 +68,9 @@ architecture arch of ipfix_message_control is
 		remaining_timeout   : t_timeout;
 		send_record_counter : natural range 1 to c_max_records_per_message;
 		send_frame_counter  : natural range 1 to c_frames_per_record;
+		ipfix_header        : t_ipfix_header;
 		ipfix_set_header    : t_ipfix_set_header;
+		ipfix_header_part   : std_ulogic_vector(c_ipfix_set_header_width - 1 downto 0);
 
 		-- output
 		if_axis_in_s  : t_if_axis_s;
@@ -81,14 +83,16 @@ architecture arch of ipfix_message_control is
 		remaining_timeout   => x"0001",
 		send_record_counter => 1,
 		send_frame_counter  => c_frames_per_record,
+		ipfix_header        => c_ipfix_header_default,
 		ipfix_set_header    => c_ipfix_set_header_default,
+		ipfix_header_part   => (others => '0'),
 		if_axis_in_s        => c_if_axis_s_default,
 		if_axis_out_m       => c_if_axis_frame_m_default
 	);
 	signal r, r_nxt : t_reg := c_reg_default;
 
 	signal s_one_hertz_pulse : std_ulogic;
-	signal s_ipfix_set_header : t_ipfix_set_header;
+	signal s_ipfix_header_part : std_ulogic_vector(c_ipfix_set_header_width - 1 downto 0);
 	signal s_if_axis_m : t_if_axis_frame_m;
 	signal s_if_axis_s : t_if_axis_s;
 begin
@@ -105,7 +109,8 @@ begin
 
 	p_comb : process(if_axis_in_m_tdata, if_axis_in_m_tvalid, if_axis_in_s,
 	                 s_if_axis_m, s_if_axis_s,
-	                 s_one_hertz_pulse, cpu_ipfix_message_timeout, cpu_ipfix_config, r)
+	                 s_one_hertz_pulse, cpu_ipfix_message_timeout, cpu_timestamp, cpu_ipfix_config,
+	                 r)
 		variable v : t_reg := c_reg_default;
 	begin
 		v := r;
@@ -122,14 +127,36 @@ begin
 				if    v.record_count = c_max_records_per_message
 				   or (v.remaining_timeout = 0 and v.record_count /= 0) then
 					v.if_axis_in_s.tready := '0';
-					-- construct ipfix set header
-					v.ipfix_set_header.set_id := cpu_ipfix_config.template_id;
-					v.ipfix_set_header.length := to_unsigned(4 + g_record_width / 8 * v.record_count, 16);
-					v.fsm := send;
+
+					-- construct ipfix header and ipfix set header
+					v.ipfix_header.export_time           := cpu_timestamp;
+					v.ipfix_header.observation_domain_id := cpu_ipfix_config.observation_domain_id;
+					-- sequence number incremented after sending
+					v.ipfix_set_header.set_id            := cpu_ipfix_config.template_id;
+					v.ipfix_set_header.length            := to_unsigned(4 + g_record_width / 8 * v.record_count, 16);
+					v.ipfix_header.length                := v.ipfix_set_header.length + c_ipfix_header_width / 8;
+
+					-- first part of ipfix header is prefixed by generic_prefix
+					-- second part and set header are the first frame
+					v.ipfix_header_part := to_std_ulogic_vector(v.ipfix_header)(127 downto 96);
+
+					v.fsm := send_header;
 				elsif v.record_count = 0 then
 					v.remaining_timeout := cpu_ipfix_message_timeout;
 				elsif s_one_hertz_pulse = '1' and v.remaining_timeout /= 0 then
 					v.remaining_timeout := v.remaining_timeout - 1;
+				end if;
+
+			when send_header =>
+				v.if_axis_out_m.tvalid := '1';
+				v.if_axis_out_m.tdata  := to_std_ulogic_vector(v.ipfix_header)(95 downto 0) & to_std_ulogic_vector(v.ipfix_set_header);
+				v.if_axis_out_m.tkeep := (others => '1');
+				v.if_axis_out_m.tlast := '0';
+
+				if s_if_axis_m.tvalid and s_if_axis_s.tready then
+					v.ipfix_header.sequence_number := v.ipfix_header.sequence_number + v.record_count;
+					v.if_axis_out_m.tvalid := '0';
+					v.fsm := send;
 				end if;
 
 			when send =>
@@ -156,7 +183,10 @@ begin
 			when wait_read =>
 				if s_if_axis_m.tvalid and s_if_axis_s.tready then
 					-- reset
-					v := c_reg_default;
+					v.if_axis_out_m.tvalid := c_reg_default.if_axis_out_m.tvalid;
+					v.record_count         := c_reg_default.record_count;
+					v.send_frame_counter   := c_reg_default.send_frame_counter;
+					v.send_record_counter  := c_reg_default.send_record_counter;
 					-- silence warning about dead state
 					v.fsm := collect;
 
@@ -168,9 +198,9 @@ begin
 		r_nxt <= v;
 	end process;
 
-	if_axis_in_s       <= r.if_axis_in_s ;
-	s_if_axis_m        <= r.if_axis_out_m;
-	s_ipfix_set_header <= r.ipfix_set_header;
+	if_axis_in_s        <= r.if_axis_in_s ;
+	s_if_axis_m         <= r.if_axis_out_m;
+	s_ipfix_header_part <= r.ipfix_header_part;
 
 	b_one_hertz_counter : block
 		constant c_one_hertz_counter_max : natural                                    := 1 sec / g_period;
@@ -209,6 +239,6 @@ begin
 			if_axis_out_m => if_axis_out_m,
 			if_axis_out_s => if_axis_out_s,
 
-			prefix        => to_std_ulogic_vector(s_ipfix_set_header)
+			prefix        => to_std_ulogic_vector(s_ipfix_header_part)
 		);
 end architecture;
