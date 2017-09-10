@@ -8,6 +8,7 @@ library ipfix_exporter;
 use ipfix_exporter.pkg_axi_stream.all;
 use ipfix_exporter.pkg_common_subtypes.all;
 use ipfix_exporter.pkg_config.all;
+use ipfix_exporter.pkg_ipfix_data_record.all;
 use ipfix_exporter.pkg_types.all;
 
 /*!
@@ -266,7 +267,7 @@ begin
 			);
 		end generate;
 
-	s_ipfix_config_used <= s_ipfix_config_ipv6 when g_ip_version = 6 else s_ipfix_config_ipv4;
+	s_ipfix_config_used <= s_ipfix_config_ipv6 when g_in_tdata_width = c_ipfix_ipv6_data_record_width else s_ipfix_config_ipv4;
 	i_ipfix_header : if g_module = "ipfix_header" generate
 		i_cond_gen : entity ipfix_exporter.ipfix_header
 			generic map (
