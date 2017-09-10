@@ -4,3 +4,5 @@ write 0000004C 0000FFFF
 write 00000050 000080EE
 # commit + ipv4
 write 00000004 000000001
+
+%EVENT

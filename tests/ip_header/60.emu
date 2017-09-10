@@ -13,3 +13,5 @@ write 00000050 000080EE
 
 # commit + ipv6
 write 00000004 00000002
+
+%EVENT
