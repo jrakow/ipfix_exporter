@@ -28,6 +28,7 @@ IPFIX_EXPORTER_SRCS := \
 	source/generic/axis_combiner.vhdl \
 	source/generic/conditional_split.vhdl \
 	source/generic/generic_dropping.vhdl \
+	source/generic/generic_prefix.vhdl \
 	source/generic/ram.vhdl \
 	source/packages/pkg_axi_stream.vhdl \
 	source/packages/pkg_common_subtypes.vhdl \
