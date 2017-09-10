@@ -36,7 +36,8 @@ digraph overview
 entity top_collect is
 	generic(
 		g_addr_width : natural;
-		g_ip_version : natural
+		g_ip_version : natural;
+		g_period     : time
 	);
 	port(
 		clk : in std_ulogic;
@@ -205,7 +206,8 @@ begin
 
 	i_ipfix_message_control : entity ipfix_exporter.ipfix_message_control
 			generic map (
-				g_record_width => c_record_width
+				g_record_width => c_record_width,
+				g_period       => g_period
 			)
 		port map(
 			clk           => clk,

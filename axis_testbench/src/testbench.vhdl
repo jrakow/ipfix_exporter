@@ -151,7 +151,8 @@ begin
 			g_module          => g_module,
 			g_in_tdata_width  => g_in_tdata_width,
 			g_out_tdata_width => g_out_tdata_width,
-			g_ip_version      => g_ip_version
+			g_ip_version      => g_ip_version,
+			g_period          => g_period
 		)
 		port map(
 			clk                  => s_clk,

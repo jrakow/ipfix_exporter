@@ -27,7 +27,8 @@ entity module_wrapper is
 		-- all other ip version dependent modules can derive it from the port widths
 		g_ip_version      : natural;
 		g_in_tdata_width  : natural;
-		g_out_tdata_width : natural
+		g_out_tdata_width : natural;
+		g_period          : time
 	);
 	port(
 		clk : in std_ulogic;
@@ -243,7 +244,8 @@ begin
 	i_ipfix_message_control : if g_module = "ipfix_message_control" generate
 		i_cond_gen : entity ipfix_exporter.ipfix_message_control
 			generic map (
-				g_record_width => g_in_tdata_width
+				g_record_width => g_in_tdata_width,
+				g_period       => g_period
 				)
 			port map(
 				clk           => clk,

@@ -16,7 +16,8 @@ It instantiates and connects the @ref top_preparation, @ref top_collect and @ref
 entity top_ipfix is
 	generic(
 		g_ipv6_cache_addr_width : natural;
-		g_ipv4_cache_addr_width : natural
+		g_ipv4_cache_addr_width : natural;
+		g_period                : time
 	);
 	port(
 		clk : in std_ulogic;
@@ -91,7 +92,8 @@ begin
 	i_top_collect_ipv6 : entity ipfix_exporter.top_collect
 		generic map(
 			g_addr_width => g_ipv6_cache_addr_width,
-			g_ip_version => 6
+			g_ip_version => 6,
+			g_period     => g_period
 		)
 		port map(
 			clk           => clk,
@@ -115,7 +117,8 @@ begin
 	i_top_collect_ipv4 : entity ipfix_exporter.top_collect
 		generic map(
 			g_addr_width => g_ipv4_cache_addr_width,
-			g_ip_version => 4
+			g_ip_version => 4,
+			g_period     => g_period
 		)
 		port map(
 			clk           => clk,
