@@ -37,7 +37,9 @@ entity ipfix_message_control is
 		if_axis_out_s             : in  t_if_axis_s;
 
 		cpu_ipfix_config          : in t_ipfix_config;
-		cpu_ipfix_message_timeout : in t_timeout
+		cpu_ipfix_message_timeout : in t_timeout;
+		-- only used for ipfix header, not timeout
+		cpu_timestamp             : in t_timestamp
 	);
 end entity;
 

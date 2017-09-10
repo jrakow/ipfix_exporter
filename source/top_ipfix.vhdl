@@ -111,7 +111,7 @@ begin
 			cpu_ipfix_message_timeout  => s_cpu_ipfix_message_timeout,
 			cpu_ipfix_config           => s_cpu_ipfix_config_ipv6,
 
-			events => s_events(8 downto 4)
+			events => s_events(7 downto 4)
 		);
 
 	i_top_collect_ipv4 : entity ipfix_exporter.top_collect
@@ -136,7 +136,7 @@ begin
 			cpu_ipfix_message_timeout  => s_cpu_ipfix_message_timeout,
 			cpu_ipfix_config           => s_cpu_ipfix_config_ipv4,
 
-			events => s_events(19 downto 15)
+			events => s_events(17 downto 14)
 		);
 
 	i_top_export_ipv6 : entity ipfix_exporter.top_export
@@ -155,7 +155,7 @@ begin
 			cpu_vlan_config     => s_cpu_vlan_config,
 			cpu_ethernet_config => s_cpu_ethernet_config,
 
-			events => s_events(14 downto 9)
+			events => s_events(13 downto 8)
 		);
 
 	i_top_export_ipv4 : entity ipfix_exporter.top_export
@@ -174,7 +174,7 @@ begin
 			cpu_vlan_config     => s_cpu_vlan_config,
 			cpu_ethernet_config => s_cpu_ethernet_config,
 
-			events => s_events(25 downto 20)
+			events => s_events(23 downto 18)
 		);
 
 	i_axis_combiner : entity ipfix_exporter.axis_combiner

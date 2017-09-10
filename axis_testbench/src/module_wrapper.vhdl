@@ -26,7 +26,6 @@ entity module_wrapper is
 		g_module          : string;
 		-- g_ip_version is only used for ipfix_header
 		-- all other ip version dependent modules can derive it from the port widths
-		g_ip_version      : natural;
 		g_in_tdata_width  : natural;
 		g_out_tdata_width : natural;
 		g_period          : time
@@ -263,36 +262,12 @@ begin
 				if_axis_out_s.tready => if_axis_out_s_tready,
 
 				cpu_ipfix_config          => s_ipfix_config_used,
-				cpu_ipfix_message_timeout => s_ipfix_message_timeout
+				cpu_ipfix_message_timeout => s_ipfix_message_timeout,
+				cpu_timestamp             => s_timestamp
 			);
 		end generate;
 
 	s_ipfix_config_used <= s_ipfix_config_ipv6 when g_in_tdata_width = c_ipfix_ipv6_data_record_width else s_ipfix_config_ipv4;
-	i_ipfix_header : if g_module = "ipfix_header" generate
-		i_cond_gen : entity ipfix_exporter.ipfix_header
-			generic map (
-				g_ip_version => g_ip_version
-				)
-			port map(
-				clk           => clk,
-				rst           => rst,
-
-				if_axis_in_m.tdata  => if_axis_in_m_tdata ,
-				if_axis_in_m.tkeep  => if_axis_in_m_tkeep ,
-				if_axis_in_m.tlast  => if_axis_in_m_tlast ,
-				if_axis_in_m.tvalid => if_axis_in_m_tvalid,
-				if_axis_in_s.tready => if_axis_in_s_tready,
-
-				if_axis_out_m.tdata  => if_axis_out_m_tdata ,
-				if_axis_out_m.tkeep  => if_axis_out_m_tkeep ,
-				if_axis_out_m.tlast  => if_axis_out_m_tlast ,
-				if_axis_out_m.tvalid => if_axis_out_m_tvalid,
-				if_axis_out_s.tready => if_axis_out_s_tready,
-
-				cpu_ipfix_config => s_ipfix_config_used,
-				cpu_timestamp    => s_timestamp
-			);
-		end generate;
 
 	i_udp_header : if g_module = "udp_header" generate
 		i_cond_gen : entity ipfix_exporter.udp_header

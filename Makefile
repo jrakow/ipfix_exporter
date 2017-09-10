@@ -17,7 +17,6 @@ IPFIX_EXPORTER_SRCS := \
 	source/collect/cache_extraction.vhdl \
 	source/collect/cache_insertion.vhdl \
 	source/collect/information_extraction.vhdl \
-	source/collect/ipfix_header.vhdl \
 	source/collect/ipfix_message_control.vhdl \
 	source/cpu_interface.vhdl \
 	source/export/ethernet_header.vhdl \

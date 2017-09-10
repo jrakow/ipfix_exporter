@@ -44,7 +44,7 @@ The following registers are provided for reading and writing by the CPU:
 | `0x88` | IPv6 flow hash collisions                       |
 | `0x8C` | IPv6 flows after @ref cache_extraction          |
 | `0x90` | IPv6 frames after @ref ipfix_message_control    |
-| `0x94` | IPv6 frames after @ref ipfix_header             |
+| `0x94` | *invalid*                                       |
 | `0x98` | IPv6 frames after @ref udp_header               |
 | `0x9C` | IPv6 frames after @ref ip_header                |
 | `0xA0` | IPv6 frames after @ref ethertype_insertion      |
@@ -56,7 +56,7 @@ The following registers are provided for reading and writing by the CPU:
 | `0xB8` | IPv4 flow hash collisions                       |
 | `0xBC` | IPv4 flows after @ref cache_extraction          |
 | `0xC0` | IPv4 frames after @ref ipfix_message_control    |
-| `0xC4` | IPv4 frames after @ref ipfix_header             |
+| `0xC4` | *invalid*                                       |
 | `0xC8` | IPv4 frames after @ref udp_header               |
 | `0xCC` | IPv4 frames after @ref ip_header                |
 | `0xD0` | IPv4 frames after @ref ethertype_insertion      |

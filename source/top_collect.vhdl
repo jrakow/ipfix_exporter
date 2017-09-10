@@ -95,9 +95,6 @@ architecture arch of top_collect is
 	signal s_if_axis_m_tvalid_1 : std_ulogic;
 	signal s_if_axis_s_1        : t_if_axis_s;
 
-	signal s_if_axis_m_2 : t_if_axis_frame_m;
-	signal s_if_axis_s_2 : t_if_axis_s;
-
 	signal s_enable_a       : std_ulogic;
 	signal s_write_enable_a : std_ulogic;
 	signal s_addr_a         : std_ulogic_vector(g_addr_width - 1 downto 0);
@@ -116,7 +113,6 @@ begin
 	events(1) <= s_if_axis_m_tvalid_0 and s_if_axis_s_0.tready;
 	events(2) <= s_collision_event;
 	events(3) <= s_if_axis_m_tvalid_1 and s_if_axis_s_1.tready;
-	events(4) <= s_if_axis_m_2.tvalid and s_if_axis_m_2.tlast and s_if_axis_s_2.tready;
 
 	i_information_extraction : entity ipfix_exporter.information_extraction
 		generic map (
@@ -217,27 +213,11 @@ begin
 			if_axis_in_m_tvalid => s_if_axis_m_tvalid_1,
 			if_axis_in_s        => s_if_axis_s_1,
 
-			if_axis_out_m => s_if_axis_m_2,
-			if_axis_out_s => s_if_axis_s_2,
-
-			cpu_ipfix_config          => cpu_ipfix_config,
-			cpu_ipfix_message_timeout => cpu_ipfix_message_timeout
-		);
-	i_ipfix_header : entity ipfix_exporter.ipfix_header
-		generic map (
-			g_ip_version => g_ip_version
-			)
-		port map(
-			clk           => clk,
-			rst           => rst,
-
-			if_axis_in_m  => s_if_axis_m_2,
-			if_axis_in_s  => s_if_axis_s_2,
-
 			if_axis_out_m => if_axis_out_m,
 			if_axis_out_s => if_axis_out_s,
 
-			cpu_ipfix_config => cpu_ipfix_config,
-			cpu_timestamp    => cpu_timestamp
+			cpu_ipfix_config          => cpu_ipfix_config,
+			cpu_ipfix_message_timeout => cpu_ipfix_message_timeout,
+			cpu_timestamp             => cpu_timestamp
 		);
 end architecture;
