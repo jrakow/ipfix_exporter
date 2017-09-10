@@ -108,6 +108,10 @@ package pkg_protocol_types is
 		set_id => (others => '0'),
 		length => (others => '0')
 	);
+
+	subtype t_partial_checksum is unsigned(15 downto 0);
+	subtype t_checksum is std_ulogic_vector(15 downto 0);
+	function ipv4_header_checksum(ih : t_ipv4_header) return std_ulogic_vector;
 end package;
 
 package body pkg_protocol_types is
@@ -208,5 +212,41 @@ package body pkg_protocol_types is
 		ret(31 downto 16) := ih.set_id;
 		ret(15 downto  0) := std_ulogic_vector(ih.length);
 		return ret;
+	end;
+
+	function partial_checksum(slv : std_ulogic_vector) return t_partial_checksum is
+		function carry_around_add(lhs, rhs: t_partial_checksum) return t_partial_checksum is
+			-- additional carry bit
+			variable ret : unsigned(16 downto 0) := (others => '0');
+		begin
+			assert lhs'length  = 16;
+			assert rhs'length = 16;
+			-- pad to get 17 bit result
+			ret := ("0" & lhs) + rhs;
+			-- add all carries
+			while ret(16) loop
+				ret := ("0" & ret(15 downto 0)) + ret(16);
+			end loop;
+
+			return ret(15 downto 0);
+		end;
+
+		variable ret : t_partial_checksum := (others => '0');
+	begin
+		-- slv'length is a multiple of 16
+		assert (slv'length / 16) * 16 = slv'length;
+		assert not slv'ascending;
+
+		for i in 0 to slv'length / 16 - 1 loop
+			ret := carry_around_add(ret, t_partial_checksum(slv((i + 1) * 16 - 1 downto i * 16)));
+		end loop;
+		return ret;
+	end;
+
+	function ipv4_header_checksum(ih : t_ipv4_header) return std_ulogic_vector is
+		variable copy : t_ipv4_header := ih;
+	begin
+		copy.header_checksum := (others => '0');
+		return not std_ulogic_vector(partial_checksum(to_std_ulogic_vector(copy)));
 	end;
 end package body;
