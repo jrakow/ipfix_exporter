@@ -39,8 +39,8 @@ entity testbench is
 		g_tvalid_ratio         : real     := 0.5;
 		g_tready_ratio         : real     := 0.5;
 
-		g_period  : time := 10 ns;
-		g_timeout : time :=  1 ms
+		g_period  : time :=  1 ms;
+		g_timeout : time := 10 sec
 	);
 end entity;
 
