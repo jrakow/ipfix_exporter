@@ -21,7 +21,7 @@ package pkg_common_subtypes is
 	subtype t_ip_length is unsigned(15 downto 0);
 
 	subtype t_ipfix_version_number        is std_ulogic_vector(15 downto 0);
-	subtype t_ipfix_export_time           is std_ulogic_vector(31 downto 0);
+	subtype t_ipfix_export_time           is unsigned(31 downto 0);
 	subtype t_ipfix_sequence_number       is unsigned(31 downto 0);
 	subtype t_ipfix_observation_domain_id is std_ulogic_vector(31 downto 0);
 	subtype t_ipfix_set_id                is std_ulogic_vector(15 downto 0);
