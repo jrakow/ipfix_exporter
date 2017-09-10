@@ -5,8 +5,8 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "00" , "invert" : false, "title" : "dropping enabled" },
-			{ "number" : "01" , "invert" : false, "title" : "dropping disabled" }
+			{ "number" : "00", "title" : "dropping enabled" },
+			{ "number" : "01", "title" : "dropping disabled" }
 		]
 	},
 	{
@@ -15,7 +15,7 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "00" , "invert" : false, "title" : "basic test" }
+			{ "number" : "00", "title" : "basic test" }
 		]
 	},
 	{
@@ -24,9 +24,9 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "00" , "invert" : false, "title" : "untagged ethernet frame, various sizes" },
-			{ "number" : "01" , "invert" : false, "title" : "single tagged ethernet frame, various sizes" },
-			{ "number" : "02" , "invert" : false, "title" : "double tagged ethernet frame, various sizes" }
+			{ "number" : "00", "title" : "untagged ethernet frame, various sizes" },
+			{ "number" : "01", "title" : "single tagged ethernet frame, various sizes" },
+			{ "number" : "02", "title" : "double tagged ethernet frame, various sizes" }
 		]
 	},
 	{
@@ -35,7 +35,7 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "00" , "invert" : false, "title" : "basic test" }
+			{ "number" : "00", "title" : "basic test" }
 		]
 	},
 	{
@@ -45,9 +45,9 @@
 		"g_out_tdata_width" : 360,
 		"cases" :
 		[
-			{ "number" : "60" , "invert" : false, "title" : "empty packets" },
-			{ "number" : "61" , "invert" : false, "title" : "udp packets" },
-			{ "number" : "62" , "invert" : false, "title" : "tcp packets" }
+			{ "number" : "60", "title" : "empty packets" },
+			{ "number" : "61", "title" : "udp packets" },
+			{ "number" : "62", "title" : "tcp packets" }
 		]
 	},
 	{
@@ -57,9 +57,9 @@
 		"g_out_tdata_width" : 168,
 		"cases" :
 		[
-			{ "number" : "40" , "invert" : false, "title" : "empty packets" },
-			{ "number" : "41" , "invert" : false, "title" : "udp packets" },
-			{ "number" : "42" , "invert" : false, "title" : "tcp packets" }
+			{ "number" : "40", "title" : "empty packets" },
+			{ "number" : "41", "title" : "udp packets" },
+			{ "number" : "42", "title" : "tcp packets" }
 		]
 	},
 	{
@@ -69,7 +69,7 @@
 		"g_out_tdata_width" : 512,
 		"cases" :
 		[
-			{ "number" : "60" , "invert" : false, "title" : "basic udp and tcp aggregation" }
+			{ "number" : "60", "title" : "basic udp and tcp aggregation" }
 		]
 	},
 	{
@@ -79,7 +79,7 @@
 		"g_out_tdata_width" : 256,
 		"cases" :
 		[
-			{ "number" : "40" , "invert" : false, "title" : "basic udp and tcp aggregation" }
+			{ "number" : "40", "title" : "basic udp and tcp aggregation" }
 		]
 	},
 	{
@@ -88,12 +88,12 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "60" , "invert" : false, "title" : "single not full message" },
-			{ "number" : "61" , "invert" : false, "title" : "single full message" },
-			{ "number" : "62" , "invert" : false, "title" : "one full, one not full message" },
-			{ "number" : "63" , "invert" : false, "title" : "template id change" },
-			{ "number" : "64" , "invert" : false, "title" : "timestamp change" },
-			{ "number" : "65" , "invert" : false, "title" : "observation id change" }
+			{ "number" : "60", "title" : "single not full message" },
+			{ "number" : "61", "title" : "single full message" },
+			{ "number" : "62", "title" : "one full, one not full message" },
+			{ "number" : "63", "title" : "template id change" },
+			{ "number" : "64", "title" : "timestamp change" },
+			{ "number" : "65", "title" : "observation id change" }
 		]
 	},
 	{
@@ -102,12 +102,12 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "40" , "invert" : false, "title" : "single not full message" },
-			{ "number" : "41" , "invert" : false, "title" : "single full message" },
-			{ "number" : "42" , "invert" : false, "title" : "one full, one not full message" },
-			{ "number" : "43" , "invert" : false, "title" : "template id change" },
-			{ "number" : "44" , "invert" : false, "title" : "timestamp change" },
-			{ "number" : "45" , "invert" : false, "title" : "observation id change" }
+			{ "number" : "40", "title" : "single not full message" },
+			{ "number" : "41", "title" : "single full message" },
+			{ "number" : "42", "title" : "one full, one not full message" },
+			{ "number" : "43", "title" : "template id change" },
+			{ "number" : "44", "title" : "timestamp change" },
+			{ "number" : "45", "title" : "observation id change" }
 		]
 	},
 	{
@@ -116,8 +116,8 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "60" , "invert" : false, "title" : "ipv6 checksum test" },
-			{ "number" : "40" , "invert" : false, "title" : "ipv4 checksum test" }
+			{ "number" : "60", "title" : "ipv6 checksum test" },
+			{ "number" : "40", "title" : "ipv4 checksum test" }
 		]
 	},
 	{
@@ -126,8 +126,8 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "60" , "invert" : false, "title" : "ipv6 header basic test" },
-			{ "number" : "40" , "invert" : false, "title" : "ipv4 header checksum test" }
+			{ "number" : "60", "title" : "ipv6 header basic test" },
+			{ "number" : "40", "title" : "ipv4 header checksum test" }
 		]
 	},
 	{
@@ -136,8 +136,8 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "60" , "invert" : false, "title" : "ipv6 basic test" },
-			{ "number" : "40" , "invert" : false, "title" : "ipv4 basic test" }
+			{ "number" : "60", "title" : "ipv6 basic test" },
+			{ "number" : "40", "title" : "ipv4 basic test" }
 		]
 	},
 	{
@@ -146,9 +146,9 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "00" , "invert" : false, "title" : "no vlans enabled, passthrough" },
-			{ "number" : "01" , "invert" : false, "title" : "one vlan enabled" },
-			{ "number" : "02" , "invert" : false, "title" : "two vlans enabled" }
+			{ "number" : "00", "title" : "no vlans enabled, passthrough" },
+			{ "number" : "01", "title" : "one vlan enabled" },
+			{ "number" : "02", "title" : "two vlans enabled" }
 		]
 	},
 	{
@@ -157,7 +157,7 @@
 		"g_out_tdata_width" : 128,
 		"cases" :
 		[
-			{ "number" : "00" , "invert" : false, "title" : "basic test" }
+			{ "number" : "00", "title" : "basic test" }
 		]
 	}
 ]
