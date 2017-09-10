@@ -112,6 +112,7 @@ begin
 					v.if_axis_in_s.tready := '0';
 
 					if v.first_frame then
+						v.prefix_remainder    := prefix(c_prefix_remainder_width - 1 downto 0);
 						v.if_axis_out_m.tdata := v.prefix_remainder(c_prefix_remainder_width - 1 downto 0) & if_axis_in_m.tdata(127 downto c_prefix_remainder_width);
 						v.first_frame         := '0';
 					else
