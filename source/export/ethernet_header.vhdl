@@ -31,5 +31,25 @@ entity ethernet_header is
 end entity;
 
 architecture arch of ethernet_header is
+	constant c_prefix_width : natural := 96;
+	signal s_prefix : std_ulogic_vector(95 downto 0);
 begin
+	s_prefix <= cpu_ethernet_config.destination & cpu_ethernet_config.source;
+
+	i_generic_prefix : entity ipfix_exporter.generic_prefix
+		generic map(
+			g_prefix_width => c_prefix_width
+		)
+		port map(
+			clk           => clk,
+			rst           => rst,
+
+			if_axis_in_m  => if_axis_in_m,
+			if_axis_in_s  => if_axis_in_s,
+
+			if_axis_out_m => if_axis_out_m,
+			if_axis_out_s => if_axis_out_s,
+
+			prefix        => s_prefix
+		);
 end architecture;
