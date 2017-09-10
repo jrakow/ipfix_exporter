@@ -28,6 +28,7 @@ IPFIX_EXPORTER_SRCS := \
 	source/generic/axis_combiner.vhdl \
 	source/generic/conditional_split.vhdl \
 	source/generic/generic_dropping.vhdl \
+	source/generic/ram.vhdl \
 	source/packages/pkg_axi_stream.vhdl \
 	source/packages/pkg_common_subtypes.vhdl \
 	source/packages/pkg_config.vhdl \
@@ -41,7 +42,6 @@ IPFIX_EXPORTER_SRCS := \
 	source/preparation/ip_version_split.vhdl \
 	source/preparation/selective_dropping.vhdl \
 	source/preparation/vlan_dropping.vhdl \
-	source/ram.vhdl \
 	source/top_collect.vhdl \
 	source/top_export.vhdl \
 	source/top_ipfix.vhdl \
