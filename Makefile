@@ -26,6 +26,7 @@ IPFIX_EXPORTER_SRCS := \
 	source/export/vlan_insertion.vhdl \
 	source/generic/axis_combiner.vhdl \
 	source/generic/conditional_split.vhdl \
+	source/generic/fifo.vhdl \
 	source/generic/generic_dropping.vhdl \
 	source/generic/generic_prefix.vhdl \
 	source/generic/ram.vhdl \
