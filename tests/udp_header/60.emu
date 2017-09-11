@@ -11,3 +11,5 @@ write 00000038 22222222
 write 0000003C 22222222
 # commit and ipv6
 write 00000004 00000002
+
+%EVENT
