@@ -38,6 +38,8 @@ package pkg_axi_stream is
 	 * convert a tkeep std_ulogic_vector to a number of bytes
 	 */
 	function tkeep_to_integer(tkeep : std_ulogic_vector) return positive;
+
+	function tkeep_to_mask(tkeep : std_ulogic_vector) return std_ulogic_vector;
 end package;
 
 package body pkg_axi_stream is
@@ -70,6 +72,15 @@ package body pkg_axi_stream is
 		assert ret /= 0
 			report "tkeep may not be null"
 			severity error;
+		return ret;
+	end;
+
+	function tkeep_to_mask(tkeep : std_ulogic_vector) return std_ulogic_vector is
+		variable ret : std_ulogic_vector(127 downto 0);
+	begin
+		for i in 0 to 15 loop
+			ret((i + 1) * 8 - 1 downto i * 8) := (others => tkeep(i));
+		end loop;
 		return ret;
 	end;
 end;
