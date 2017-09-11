@@ -111,6 +111,7 @@ package pkg_protocol_types is
 
 	subtype t_partial_checksum is unsigned(15 downto 0);
 	subtype t_checksum is std_ulogic_vector(15 downto 0);
+	function partial_checksum(slv : std_ulogic_vector) return t_partial_checksum;
 	function ipv4_header_checksum(ih : t_ipv4_header) return std_ulogic_vector;
 end package;
 
@@ -231,14 +232,22 @@ package body pkg_protocol_types is
 			return ret(15 downto 0);
 		end;
 
+		alias    slv_rev  : std_ulogic_vector(slv'reverse_range) is slv;
+		variable slv_copy : std_ulogic_vector(slv'length - 1 downto 0);
+
 		variable ret : t_partial_checksum := (others => '0');
 	begin
 		-- slv'length is a multiple of 16
 		assert (slv'length / 16) * 16 = slv'length;
-		assert not slv'ascending;
 
-		for i in 0 to slv'length / 16 - 1 loop
-			ret := carry_around_add(ret, t_partial_checksum(slv((i + 1) * 16 - 1 downto i * 16)));
+		if slv'ascending then
+			slv_copy := slv_rev;
+		else
+			slv_copy := slv;
+		end if;
+
+		for i in 0 to slv_copy'length / 16 - 1 loop
+			ret := carry_around_add(ret, t_partial_checksum(slv_copy((i + 1) * 16 - 1 downto i * 16)));
 		end loop;
 		return ret;
 	end;
