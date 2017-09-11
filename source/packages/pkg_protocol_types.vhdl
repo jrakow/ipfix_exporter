@@ -4,6 +4,7 @@ use ieee.numeric_std.all;
 
 library ipfix_exporter;
 use ipfix_exporter.pkg_common_subtypes.all;
+use ipfix_exporter.pkg_config.all;
 
 package pkg_protocol_types is
 	constant c_protocol_udp : t_next_header := x"11";
@@ -113,6 +114,7 @@ package pkg_protocol_types is
 	subtype t_checksum is std_ulogic_vector(15 downto 0);
 	function partial_checksum(slv : std_ulogic_vector) return t_partial_checksum;
 	function ipv4_header_checksum(ih : t_ipv4_header) return std_ulogic_vector;
+	function udp_checksum(udp : t_udp_header;  partial : t_partial_checksum; cpu_ip_config : t_ip_config) return t_checksum;
 end package;
 
 package body pkg_protocol_types is
@@ -257,5 +259,35 @@ package body pkg_protocol_types is
 	begin
 		copy.header_checksum := (others => '0');
 		return not std_ulogic_vector(partial_checksum(to_std_ulogic_vector(copy)));
+	end;
+
+	function udp_checksum(udp : t_udp_header;  partial : t_partial_checksum; cpu_ip_config : t_ip_config) return t_checksum is
+		variable copy : t_udp_header := udp;
+		variable full_checksum : t_partial_checksum := (others => '0');
+	begin
+		copy.checksum := (others => '0');
+		if cpu_ip_config.version = x"6" then
+			-- pseudo header
+			full_checksum := partial_checksum(
+				cpu_ip_config.ipv6_source_address
+				& cpu_ip_config.ipv6_destination_address
+				& std_ulogic_vector(udp.length)
+				& x"00" & c_protocol_udp
+				& to_std_ulogic_vector(copy)
+				& std_ulogic_vector(partial));
+		else
+			full_checksum := partial_checksum(
+				cpu_ip_config.ipv4_source_address
+				& cpu_ip_config.ipv4_destination_address
+				& x"00" & c_protocol_udp
+				& std_ulogic_vector(udp.length)
+				& to_std_ulogic_vector(copy)
+				& std_ulogic_vector(partial));
+		end if;
+		if full_checksum = x"1111" then
+			return std_ulogic_vector(full_checksum);
+		else
+			return not std_ulogic_vector(full_checksum);
+		end if;
 	end;
 end package body;

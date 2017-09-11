@@ -62,6 +62,9 @@ architecture arch of top_export is
 
 	signal s_if_axis_m_4 : t_if_axis_frame_m;
 	signal s_if_axis_s_4 : t_if_axis_s;
+
+	-- udp header to ip header
+	signal s_udp_ip_config : t_ip_config;
 begin
 	events(0) <= if_axis_in_m.tvalid and if_axis_in_m.tlast and if_axis_in_s.tready;
 	events(1) <= s_if_axis_m_1.tvalid and s_if_axis_m_1.tlast and s_if_axis_s_1.tready;
@@ -82,7 +85,8 @@ begin
 			if_axis_out_s => s_if_axis_s_1,
 
 			cpu_udp_config => cpu_udp_config,
-			cpu_ip_config  => cpu_ip_config
+			cpu_ip_config  => cpu_ip_config,
+			udp_ip_config  => s_udp_ip_config
 		);
 	i_ip_header : entity ipfix_exporter.ip_header
 		port map(
@@ -95,7 +99,7 @@ begin
 			if_axis_out_m => s_if_axis_m_2,
 			if_axis_out_s => s_if_axis_s_2,
 
-			cpu_ip_config => cpu_ip_config
+			cpu_ip_config => s_udp_ip_config
 		);
 	i_ethertype_insertion : entity ipfix_exporter.ethertype_insertion
 		port map(
