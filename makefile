@@ -39,6 +39,8 @@ clean:
 	       axis_testbench-obj08.cf \
 	       testbench \
 	       waveforms/*/*.ghw \
+	       junit.xml \
+	       report.html \
 	       html
 
 # use testbench.gcda as dummy for all run results
