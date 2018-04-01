@@ -1,12 +1,4 @@
-/html
-*.o
-*.cf
-*.gcno
-*.gcda
-*.gcov
-/coverage
-/coverage.info
-/testbench
-/waveforms/*/*.ghw
-junit.xml
-report.html
+/build/
+/coverage/
+/waveforms/
+/report.html

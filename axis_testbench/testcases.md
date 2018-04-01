@@ -25,6 +25,6 @@ The goal for this example is that the generator and checker modules start after 
 This is achieved by placing a single line with `%WAIT_EMU` each at the beginning of the `in.dat` and `out.dat` files.
 Also a line with `%EVENT` is appended to the `.emu` file.
 
-## Test cases
+## Example test cases
 
-\verbinclude cases.json
+\verbinclude selftest/cases.json

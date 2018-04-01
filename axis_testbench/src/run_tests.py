@@ -14,11 +14,11 @@ def eprint(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
 
 def make_args(module, case):
-	case_filename_stub = "cases/" + module["name"] + "/" + case["number"]
+	case_filename_stub = "../tests/" + module["name"] + "/" + case["number"]
 	# VHDL ieee.math_real.uniform seed allowed values
 	random_ints = [(str(randint(1, 2147483562)), str(randint(1, 2147483398))) for i in range(0, 2)]
-	return ["./testbench",
-	        "--wave=waveforms/" + module["name"] + "/" + case["number"] + ".ghw",
+	return ["./axis_testbench",
+	        "--wave=../waveforms/" + module["name"] + "/" + case["number"] + ".ghw",
 	        "-gg_module=" + module["name"],
 
 	        "-gg_in_tdata_width=" + str(module["g_in_tdata_width"]),
@@ -35,7 +35,7 @@ def make_args(module, case):
 	       ]
 
 def end_line(test_case_name, exit, expected):
-	end_line = "  " + test_case_name
+	end_line = "  \"" + test_case_name + "\""
 	if exit == 0:
 		end_line += " succeeded"
 	else:
@@ -60,7 +60,7 @@ def run_tests(module):
 			test_case_name += " " + case["title"]
 
 		# start line
-		start_line = "  starting " + test_case_name
+		start_line = "  starting \"" + test_case_name + "\""
 		if is_inverted:
 			start_line += " expecting failure"
 		eprint(start_line)
@@ -78,8 +78,10 @@ def run_tests(module):
 		test_case.system_err = '\n'.join(completed.stderr.decode("utf-8").split('\0'))
 		test_case.system_out = '\n'.join(completed.stdout.decode("utf-8").split('\0'))
 		if not expected:
-			test_case.result = junit.Failure("succeeded" if exit == 0 else "failed" + " unexpectedly")
-
+			if completed.returncode == 0:
+				test_case.result = junit.Failure("succeeded unexpectedly")
+			else:
+				test_case.result = junit.Failure("failed unexpectedly")
 		test_cases.append(test_case)
 
 	eprint(" all tests run for module " + module["name"])
@@ -88,7 +90,7 @@ def run_tests(module):
 if __name__ == "__main__":
 	assert len(sys.argv) > 1, 'specify either module names or "all"'
 	eprint("starting test run")
-	with open("cases/cases.json") as file:
+	with open("../tests/cases.json") as file:
 		json = json.load(file)
 
 	modules = []
@@ -114,6 +116,11 @@ if __name__ == "__main__":
 			test_suites[module["name"]] = junit.TestSuite(module["name"])
 		arg_vector.append(module)
 		module_names.append(module["name"])
+
+	# contruct waveform directories
+	for module_name in module_names:
+		if not os.path.exists("../waveforms/" + module_name):
+			os.makedirs("../waveforms/" + module_name)
 
 	pool = ThreadPool()
 	results = pool.map(run_tests, arg_vector)

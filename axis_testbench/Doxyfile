@@ -772,14 +772,14 @@ WARN_LOGFILE =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT = \
-        readme.md \
-        test_cases.md \
-        axis_checker.vhdl \
-        axis_generator.vhdl \
-        pkg_axis_testbench_io.vhdl \
-        testbench.vhdl \
-        testbench_test_dummy.vhdl \
-        cpu_emulator.vhdl
+	readme.md \
+	testcases.md \
+	src/axis_checker.vhdl \
+	src/axis_generator.vhdl \
+	src/pkg_axis_testbench_io.vhdl \
+	src/testbench.vhdl \
+	src/testbench_test_dummy.vhdl \
+	src/cpu_emulator.vhdl
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -852,7 +852,7 @@ EXCLUDE_SYMBOLS =
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH = cases/cases.json
+EXAMPLE_PATH = selftest/cases.json
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and
