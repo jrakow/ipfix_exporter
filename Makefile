@@ -14,32 +14,32 @@ AXIS_TESTBENCH_SRCS := \
 	axis_testbench/src/testbench_test_dummy.vhdl
 
 IPFIX_EXPORTER_SRCS := \
-	source/pkg_protocol_types.vhdl \
-	source/pkg_types.vhdl \
-	source/generic/axis_combiner.vhdl \
-	source/generic/conditional_split.vhdl \
-	source/generic/generic_dropping.vhdl \
-	source/cpu_interface.vhdl \
-	source/top_preparation.vhdl \
 	source/collect/cache_extraction.vhdl \
 	source/collect/cache_insertion.vhdl \
 	source/collect/information_extraction.vhdl \
 	source/collect/ipfix_header.vhdl \
 	source/collect/ipfix_message_control.vhdl \
-	source/top_collect.vhdl \
+	source/cpu_interface.vhdl \
 	source/export/ethernet_header.vhdl \
 	source/export/ethertype_insertion.vhdl \
 	source/export/ip_header.vhdl \
 	source/export/udp_header.vhdl \
 	source/export/vlan_insertion.vhdl \
+	source/generic/axis_combiner.vhdl \
+	source/generic/conditional_split.vhdl \
+	source/generic/generic_dropping.vhdl \
+	source/pkg_protocol_types.vhdl \
+	source/pkg_types.vhdl \
 	source/preparation/ethernet_dropping.vhdl \
 	source/preparation/ethertype_dropping.vhdl \
 	source/preparation/ip_version_split.vhdl \
 	source/preparation/selective_dropping.vhdl \
 	source/preparation/vlan_dropping.vhdl \
 	source/ram.vhdl \
+	source/top_collect.vhdl \
 	source/top_export.vhdl \
-	source/top_ipfix.vhdl
+	source/top_ipfix.vhdl \
+	source/top_preparation.vhdl
 
 .PHONY: all
 all: build/axis_testbench
