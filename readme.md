@@ -13,16 +13,3 @@ If such a flow is found, the cache entry is reset and the flows is forwarded.
 
 Flows are collected to form IPFIX messages.
 If an IPFIX message is ready, it is wrapped in the UDP, IP and Ethernet protocols and sent.
-
-## Development
-This project is non building work in progress.
-Currently modules are being specified and the surrounding infrastructure is created.
-
-Further steps include:
-1. specify used data types
-2. write an AXIS testbench
-3. add unit tests for each module
-4. implement modules
-5. write AXI CPU interface
-
-See [modules](doc/modules.md).
