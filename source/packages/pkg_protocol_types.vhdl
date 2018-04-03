@@ -26,6 +26,27 @@ package pkg_protocol_types is
 		checksum    => (others => '0')
 	);
 
+	type t_tcp_header_until_flags is record
+		source                : t_transport_port;
+		destination           : t_transport_port;
+		sequence_number       : unsigned(31 downto 0);
+		acknowledgment_number : unsigned(31 downto 0);
+		data_offset           : unsigned( 3 downto 0);
+--		reserved : unsigned(2 downto 0);
+		flags                 : std_ulogic_vector(8 downto 0);
+	end record;
+	constant c_tcp_header_until_flags_width : natural := 112;
+	function to_tcp_header_until_flags(slv : std_ulogic_vector(c_tcp_header_until_flags_width - 1 downto 0)) return t_tcp_header_until_flags;
+	constant c_tcp_header_until_flags_default : t_tcp_header_until_flags := (
+		source                => (others => '0'),
+		destination           => (others => '0'),
+		sequence_number       => (others => '0'),
+		acknowledgment_number => (others => '0'),
+		data_offset           => (others => '0'),
+--		reserved : unsigned(2 downto 0);
+		flags                 => (others => '0')
+	);
+
 	type t_ipv6_header is record
 		version        : std_ulogic_vector(3 downto 0);
 		traffic_class  : t_ip_traffic_class;
@@ -134,6 +155,19 @@ package body pkg_protocol_types is
 		ret(47 downto 32) := uh.destination;
 		ret(31 downto 16) := std_ulogic_vector(uh.length);
 		ret(15 downto  0) := uh.checksum   ;
+		return ret;
+	end;
+
+	function to_tcp_header_until_flags(slv : std_ulogic_vector(c_tcp_header_until_flags_width - 1 downto 0)) return t_tcp_header_until_flags is
+		variable ret : t_tcp_header_until_flags := c_tcp_header_until_flags_default;
+	begin
+		ret.source                := slv(111 downto 96);
+		ret.destination           := slv(95 downto 80);
+		ret.sequence_number       := unsigned(slv(79 downto 48));
+		ret.acknowledgment_number := unsigned(slv(47 downto 16));
+		ret.data_offset           := unsigned(slv(15 downto 12));
+--		reserved : unsigned(2 downto 0);
+		ret.flags                 := slv( 8 downto 0);
 		return ret;
 	end;
 

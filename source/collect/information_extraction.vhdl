@@ -45,14 +45,14 @@ architecture arch of information_extraction is
 	function get_max_remaining_frames(ip_version : positive) return natural is
 	begin
 		if ip_version = 6 then
-			return 3;
+			return 4;
 		else
-			return 2;
+			return 3;
 		end if;
 	end;
 	constant c_max_remaining_frames : natural := get_max_remaining_frames(c_ip_version);
 
-	type t_fsm is (collect, wait_read);
+	type t_fsm is (collect, send, wait_read);
 	type t_reg is record
 		fsm : t_fsm;
 
@@ -60,9 +60,9 @@ architecture arch of information_extraction is
 
 		-- assembled ip and udp headers
 		-- only ipv6 or ipv4 is used
-		ipv6_header : std_ulogic_vector(c_ipv6_header_width - 1 downto 0);
-		ipv4_header : std_ulogic_vector(c_ipv4_header_width - 1 downto 0);
-		udp_header  : std_ulogic_vector(c_udp_header_width  - 1 downto 0);
+		ipv6_header      : std_ulogic_vector(c_ipv6_header_width - 1 downto 0);
+		ipv4_header      : std_ulogic_vector(c_ipv4_header_width - 1 downto 0);
+		transport_header : std_ulogic_vector(c_tcp_header_until_flags_width  - 1 downto 0);
 
 		-- output
 		if_axis_in_s         : t_if_axis_s;
@@ -75,7 +75,7 @@ architecture arch of information_extraction is
 		remaining_frames     => c_max_remaining_frames,
 		ipv6_header          => (others => '0'),
 		ipv4_header          => (others => '0'),
-		udp_header           => (others => '0'),
+		transport_header     => (others => '0'),
 		if_axis_in_s         => c_if_axis_s_default,
 		ipv6_frame_info      => c_ipv6_frame_info_default,
 		ipv4_frame_info      => c_ipv4_frame_info_default,
@@ -109,59 +109,51 @@ begin
 
 				if if_axis_in_m.tvalid and if_axis_in_s.tready then
 					case v.remaining_frames is
-						when 3 =>
+						when 4 =>
 							v.ipv6_header(319 downto 192) := if_axis_in_m.tdata;
-							if if_axis_in_m.tlast then
+							if if_axis_in_m.tlast then -- frame too short
+								v := c_reg_default;
+							end if;
+						when 3 =>
+							v.ipv6_header(191 downto 64) := if_axis_in_m.tdata;
+							v.ipv4_header(159 downto 32) := if_axis_in_m.tdata;
+							if if_axis_in_m.tlast then -- frame too short
 								v := c_reg_default;
 							end if;
 						when 2 =>
-							v.ipv6_header(191 downto 64) := if_axis_in_m.tdata;
-							v.ipv4_header(159 downto 32) := if_axis_in_m.tdata;
-							if if_axis_in_m.tlast then
+							if c_ip_version = 6 then
+								v.ipv6_header(63 downto 0) := if_axis_in_m.tdata(127 downto 64);
+								v.transport_header(111 downto 48) := if_axis_in_m.tdata(63 downto 0);
+							else
+								v.ipv4_header(31 downto 0) := if_axis_in_m.tdata(127 downto 96);
+								v.transport_header(111 downto 16) := if_axis_in_m.tdata(95 downto 0);
+							end if;
+
+							if    ((c_ip_version = 6) and (to_ipv6_header(v.ipv6_header).next_header /= c_protocol_tcp))
+							   or ((c_ip_version = 4) and (to_ipv4_header(v.ipv4_header).protocol    /= c_protocol_tcp)) then
+
+								v.fsm := send;
+								-- incoming frames are ignored until tlast
+								if if_axis_in_m.tlast then
+									v.if_axis_in_s.tready := '0';
+								end if;
+
+							elsif if_axis_in_m.tlast then -- frame too short
 								v := c_reg_default;
 							end if;
+
 						when 1 =>
-							-- collect final parts
-							v.ipv6_header(63 downto 0) := if_axis_in_m.tdata(127 downto 64);
-							v.ipv4_header(31 downto 0) := if_axis_in_m.tdata(127 downto 96);
-							-- treat as udp to get ports
 							if c_ip_version = 6 then
-								v.udp_header := if_axis_in_m.tdata(63 downto 0);
+								v.transport_header(47 downto 0) := if_axis_in_m.tdata(127 downto 80);
 							else
-								v.udp_header := if_axis_in_m.tdata(95 downto 32);
+								v.transport_header(15 downto 0) := if_axis_in_m.tdata(127 downto 112);
 							end if;
-
-							-- assemble frame_info
-							v.ipv6_frame_info.timestamp := cpu_timestamp;
-							v.ipv4_frame_info.timestamp := cpu_timestamp;
-							v.ipv6_frame_info.src_port  := to_udp_header(v.udp_header).source;
-							v.ipv4_frame_info.src_port  := to_udp_header(v.udp_header).source;
-							v.ipv6_frame_info.dest_port := to_udp_header(v.udp_header).destination;
-							v.ipv4_frame_info.dest_port := to_udp_header(v.udp_header).destination;
---							v.ipv6_frame_info.tcp_flags := TODO
---							v.ipv4_frame_info.tcp_flags := TODO
-							if c_ip_version = 6 then
-								v.ipv6_frame_info.src_ip_addr   := to_ipv6_header(v.ipv6_header).source;
-								v.ipv6_frame_info.dest_ip_addr  := to_ipv6_header(v.ipv6_header).destination;
-								-- length in ipv6 header is without header
-								v.ipv6_frame_info.octet_count   := to_ipv6_header(v.ipv6_header).payload_length + 40;
-								v.ipv6_frame_info.next_header   := to_ipv6_header(v.ipv6_header).next_header;
-								v.ipv6_frame_info.traffic_class := to_ipv6_header(v.ipv6_header).traffic_class;
-							else
-								v.ipv4_frame_info.src_ip_addr   := to_ipv4_header(v.ipv4_header).source;
-								v.ipv4_frame_info.dest_ip_addr  := to_ipv4_header(v.ipv4_header).destination;
-								v.ipv4_frame_info.octet_count   := to_ipv4_header(v.ipv4_header).total_length;
-								v.ipv4_frame_info.next_header   := to_ipv4_header(v.ipv4_header).protocol;
-								v.ipv4_frame_info.traffic_class := to_ipv4_header(v.ipv4_header).traffic_class;
-							end if;
-
-							v.if_axis_out_m_tvalid := '1';
-							if if_axis_in_m.tlast then
-								-- forget incoming frames until tlast
+							v.fsm := send;
+							-- incoming frames are ignored until tlast
+							if if_axis_in_m.tvalid and if_axis_in_s.tready and if_axis_in_m.tlast then
 								v.if_axis_in_s.tready := '0';
 							end if;
 
-							v.fsm                  := wait_read;
 						when 0 =>
 							assert false
 								report "remaining_frames may not be 0 in this state"
@@ -170,9 +162,59 @@ begin
 					v.remaining_frames := r.remaining_frames - 1;
 				end if;
 
-			when wait_read =>
+			when send =>
+				if c_ip_version = 6 then
+					v.ipv6_frame_info.timestamp := cpu_timestamp;
+					v.ipv6_frame_info.src_ip_addr   := to_ipv6_header(v.ipv6_header).source;
+					v.ipv6_frame_info.dest_ip_addr  := to_ipv6_header(v.ipv6_header).destination;
+					-- length in ipv6 header is without header
+					v.ipv6_frame_info.octet_count   := to_ipv6_header(v.ipv6_header).payload_length + 40;
+					v.ipv6_frame_info.next_header   := to_ipv6_header(v.ipv6_header).next_header;
+					v.ipv6_frame_info.traffic_class := to_ipv6_header(v.ipv6_header).traffic_class;
+
+					if    (v.ipv6_frame_info.next_header = c_protocol_udp)
+					   or (v.ipv6_frame_info.next_header = c_protocol_tcp) then
+						v.ipv6_frame_info.src_port  := to_udp_header(v.transport_header(111 downto 48)).source;
+						v.ipv6_frame_info.dest_port := to_udp_header(v.transport_header(111 downto 48)).destination;
+					end if;
+					if v.ipv6_frame_info.next_header = c_protocol_tcp then
+						v.ipv6_frame_info.tcp_flags := to_tcp_header_until_flags(v.transport_header).flags(7 downto 0);
+					else
+						v.ipv6_frame_info.tcp_flags := (others => '0');
+					end if;
+				else
+					v.ipv4_frame_info.timestamp := cpu_timestamp;
+					v.ipv4_frame_info.src_ip_addr   := to_ipv4_header(v.ipv4_header).source;
+					v.ipv4_frame_info.dest_ip_addr  := to_ipv4_header(v.ipv4_header).destination;
+					v.ipv4_frame_info.octet_count   := to_ipv4_header(v.ipv4_header).total_length;
+					v.ipv4_frame_info.next_header   := to_ipv4_header(v.ipv4_header).protocol;
+					v.ipv4_frame_info.traffic_class := to_ipv4_header(v.ipv4_header).traffic_class;
+					v.ipv4_frame_info.tcp_flags     := to_tcp_header_until_flags(v.transport_header).flags(7 downto 0) when v.ipv4_frame_info.next_header = c_protocol_tcp else (others => '0');
+
+					if    (v.ipv4_frame_info.next_header = c_protocol_udp)
+					   or (v.ipv4_frame_info.next_header = c_protocol_tcp) then
+						v.ipv4_frame_info.src_port  := to_udp_header(v.transport_header(111 downto 48)).source;
+						v.ipv4_frame_info.dest_port := to_udp_header(v.transport_header(111 downto 48)).destination;
+					end if;
+					if v.ipv4_frame_info.next_header = c_protocol_tcp then
+						v.ipv4_frame_info.tcp_flags := to_tcp_header_until_flags(v.transport_header).flags(7 downto 0);
+					else
+						v.ipv4_frame_info.tcp_flags := (others => '0');
+					end if;
+				end if;
+
+				v.if_axis_out_m_tvalid := '1';
+
+				-- incoming frames are ignored until tlast
 				if if_axis_in_m.tvalid and if_axis_in_s.tready and if_axis_in_m.tlast then
-					-- forget incoming frames until tlast
+					v.if_axis_in_s.tready := '0';
+				end if;
+
+				v.fsm := wait_read;
+
+			when wait_read =>
+				-- incoming frames are ignored until tlast
+				if if_axis_in_m.tvalid and if_axis_in_s.tready and if_axis_in_m.tlast then
 					v.if_axis_in_s.tready := '0';
 				end if;
 				if if_axis_out_m_tvalid and if_axis_out_s.tready then
